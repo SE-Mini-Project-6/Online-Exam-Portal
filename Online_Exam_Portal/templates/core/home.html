@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Portal - Home</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 2rem; background: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .home-container { background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; width: 400px; }
+        h1 { color: #0056b3; margin-bottom: 2rem; }
+        .role-buttons .btn { display: block; width: 100%; padding: 1rem; margin: 1rem 0; background: #007bff; color: white; border: none; border-radius: 4; font-size: 1rem; cursor: pointer; text-decoration: none; }
+        .role-buttons .admin-btn { background: #dc3545; }
+        .role-buttons .student-btn { background: #28a745; }
+        .role-buttons .btn:hover { background: #0056b3; }
+        .role-buttons .admin-btn:hover { background: #c82333; }
+        .role-buttons .student-btn:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <div class="home-container">
+        <h1>Online Exam Portal</h1>
+        <div class="role-buttons">
+            <a href="{% url 'accounts:login' %}" class="btn admin-btn">Admin Login</a>
+            <a href="{% url 'accounts:student_login' %}" class="btn student-btn">Student Login</a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.9rem;">
+            Please select your role to continue.
+        </p>
+    </div>
+</body>
+</html>
