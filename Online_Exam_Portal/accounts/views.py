@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
+from exams.models import Exam
 
 
 def admin_login(request):
@@ -79,6 +80,7 @@ def admin_dashboard(request):
     return render(request, 'accounts/admin_dashboard.html', {
         'user': request.user,
         'is_admin': True,
+        'exams': Exam.objects.all(),
     })
 
 

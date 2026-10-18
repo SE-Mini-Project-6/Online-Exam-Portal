@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Custom apps
     'accounts',
+    'exams',
 ]
 
 MIDDLEWARE = [

@@ -96,8 +96,8 @@ A minimum of **7–10 test cases** are included.
 ### Admin
 
 - Login with Admin privileges
-- Create exams
-- Configure exam duration
+- Create exams with a title, duration, and availability window
+- Configure exam duration and reject invalid availability intervals
 - Add, edit, and delete MCQ questions
 - View student submissions
 - Release examination results
@@ -113,6 +113,60 @@ A minimum of **7–10 test cases** are included.
 - Submit examination manually
 - Automatic submission after timeout
 - View results after release
+
+## Exam configuration
+
+Staff users can configure an exam at `/exams/create/` from the **Manage Exams**
+card on the admin dashboard. The form stores the title, duration in minutes,
+and timezone-aware start and end timestamps. Validation ensures:
+- The end timestamp must be strictly later than the start timestamp.
+- The duration must be a positive integer (at least one minute).
+- The duration cannot exceed the total availability window.
+- Missing or malformed fields are handled gracefully with field-level errors.
+
+Successfully saved exams are listed in the **Configured Exams** section of the
+admin dashboard.
+
+The implementation satisfies requirement **FR-03** (Create Exam) and extends the
+admin exam-management capability described in the
+[Deliverable 3 architecture/design document](Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf).
+No design deviation was required.
+
+### Test evidence
+
+Automated coverage is in
+[exams/tests.py](Online_Exam_Portal/exams/tests.py) (12 tests) and verifies:
+- Successful exam creation and redirection to dashboard.
+- Configured exam and duration appear in the admin dashboard table.
+- Invalid interval rejection: end timestamp earlier than start timestamp.
+- Invalid interval rejection: end timestamp equal to start timestamp.
+- Non-positive duration rejection (0 or negative).
+- Missing/empty duration handled gracefully without runtime errors.
+- Duration exceeding availability window rejection.
+- Direct model-level `clean()` validation checks.
+- Non-staff / student access prohibition (HTTP 403 Forbidden).
+- Anonymous user redirect to login page (HTTP 302).
+- Admin GET form render verification.
+- Model string representation (`__str__`).
+
+Run the automated test suite with:
+
+```text
+cd Online_Exam_Portal
+..\.venv\Scripts\python.exe manage.py test exams
+```
+
+Manual verification steps:
+
+1. Sign in through `/accounts/login/` as an admin (staff) user.
+2. Select **Create an exam** from the **Manage Exams** card.
+3. Enter a title, valid duration (e.g., `90`), and valid window (e.g., start tomorrow 10:00, end tomorrow 12:00), then click **Save exam**.
+4. Confirm redirection to the admin dashboard and that the exam appears under **Configured Exams** with title, duration, and formatted window timestamps.
+5. Attempt invalid intervals:
+   - End time before or equal to start time: confirm error `"End time must be after the start time."`
+   - Duration exceeding the window (e.g., 180 minutes for a 2-hour window): confirm error `"Exam duration cannot exceed the availability window."`
+   - Duration of 0 or blank: confirm validation error without server error.
+6. Attempt to visit `/exams/create/` while logged in as a student user; confirm HTTP 403 Forbidden.
 
 ---
 
