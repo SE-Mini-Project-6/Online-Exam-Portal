@@ -3,55 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard - Exam Portal</title>
+    <title>Student Dashboard - Online Exam Portal</title>
     <style>
-        * { box-sizing: border-success; }
-        body { font-family: Arial, sans-serif; margin: 0; padding: 2rem; max-width: 1200px; margin: 0 auto; }
-        .navbar { background: #28a745; color: white; padding: 1rem 2rem; border-radius: 4px; margin-bottom: 2rem; }
-        .navbar h1 { margin: 0; }
-        .navbar a { color: white; margin-left: 1rem; text-decoration: none;}
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 1.25rem 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .navbar h1 { margin: 0; font-size: 1.5rem; font-weight: 600; }
+        .nav-links { display: flex; align-items: center; gap: 1rem; }
+        .user-badge { background: rgba(255,255,255,0.2); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.9rem; }
+        .navbar a { color: white; text-decoration: none; font-weight: 500; }
         .navbar a:hover { text-decoration: underline; }
-        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform 0.2s; }
-        .card:hover { transform: translateY(-2px); }
-        .card h3 { margin-top: 0; color: #28a745; }
-        .logout-btn { margin-top: 2rem; padding: 0.8rem 1.5rem; background: #dc3545; color: white; border: none; border-radius: 4; cursor: pointer; font-size: 1rem; }
-        .logout-btn:hover { background: #c82333; }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .card h3 { margin-top: 0; color: #059669; font-size: 1.15rem; }
+        .card p { margin: 0; color: #64748b; font-size: 0.9rem; }
+        .card a { text-decoration: none; color: inherit; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .section-header h2 { margin: 0; font-size: 1.4rem; color: #0f172a; }
+
+        .exam-section {
+            background: white;
+            padding: 1.75rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+            margin-bottom: 2.5rem;
+        }
+
+        .exam-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .exam-table th {
+            text-align: left;
+            padding: 0.85rem 1rem;
+            background-color: #f1f5f9;
+            color: #475569;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .exam-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
+            vertical-align: middle;
+        }
+        .exam-table tr:hover { background-color: #f8fafc; }
+        .exam-title { font-weight: 600; color: #0f172a; }
+        .exam-duration { color: #64748b; }
+        .exam-window { color: #334155; font-size: 0.9rem; }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .badge-available {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .badge-upcoming {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+        }
+        .badge-expired {
+            background-color: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-action {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.15s, transform 0.15s;
+        }
+        .btn-take {
+            background-color: #10b981;
+            color: white;
+        }
+        .btn-take:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+        }
+        .btn-disabled {
+            background-color: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            padding: 2.5rem;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .logout-form {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .logout-btn {
+            padding: 0.75rem 2rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .logout-btn:hover { background: #dc2626; }
     </style>
 </head>
 <body>
-    <div class="navbar">
+    <div class="navbar" id="student-navbar">
         <h1>Student Portal</h1>
-        <a href="{% url 'accounts:logout' %}">Logout</a>
+        <div class="nav-links">
+            <span class="user-badge" id="student-username">Signed in as: <strong>{{ user.username }}</strong></span>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="card">
+    <div class="container" id="features-overview">
+        <a href="#available-exams-section" class="card" id="card-attempt-exams">
             <h3>Attempt Exams</h3>
-            <p>Start available examinations.</p>
-        </div>
-        <div class="card">
+            <p>View scheduled exams and begin your attempts during open windows.</p>
+        </a>
+        <div class="card" id="card-answer-questions">
             <h3>Answer Questions</h3>
-            <p>Answer questions in any order.</p>
+            <p>Answer questions in any order with real-time progress tracking.</p>
         </div>
-        <div class="card">
+        <div class="card" id="card-mark-review">
             <h3>Mark for Review</h3>
-            <p>Mark questions for review before submission.</p>
+            <p>Flag questions to revisit before final submission.</p>
         </div>
-        <div class="card">
+        <div class="card" id="card-submit-exam">
             <h3>Submit Exam</h3>
-            <p>Submit examination manually or automatically after timeout.</p>
+            <p>Submit manually or automatically upon window / duration expiration.</p>
         </div>
-        <div class="card">
+        <div class="card" id="card-view-results">
             <h3>View Results</h3>
-            <p>View released results after instructor release.</p>
+            <p>Review final scores once released by exam administrators.</p>
         </div>
     </div>
 
-    <form method="post" action="{% url 'accounts:logout' %}" style="text-align: center; margin-top: 1rem;">
-        {% csrf_token %}
-        <button type="submit" class="logout-btn" style="width: 100%; padding: 0.8rem 1.5rem; background: #dc3545; color: white; border: none; border-radius: 4; cursor: pointer; font-size: 1rem;">Logout</button>
-    </form>
+    <section class="exam-section" id="available-exams-section">
+        <div class="section-header">
+            <h2>Available Examinations</h2>
+            <span style="font-size: 0.9rem; color: #64748b;">Current Server Time: {{ current_time|date:"M j, Y, g:i A" }}</span>
+        </div>
 
-    </body>
+        {% if exams %}
+            <table class="exam-table" id="available-exams-table">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">Exam Title</th>
+                        <th style="width: 15%;">Duration</th>
+                        <th style="width: 30%;">Scheduled Window</th>
+                        <th style="width: 12%;">Status</th>
+                        <th style="width: 13%; text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam in exams %}
+                        <tr id="exam-row-{{ exam.id }}">
+                            <td>
+                                <div class="exam-title" id="exam-title-{{ exam.id }}">{{ exam.title }}</div>
+                            </td>
+                            <td>
+                                <div class="exam-duration" id="exam-duration-{{ exam.id }}">{{ exam.duration_minutes }} minutes</div>
+                            </td>
+                            <td>
+                                <div class="exam-window" id="exam-window-{{ exam.id }}">
+                                    {{ exam.start_at|date:"M j, Y, g:i A" }} &ndash; {{ exam.end_at|date:"M j, Y, g:i A" }}
+                                </div>
+                            </td>
+                            <td>
+                                {% if exam.is_currently_available %}
+                                    <span class="badge badge-available" id="badge-{{ exam.id }}">Available Now</span>
+                                {% elif exam.is_currently_upcoming %}
+                                    <span class="badge badge-upcoming" id="badge-{{ exam.id }}">Upcoming</span>
+                                {% else %}
+                                    <span class="badge badge-expired" id="badge-{{ exam.id }}">Closed</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: center;">
+                                {% if exam.is_currently_available %}
+                                    <a href="{% url 'exams:take' exam.id %}" class="btn-action btn-take" id="btn-take-{{ exam.id }}">Start Exam</a>
+                                {% elif exam.is_currently_upcoming %}
+                                    <button disabled class="btn-action btn-disabled" id="btn-take-{{ exam.id }}" title="Exam opens at {{ exam.start_at|date:'M j, g:i A' }}">Upcoming</button>
+                                {% else %}
+                                    <button disabled class="btn-action btn-disabled" id="btn-take-{{ exam.id }}" title="Availability window has closed">Closed</button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state" id="no-exams-message">
+                <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">No examinations are scheduled at this time.</p>
+                <p style="font-size: 0.9rem;">Check back later or contact your instructor.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <form method="post" action="{% url 'accounts:logout' %}" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn" id="logout-button">Logout</button>
+    </form>
+</body>
 </html>
