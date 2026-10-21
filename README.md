@@ -218,6 +218,13 @@ cd Online_Exam_Portal
 ..\.venv\Scripts\python.exe manage.py test exams
 ```
 
+Or run the full test suite (41 tests covering core, accounts, and exams):
+
+```text
+cd Online_Exam_Portal
+..\.venv\Scripts\python.exe manage.py test accounts.tests exams.tests core.tests
+```
+
 Manual verification steps:
 
 1. Sign in as Admin (`/accounts/login/`) and create three test exams:

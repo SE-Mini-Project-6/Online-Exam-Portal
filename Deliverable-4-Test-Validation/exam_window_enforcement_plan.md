@@ -104,7 +104,14 @@ Automated test suite in `Online_Exam_Portal/exams/tests.py` covers 24 unit and i
 cd Online_Exam_Portal
 ..\.venv\Scripts\python.exe manage.py test exams
 ```
-All 24 tests pass cleanly with 0 failures and 0 errors.
+All 24 exams tests pass cleanly with 0 failures and 0 errors.
+
+To run the complete test suite across all portal modules (core, accounts, and exams — 41 tests total):
+```text
+cd Online_Exam_Portal
+..\.venv\Scripts\python.exe manage.py test accounts.tests exams.tests core.tests
+```
+All 41 tests pass cleanly with 0 failures and 0 errors.
 
 ---
 
