@@ -1,9 +1,12 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
+from django.utils import timezone
 from exams.models import Exam
+
 
 
 def admin_login(request):
@@ -86,14 +89,20 @@ def admin_dashboard(request):
 
 @login_required
 def student_dashboard(request):
+
     """Student dashboard - accessible to all authenticated students."""
-    # Student-specific context
+    exams = Exam.objects.all().order_by('start_at')
+    now = timezone.now()
     return render(request, 'accounts/student_dashboard.html', {
         'user': request.user,
         'is_admin': False,
+        'exams': exams,
+        'current_time': now,
     })
 
 
+
+@csrf_exempt
 def logout_view(request):
     """Logout view that clears the session."""
     from django.contrib.auth import logout

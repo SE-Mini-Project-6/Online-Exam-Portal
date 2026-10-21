@@ -16,11 +16,14 @@ class AuthenticationTests(TestCase):
     def setUp(self):
         """Set up test users - admin and student."""
         # Create admin user with staff privileges
-        self.admin_user = User.objects.create_staff_user(
+        self.admin_user = User.objects.create_user(
             username='admin',
             email='admin@examportal.com',
-            password='AdminPass123!'
+            password='AdminPass123!',
+            is_staff=True,
+            is_superuser=True,
         )
+
         # Create regular student user
         self.student_user = User.objects.create_user(
             username='student',
@@ -100,25 +103,25 @@ class AuthenticationTests(TestCase):
     def test_role_aware_session_redirect(self):
         """Test role-aware session redirect after login."""
         # Login as admin
-        self.client.post(reverse('accounts:login'), {
+        admin_response = self.client.post(reverse('accounts:login'), {
             'username': 'admin',
             'password': 'AdminPass123!'
         })
 
         # Admin should be redirected to admin dashboard
         # and have is_staff=True in session context
-        self.assertTrue(self.client.user.is_staff)
-        self.assertTrue(self.client.user.is_authenticated)
+        self.assertTrue(admin_response.wsgi_request.user.is_staff)
+        self.assertTrue(admin_response.wsgi_request.user.is_authenticated)
 
         # Login as student
-        self.client.post(reverse('accounts:student-login'), {
+        student_response = self.client.post(reverse('accounts:student-login'), {
             'username': 'student',
             'password': 'StudentPass123!'
         })
 
         # Student should NOT have staff privileges
-        self.assertFalse(self.client.user.is_staff)
-        self.assertTrue(self.client.user.is_authenticated)
+        self.assertFalse(student_response.wsgi_request.user.is_staff)
+        self.assertTrue(student_response.wsgi_request.user.is_authenticated)
 
     def test_session_persistence(self):
         """Test that session persists across requests."""
@@ -133,7 +136,7 @@ class AuthenticationTests(TestCase):
 
         # User should still be authenticated
         self.assertEqual(authenticated_response.status_code, 200)
-        self.assertTrue(self.client.user.is_staff)
+        self.assertTrue(authenticated_response.wsgi_request.user.is_staff)
 
     def test_csrf_protection(self):
         """Test that CSRF protection is in place for login."""
@@ -145,6 +148,7 @@ class AuthenticationTests(TestCase):
     def test_multiple_failed_login_attempts(self):
         """Test that multiple failed login attempts are handled."""
         # Try multiple invalid login attempts
+        response = None
         for _ in range(3):
             response = self.client.post(reverse('accounts:login'), {
                 'username': 'admin',
@@ -153,7 +157,8 @@ class AuthenticationTests(TestCase):
             self.assertEqual(response.status_code, 200)
 
         # User should still not be logged in
-        self.assertFalse(self.client.user.is_authenticated)
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+
 
     def test_admin_and_student_can_both_login(self):
         """Test that both admin and student can login successfully."""
@@ -175,3 +180,19 @@ class AuthenticationTests(TestCase):
         })
         self.assertTrue(student_response.wsgi_request.user.is_authenticated)
         self.assertFalse(student_response.wsgi_request.user.is_staff)
+
+    def test_student_dashboard_has_only_bottom_logout_button(self):
+        """Test that student dashboard contains only the bottom logout button and no navbar logout link."""
+        self.client.force_login(self.student_user)
+        response = self.client.get(reverse('accounts:student_dashboard'))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'id="nav-logout-link"')
+        self.assertContains(response, 'id="logout-button"')
+
+    def test_logout_post_succeeds_without_csrf_forbidden(self):
+        """Test that POST to logout works and successfully clears authentication."""
+        self.client.force_login(self.student_user)
+        response = self.client.post(reverse('accounts:logout'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('accounts:login'))
+        self.assertFalse(self.client.session.get('_auth_user_id'))

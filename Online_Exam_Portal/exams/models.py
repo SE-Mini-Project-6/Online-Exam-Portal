@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 class Exam(models.Model):
@@ -28,3 +29,59 @@ class Exam(models.Model):
                     errors['duration_minutes'] = 'Exam duration cannot exceed the availability window.'
         if errors:
             raise ValidationError(errors)
+
+    def is_available(self, current_time=None):
+        """Check if exam is within its configured availability window."""
+        if current_time is None:
+            current_time = timezone.now()
+        return self.start_at <= current_time <= self.end_at
+
+    def is_upcoming(self, current_time=None):
+        """Check if exam has not started yet."""
+        if current_time is None:
+            current_time = timezone.now()
+        return current_time < self.start_at
+
+    def is_expired(self, current_time=None):
+        """Check if exam window has already closed."""
+        if current_time is None:
+            current_time = timezone.now()
+        return current_time > self.end_at
+
+    def get_status(self, current_time=None):
+        """Return status string: 'available', 'upcoming', or 'expired'."""
+        if self.is_available(current_time):
+            return 'available'
+        elif self.is_upcoming(current_time):
+            return 'upcoming'
+        return 'expired'
+
+    def get_status_label(self, current_time=None):
+        """Return human-readable status badge label."""
+        status = self.get_status(current_time)
+        if status == 'available':
+            return 'Available Now'
+        elif status == 'upcoming':
+            return 'Upcoming'
+        return 'Closed'
+
+    @property
+    def is_currently_available(self):
+        return self.is_available()
+
+    @property
+    def is_currently_upcoming(self):
+        return self.is_upcoming()
+
+    @property
+    def is_currently_expired(self):
+        return self.is_expired()
+
+    @property
+    def status(self):
+        return self.get_status()
+
+    @property
+    def status_label(self):
+        return self.get_status_label()
+
