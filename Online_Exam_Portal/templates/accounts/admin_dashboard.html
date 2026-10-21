@@ -28,6 +28,7 @@
         <div class="card">
             <h3>Manage Exams</h3>
             <p>Create, edit, and delete examinations.</p>
+            <a href="{% url 'exams:create' %}">Create an exam</a>
         </div>
         <div class="card">
             <h3>Configure Exam Duration</h3>
@@ -46,6 +47,35 @@
             <p>Release examination results to students.</p>
         </div>
     </div>
+
+    <section style="margin-top: 2rem;">
+        <h2>Configured Exams</h2>
+        {% if exams %}
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding: 0.6rem;">Title</th>
+                        <th style="text-align: left; padding: 0.6rem;">Duration</th>
+                        <th style="text-align: left; padding: 0.6rem;">Availability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam in exams %}
+                        <tr>
+                            <td style="padding: 0.6rem;">{{ exam.title }}</td>
+                            <td style="padding: 0.6rem;">{{ exam.duration_minutes }} minutes</td>
+                            <td style="padding: 0.6rem;">
+                                {{ exam.start_at|date:"M j, Y, g:i A" }} -
+                                {{ exam.end_at|date:"M j, Y, g:i A" }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No exams have been configured yet.</p>
+        {% endif %}
+    </section>
 
     <form method="post" action="{% url 'accounts:logout' %}" style="text-align: center; margin-top: 1rem;">
         {% csrf_token %}
