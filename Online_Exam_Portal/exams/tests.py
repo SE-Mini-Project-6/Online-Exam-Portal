@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from .forms import ExamForm
-from .models import Exam
+from .models import Exam, Question
 
 
 @override_settings(SECURE_SSL_REDIRECT=False)
@@ -350,3 +350,56 @@ class ExamAvailabilityAndWindowEnforcementTests(TestCase):
         self.assertTrue(self.upcoming_exam.is_currently_upcoming)
         self.assertTrue(self.expired_exam.is_currently_expired)
 
+
+
+@override_settings(SECURE_SSL_REDIRECT=False)
+class QuestionNavigationTests(TestCase):
+    def setUp(self):
+        self.student = get_user_model().objects.create_user(username='nav-student', password='StudentPass123!')
+        now = timezone.now()
+        self.exam = Exam.objects.create(
+            title='Nav Exam', duration_minutes=30,
+            start_at=now - timedelta(minutes=10), end_at=now + timedelta(hours=1),
+        )
+        for i in range(1, 6):
+            Question.objects.create(
+                exam=self.exam, text=f'Question text {i}',
+                option_a='a', option_b='b', option_c='c', option_d='d', correct_option='A',
+            )
+        self.url = reverse('exams:take', args=[self.exam.id])
+        self.client.force_login(self.student)
+
+    def go(self, current, goto, answer=None):
+        data = {'current': current, 'goto': goto}
+        if answer:
+            data['answer'] = answer
+        return self.client.post(self.url, data, follow=True)
+
+    def test_first_question_and_direct_navigation(self):
+        self.assertContains(self.client.get(self.url), 'Question text 1')
+        response = self.client.get(self.url, {'question': 4})
+        self.assertContains(response, 'Question 4 of 5')
+        self.assertContains(response, 'Question text 4')
+
+    def test_invalid_question_number_falls_back_safely(self):
+        self.assertContains(self.client.get(self.url, {'question': 'abc'}), 'Question 1 of 5')
+        self.assertContains(self.client.get(self.url, {'question': 99}), 'Question 5 of 5')
+
+    def test_any_order_navigation_preserves_answers(self):
+        self.go(1, 4)
+        self.go(4, 2, answer='C')
+        self.go(2, 5)
+        response = self.go(5, 4)
+        self.assertContains(response, 'Question 4 of 5')
+        self.assertContains(response, 'value="C" checked')
+
+    def test_invalid_option_is_ignored(self):
+        self.go(1, 1, answer='Z')
+        self.assertNotIn('exam_answers', self.client.session)
+
+    def test_answers_are_not_accepted_after_window_closes(self):
+        self.exam.end_at = timezone.now() - timedelta(minutes=1)
+        self.exam.save()
+        response = self.client.post(self.url, {'current': 1, 'goto': 2, 'answer': 'A'})
+        self.assertEqual(response.status_code, 403)
+        self.assertNotIn('exam_answers', self.client.session)

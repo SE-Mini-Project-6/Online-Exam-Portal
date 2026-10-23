@@ -114,6 +114,18 @@
             font-weight: 500;
         }
         .btn-back:hover { color: #0f172a; text-decoration: underline; }
+
+        .q-progress { color: #64748b; font-weight: 600; margin-bottom: 0.75rem; }
+        .q-text { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.25rem; white-space: pre-wrap; }
+        .q-option { display: block; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 0.6rem; cursor: pointer; }
+        .q-option:hover { background: #f8fafc; }
+        .q-nav { display: flex; justify-content: space-between; margin: 1.5rem 0; }
+        .btn-nav { background: #fff; border: 1px solid #10b981; color: #047857; padding: 0.6rem 1.4rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .btn-nav:disabled { opacity: 0.4; cursor: not-allowed; }
+        .q-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .q-grid button { width: 2.6rem; height: 2.6rem; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; font-weight: 600; cursor: pointer; }
+        .q-grid button.answered { background: #d1fae5; border-color: #10b981; }
+        .q-grid button.current { background: #10b981; color: #fff; border-color: #059669; }
     </style>
 </head>
 <body>
@@ -144,19 +156,46 @@
         </div>
 
         <div class="instructions-box" id="exam-instructions">
-            <h3>Examination Rules & Instructions</h3>
+            <h3>Examination Rules &amp; Instructions</h3>
             <ul>
-                <li>The exam duration is <strong>{{ exam.duration_minutes }} minutes</strong>. Your timer begins once you start.</li>
+                <li>The exam duration is <strong>{{ exam.duration_minutes }} minutes</strong>.</li>
                 <li>You can answer questions in any order and navigate between questions.</li>
-                <li>Questions may be flagged with <em>Mark for Review</em> to revisit before final submission.</li>
+                <li>Use the question navigator to jump directly to any question and revisit your answers.</li>
                 <li>Answers must be submitted before the availability window closes at <strong>{{ exam.end_at|date:"g:i A" }}</strong>.</li>
-                <li>Unsubmitted exams will automatically submit upon duration or window timeout.</li>
             </ul>
         </div>
 
+        {% if question %}
+        <form method="post" id="question-form">
+            {% csrf_token %}
+            <input type="hidden" name="current" value="{{ number }}">
+            <div class="q-progress" id="question-progress">Question {{ number }} of {{ total }}</div>
+            <div class="q-text" id="question-text">{{ question.text }}</div>
+            {% for key, label in question.options %}
+            <label class="q-option">
+                <input type="radio" name="answer" value="{{ key }}" {% if selected == key %}checked{% endif %}>
+                {{ key }}. {{ label }}
+            </label>
+            {% endfor %}
+
+            <div class="q-nav">
+                <button type="submit" class="btn-nav" name="goto" value="{{ prev_number|default_if_none:number }}" {% if not prev_number %}disabled{% endif %}>&larr; Previous</button>
+                <button type="submit" class="btn-nav" name="goto" value="{{ next_number|default_if_none:number }}" {% if not next_number %}disabled{% endif %}>Next &rarr;</button>
+            </div>
+
+            <h3>Question Navigator</h3>
+            <div class="q-grid" id="question-grid">
+                {% for item in navigator %}
+                <button type="submit" name="goto" value="{{ item.number }}" class="{% if item.current %}current{% elif item.answered %}answered{% endif %}">{{ item.number }}</button>
+                {% endfor %}
+            </div>
+        </form>
+        {% else %}
+        <p id="no-questions">No questions have been added to this exam yet.</p>
+        {% endif %}
+
         <div class="action-bar">
             <a href="{% url 'accounts:student_dashboard' %}" class="btn-back">&larr; Return to Dashboard</a>
-            <button class="btn-start" id="start-exam-button" onclick="alert('Questions feature will load your attempt session.');">Start Attempt</button>
         </div>
     </div>
 </body>

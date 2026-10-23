@@ -85,3 +85,25 @@ class Exam(models.Model):
     def status_label(self):
         return self.get_status_label()
 
+
+
+class Question(models.Model):
+    OPTION_CHOICES = [('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')]
+
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='questions')
+    text = models.TextField()
+    option_a = models.CharField(max_length=300)
+    option_b = models.CharField(max_length=300)
+    option_c = models.CharField(max_length=300)
+    option_d = models.CharField(max_length=300)
+    correct_option = models.CharField(max_length=1, choices=OPTION_CHOICES)
+
+    class Meta:
+        ordering = ('id',)
+
+    def __str__(self):
+        return self.text[:60]
+
+    def options(self):
+        """Return (key, text) pairs in display order."""
+        return [('A', self.option_a), ('B', self.option_b), ('C', self.option_c), ('D', self.option_d)]
