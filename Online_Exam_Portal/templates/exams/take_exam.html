@@ -178,6 +178,7 @@
             </label>
             {% endfor %}
 
+            <label class="q-option"><input type="checkbox" name="mark_for_review" {% if marked_for_review %}checked{% endif %}> Mark for review</label>
             <div class="q-nav">
                 <button type="submit" class="btn-nav" name="goto" value="{{ prev_number|default_if_none:number }}" {% if not prev_number %}disabled{% endif %}>&larr; Previous</button>
                 <button type="submit" class="btn-nav" name="goto" value="{{ next_number|default_if_none:number }}" {% if not next_number %}disabled{% endif %}>Next &rarr;</button>
@@ -189,6 +190,7 @@
                 <button type="submit" name="goto" value="{{ item.number }}" class="{% if item.current %}current{% elif item.answered %}answered{% endif %}">{{ item.number }}</button>
                 {% endfor %}
             </div>
+            <p><button type="submit" class="btn-start" name="action" value="review_submission">Save and review submission</button></p>
         </form>
         {% else %}
         <p id="no-questions">No questions have been added to this exam yet.</p>

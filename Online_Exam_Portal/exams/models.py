@@ -107,3 +107,67 @@ class Question(models.Model):
     def options(self):
         """Return (key, text) pairs in display order."""
         return [('A', self.option_a), ('B', self.option_b), ('C', self.option_c), ('D', self.option_d)]
+
+    def clean(self):
+        errors = {}
+        if not self.text or not self.text.strip():
+            errors['text'] = 'Question text is required.'
+        for field in ('option_a', 'option_b', 'option_c', 'option_d'):
+            if not getattr(self, field, None) or not getattr(self, field).strip():
+                errors[field] = 'All four options must be non-empty.'
+        if self.correct_option not in ('A', 'B', 'C', 'D'):
+            errors['correct_option'] = 'Select exactly one correct option (A, B, C, or D).'
+        if errors:
+            raise ValidationError(errors)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
+
+
+# Sprint 1: persistent per-student attempts and immutable submitted scores.
+from django.conf import settings
+
+
+class Attempt(models.Model):
+    IN_PROGRESS = 'in_progress'
+    SUBMITTED = 'submitted'
+    STATUS_CHOICES = [(IN_PROGRESS, 'In progress'), (SUBMITTED, 'Submitted')]
+
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='attempts')
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='exam_attempts')
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default=IN_PROGRESS)
+    score = models.PositiveIntegerField(null=True, blank=True)
+    submitted_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['exam', 'student'], name='unique_student_exam_attempt')]
+
+    def __str__(self):
+        return f'{self.student} - {self.exam} ({self.status})'
+
+
+class Answer(models.Model):
+    attempt = models.ForeignKey(Attempt, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='student_answers')
+    selected_option = models.CharField(max_length=1, choices=Question.OPTION_CHOICES, null=True, blank=True)
+    marked_for_review = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['attempt', 'question'], name='unique_attempt_question_answer')]
+
+    def clean(self):
+        errors = {}
+        if self.question_id and self.attempt_id and self.question.exam_id != self.attempt.exam_id:
+            errors['question'] = 'Question does not belong to this attempt exam.'
+        if self.selected_option is not None and self.selected_option not in ('A', 'B', 'C', 'D'):
+            errors['selected_option'] = 'Choose one of A, B, C, or D.'
+        if self.attempt_id and self.attempt.status == Attempt.SUBMITTED:
+            errors['attempt'] = 'Answers cannot be changed after submission.'
+        if errors:
+            raise ValidationError(errors)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)

@@ -1,0 +1,4 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Delete MCQ</title></head><body style="font:16px system-ui;max-width:650px;margin:3rem auto">
+<h1>Delete question?</h1><p>{{ question.text }}</p><p>This cannot be undone.</p>
+<form method="post">{% csrf_token %}<button type="submit">Confirm delete</button> <a href="{% url 'exams:questions' exam.id %}">Cancel</a></form>
+</body></html>
