@@ -153,6 +153,7 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='student_answers')
     selected_option = models.CharField(max_length=1, choices=Question.OPTION_CHOICES, null=True, blank=True)
     marked_for_review = models.BooleanField(default=False)
+    saved_at = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['attempt', 'question'], name='unique_attempt_question_answer')]

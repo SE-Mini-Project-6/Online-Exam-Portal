@@ -147,7 +147,7 @@ def take_exam(request, exam_id):
         for i, q in enumerate(questions, start=1)
     ]
     return render(request, 'exams/take_exam.html', {
-        'exam': exam, 'current_time': now, 'user': request.user,
+        'exam': exam, 'current_time': now, 'user': request.user, 'attempt': attempt,
         'question': question, 'number': number, 'total': total,
         'selected': selected_answer.selected_option if selected_answer else None,
         'marked_for_review': selected_answer.marked_for_review if selected_answer else False,
