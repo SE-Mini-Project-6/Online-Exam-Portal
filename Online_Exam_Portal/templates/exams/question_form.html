@@ -1,8 +1,17 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><title>{% if editing %}Edit{% else %}Add{% endif %} MCQ</title>
-<style>body{font:16px system-ui;margin:3rem auto;max-width:650px;color:#1e293b;padding:0 1rem}label{display:block;margin-top:1rem;font-weight:600}textarea,input,select{padding:.5rem;width:100%;box-sizing:border-box}button{margin-top:1.5rem;background:#059669;color:#fff;border:0;padding:.8rem 1.3rem;cursor:pointer}.errorlist{color:#b91c1c}</style>
-</head><body>
-<h1>{% if editing %}Edit{% else %}Add{% endif %} MCQ — {{ exam.title }}</h1>
-<p>Exactly four non-empty choices and one correct answer are required.</p>
-<form method="post">{% csrf_token %}{{ form.non_field_errors }}{% for field in form %}<label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}{% endfor %}<button type="submit">Save question</button></form>
-<p><a href="{% url 'exams:questions' exam.id %}">Back to questions</a></p></body></html>
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}Add{% endif %} MCQ{% endblock %}
+{% block content %}
+<div class="panel form-card">
+    <h1 class="page-title">{% if editing %}Edit{% else %}Add{% endif %} MCQ &mdash; {{ exam.title }}</h1>
+    <p class="help">Exactly four non-empty choices and one correct answer are required.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}
+        {% endfor %}
+        <button type="submit" class="btn-primary">Save question</button>
+    </form>
+    <a class="back-link" href="{% url 'exams:questions' exam.id %}">&larr; Back to questions</a>
+</div>
+{% endblock %}

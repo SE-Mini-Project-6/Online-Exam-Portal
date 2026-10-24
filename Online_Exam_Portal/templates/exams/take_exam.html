@@ -1,35 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ exam.title }} - Examination Attempt</title>
+{% extends "base.html" %}
+{% block title %}{{ exam.title }}{% endblock %}
+{% block extra_head %}
     <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #f8fafc;
-            color: #1e293b;
-        }
-        .navbar {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 1.25rem 2rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        .navbar h1 { margin: 0; font-size: 1.4rem; font-weight: 600; }
-        .navbar a { color: white; text-decoration: none; font-weight: 500; }
-        .navbar a:hover { text-decoration: underline; }
-
         .exam-container {
             background: white;
             padding: 2.5rem;
@@ -129,13 +101,8 @@
         .save-status { min-height: 1.4rem; font-size: 0.9rem; color: #64748b; margin-bottom: 0.5rem; }
         .save-status.error { color: #b91c1c; }
     </style>
-</head>
-<body>
-    <div class="navbar" id="take-exam-navbar">
-        <h1>Online Exam Portal</h1>
-        <a href="{% url 'accounts:student_dashboard' %}">Dashboard</a>
-    </div>
-
+{% endblock %}
+{% block content %}
     <div class="exam-container" id="exam-attempt-container">
         <div class="exam-header">
             <h2 id="exam-title-heading">{{ exam.title }}</h2>
@@ -203,6 +170,8 @@
             <a href="{% url 'accounts:student_dashboard' %}" class="btn-back">&larr; Return to Dashboard</a>
         </div>
     </div>
+{% endblock %}
+{% block extra_js %}
     <script>
     (function () {
         var form = document.getElementById('question-form');
@@ -263,5 +232,4 @@
         }
     })();
     </script>
-</body>
-</html>
+{% endblock %}

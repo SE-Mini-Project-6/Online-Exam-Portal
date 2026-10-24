@@ -1,6 +1,11 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Exam submitted</title>
-<style>body{font:16px system-ui;max-width:650px;margin:3rem auto;padding:0 1rem}</style>
-</head><body><h1>Exam submitted successfully</h1>
-<p>{{ exam.title }}</p><p>Your answers are locked. Your score has been saved securely.</p>
-<p>Submitted: {{ attempt.submitted_at }}</p><p><a href="{% url 'accounts:student_dashboard' %}">Return to dashboard</a></p>
-</body></html>
+{% extends "base.html" %}
+{% block title %}Exam submitted{% endblock %}
+{% block content %}
+<div class="panel form-card">
+    <h1 class="page-title">Exam submitted successfully</h1>
+    <p>{{ exam.title }}</p>
+    <p>Your answers are locked. Your score has been saved securely.</p>
+    <p>Submitted: {{ attempt.submitted_at }}</p>
+    <a class="back-link" href="{% url 'accounts:student_dashboard' %}">Return to dashboard</a>
+</div>
+{% endblock %}
