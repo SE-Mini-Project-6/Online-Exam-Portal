@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from .forms import ExamForm
-from .models import Exam
+from .models import Exam, Question
 
 
 @login_required
@@ -95,9 +95,50 @@ def take_exam(request, exam_id):
             'status': 'available',
         })
 
+    questions = list(exam.questions.all())
+    total = len(questions)
+
+    # Answers are kept in the session only (Sprint 1 design deviation, see docs).
+    all_answers = request.session.get('exam_answers', {})
+    answers = all_answers.get(str(exam.id), {})
+
+    if request.method == 'POST' and total:
+        current = _question_number(request.POST.get('current'), total)
+        selected = request.POST.get('answer')
+        if selected in dict(Question.OPTION_CHOICES):
+            answers[str(questions[current - 1].id)] = selected
+            all_answers[str(exam.id)] = answers
+            request.session['exam_answers'] = all_answers
+        target = _question_number(request.POST.get('goto'), total, default=current)
+        return redirect(f"{request.path}?question={target}")
+
+    number = _question_number(request.GET.get('question'), total)
+    question = questions[number - 1] if total else None
+
+    navigator = [
+        {'number': i, 'answered': str(q.id) in answers, 'current': i == number}
+        for i, q in enumerate(questions, start=1)
+    ]
+
     return render(request, 'exams/take_exam.html', {
         'exam': exam,
         'current_time': now,
         'user': request.user,
+        'question': question,
+        'number': number,
+        'total': total,
+        'selected': answers.get(str(question.id)) if question else None,
+        'navigator': navigator,
+        'prev_number': number - 1 if number > 1 else None,
+        'next_number': number + 1 if number < total else None,
     })
+
+
+def _question_number(value, total, default=1):
+    """Parse a 1-based question number, clamped to the valid range."""
+    try:
+        number = int(value)
+    except (TypeError, ValueError):
+        number = default
+    return max(1, min(number, total)) if total else 1
 
