@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Exam
+from .models import Exam, Question
 
 
 class ExamForm(forms.ModelForm):
@@ -37,3 +37,10 @@ class ExamForm(forms.ModelForm):
                 if duration_minutes > window_minutes:
                     self.add_error('duration_minutes', 'Exam duration cannot exceed the availability window.')
         return cleaned_data
+
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ('text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_option')
+        widgets = {'text': forms.Textarea(attrs={'rows': 3})}

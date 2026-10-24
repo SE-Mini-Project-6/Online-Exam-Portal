@@ -57,6 +57,7 @@
                         <th style="text-align: left; padding: 0.6rem;">Title</th>
                         <th style="text-align: left; padding: 0.6rem;">Duration</th>
                         <th style="text-align: left; padding: 0.6rem;">Availability</th>
+                        <th style="text-align: left; padding: 0.6rem;">MCQs</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,6 +69,7 @@
                                 {{ exam.start_at|date:"M j, Y, g:i A" }} -
                                 {{ exam.end_at|date:"M j, Y, g:i A" }}
                             </td>
+                            <td style="padding: 0.6rem;"><a href="{% url 'exams:questions' exam.id %}">Manage questions</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

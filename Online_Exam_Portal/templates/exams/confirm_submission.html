@@ -1,0 +1,8 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Confirm exam submission</title>
+<style>body{font:16px system-ui;max-width:650px;margin:3rem auto;padding:0 1rem}button{background:#059669;color:#fff;padding:.8rem 1.5rem;border:0;border-radius:6px;cursor:pointer}</style>
+</head><body><h1>Confirm exam submission</h1>
+<p>Exam: <strong>{{ exam.title }}</strong></p><p>You have answered <strong>{{ answered }} of {{ total }}</strong> questions.</p>
+<p><strong>After submission, you cannot edit answers or submit again.</strong></p>
+<form method="post">{% csrf_token %}<input type="hidden" name="confirmed" value="yes"><button type="submit">Confirm final submission</button></form>
+<p><a href="{% url 'exams:take' exam.id %}">Return to exam and continue editing</a></p>
+</body></html>
