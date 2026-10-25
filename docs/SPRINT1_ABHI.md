@@ -50,3 +50,9 @@ Dedicated tests: `python manage.py test exams.test_sprint1_abhi`.
 - The grading score is calculated and stored at submission, but **result release to students** is outside this story. Students see confirmation, not an unreleased grade.
 - **Automatic timer/timeout submission belongs to Sprint 2 issue #22** and is intentionally not implemented here.
 - Changes to existing SRS/SAD/Test Plan documents must be noted for the team's final demo if they conflict with this persistent-attempt design.
+
+### Test evidence
+
+- `python manage.py test`: 43 tests passed.
+- `python manage.py test exams.test_sprint1_criteria`: 2 exam admin edit/delete tests passed.
+- GitHub Actions runs the Django test suite on pushes and pull requests.
