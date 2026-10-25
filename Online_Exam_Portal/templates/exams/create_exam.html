@@ -1,20 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Exam - Exam Portal</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0 auto; max-width: 720px; padding: 2rem; }
-        label { display: block; font-weight: bold; margin-top: 1rem; }
-        input { margin-top: 0.4rem; padding: 0.6rem; width: 100%; }
-        button { background: #0056b3; border: 0; color: white; cursor: pointer; margin-top: 1.5rem; padding: 0.8rem 1.5rem; }
-        .errors { color: #a00; margin: 0.4rem 0; }
-        .help { color: #555; }
-    </style>
-</head>
-<body>
-    <h1>Create exam</h1>
+{% extends "base.html" %}
+{% block title %}Create Exam{% endblock %}
+{% block content %}
+<div class="panel form-card">
+    <h1 class="page-title">Create exam</h1>
     <p class="help">Set the availability window and the time allowed for the attempt.</p>
     <form method="post">
         {% csrf_token %}
@@ -26,8 +14,8 @@
                 <div class="errors">{{ error }}</div>
             {% endfor %}
         {% endfor %}
-        <button type="submit">Save exam</button>
+        <button type="submit" class="btn-primary">Save exam</button>
     </form>
-    <p><a href="{% url 'accounts:admin_dashboard' %}">Back to dashboard</a></p>
-</body>
-</html>
+    <a class="back-link" href="{% url 'accounts:admin_dashboard' %}">&larr; Back to dashboard</a>
+</div>
+{% endblock %}

@@ -8,6 +8,10 @@ from django.utils import timezone
 from exams.models import Exam
 
 
+def landing_url_name(user):
+    """Name of the landing page for a signed-in user's role."""
+    return 'accounts:admin_dashboard' if user.is_staff else 'accounts:student_dashboard'
+
 
 def admin_login(request):
     """
@@ -18,6 +22,9 @@ def admin_login(request):
     - On success, logs in and redirects based on user role
     - On failure, re-renders login form with error message
     """
+    if request.method == 'GET' and request.user.is_authenticated:
+        return redirect(landing_url_name(request.user))
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -41,7 +48,7 @@ def admin_login(request):
             # Invalid credentials rejected - generic error to avoid username enumeration
             messages.error(request, 'Invalid username or password.')
 
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html', {'role': 'admin'})
 
 
 def student_login(request):
@@ -51,6 +58,9 @@ def student_login(request):
     - Shares authentication logic with admin_login
     - Role-based redirection after successful login
     """
+    if request.method == 'GET' and request.user.is_authenticated:
+        return redirect(landing_url_name(request.user))
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -70,7 +80,7 @@ def student_login(request):
         else:
             messages.error(request, 'Invalid username or password.')
 
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html', {'role': 'student'})
 
 
 @login_required
@@ -91,6 +101,8 @@ def admin_dashboard(request):
 def student_dashboard(request):
 
     """Student dashboard - accessible to all authenticated students."""
+    if request.user.is_staff:
+        return redirect('accounts:admin_dashboard')
     exams = Exam.objects.all().order_by('start_at')
     now = timezone.now()
     return render(request, 'accounts/student_dashboard.html', {

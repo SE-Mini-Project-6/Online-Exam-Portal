@@ -1,0 +1,142 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Online Exam Portal{% endblock %} - Online Exam Portal</title>
+    <style>
+        :root {
+            --accent: #059669; --accent-dark: #047857; --accent-soft: #d1fae5;
+            --bg: #f8fafc; --text: #1e293b; --muted: #64748b; --border: #e2e8f0;
+            --danger: #dc2626;
+        }
+        body.role-admin { --accent: #1d4ed8; --accent-dark: #1e3a8a; --accent-soft: #dbeafe; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0 auto; padding: 1.25rem; max-width: 1200px;
+            background-color: var(--bg); color: var(--text); line-height: 1.5;
+        }
+        a { color: var(--accent-dark); }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: #fff; padding: 0.9rem 1.5rem; border-radius: 8px; margin-bottom: 1.75rem;
+            display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .navbar a { color: #fff; text-decoration: none; font-weight: 500; }
+        .navbar a:hover { text-decoration: underline; }
+        .brand { font-size: 1.3rem; font-weight: 600; }
+        .role-tag { background: rgba(255,255,255,0.22); padding: 0.15rem 0.65rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nav-links { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin-right: auto; }
+        .nav-links a { padding: 0.25rem 0; border-bottom: 2px solid transparent; }
+        .nav-links a.active { border-bottom-color: #fff; }
+        .nav-user { display: flex; align-items: center; gap: 0.75rem; margin-left: auto; }
+        .nav-links + .nav-user { margin-left: 0; }
+        .user-badge { background: rgba(255,255,255,0.2); padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.9rem; }
+        .logout-form { margin: 0; }
+        .logout-btn { padding: 0.4rem 1rem; background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.6); border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 500; }
+        .logout-btn:hover { background: rgba(255,255,255,0.3); }
+
+        /* Messages */
+        .messages { list-style: none; margin: 0 0 1.25rem; padding: 0; }
+        .message { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.5rem; border: 1px solid var(--border); background: #fff; }
+        .message.success { background: #d1fae5; border-color: #a7f3d0; color: #065f46; }
+        .message.info { background: #e0f2fe; border-color: #bae6fd; color: #075985; }
+        .message.error { background: #fee2e2; border-color: #fecaca; color: #991b1b; }
+
+        /* Cards, sections, tables */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+        .card { background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); border: 1px solid var(--border); }
+        .card h3 { margin-top: 0; color: var(--accent); font-size: 1.15rem; }
+        .card p { margin: 0 0 0.5rem; color: var(--muted); font-size: 0.9rem; }
+        a.card { text-decoration: none; color: inherit; display: block; }
+        a.card:hover { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .panel { background: #fff; padding: 1.75rem; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.07); margin-bottom: 2rem; }
+        .exam-section { background: #fff; padding: 1.75rem; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.07); margin-bottom: 2rem; }
+        .section-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+        .section-header h2 { margin: 0; font-size: 1.4rem; color: #0f172a; }
+        h1.page-title { font-size: 1.6rem; margin: 0 0 1rem; color: #0f172a; }
+        .table-wrap { overflow-x: auto; }
+        .exam-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+        .exam-table th { text-align: left; padding: 0.85rem 1rem; background-color: #f1f5f9; color: #475569; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+        .exam-table td { padding: 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; vertical-align: middle; }
+        .exam-table tr:hover { background-color: var(--bg); }
+        .exam-title { font-weight: 600; color: #0f172a; }
+        .exam-duration { color: var(--muted); }
+        .exam-window { color: #334155; font-size: 0.9rem; }
+        .empty-state { padding: 2.5rem; text-align: center; color: var(--muted); }
+        .badge { display: inline-block; padding: 0.35rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; text-align: center; }
+        .badge-available { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .badge-upcoming { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+        .badge-expired { background-color: #f1f5f9; color: var(--muted); border: 1px solid var(--border); }
+
+        /* Buttons and forms */
+        .btn-action, .btn-primary { display: inline-block; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; font-weight: 500; text-decoration: none; cursor: pointer; border: none; }
+        .btn-take, .btn-primary { background-color: var(--accent); color: #fff; }
+        .btn-take:hover, .btn-primary:hover { background-color: var(--accent-dark); }
+        .btn-disabled { background-color: var(--border); color: #94a3b8; cursor: not-allowed; }
+        .back-link { display: inline-block; margin-top: 1.25rem; font-weight: 500; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .form-card { max-width: 720px; margin: 0 auto 2rem; }
+        .form-card label { display: block; font-weight: 600; margin-top: 1rem; }
+        .form-card input[type=text], .form-card input[type=password], .form-card input[type=number], .form-card input[type=datetime-local], .form-card textarea, .form-card select { margin-top: 0.4rem; padding: 0.6rem; width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; font: inherit; }
+        .form-card button[type=submit] { margin-top: 1.5rem; }
+        .errorlist, .errors { color: #b91c1c; list-style: none; padding: 0; margin: 0.4rem 0; }
+        .help { color: var(--muted); }
+        .center-card { max-width: 420px; margin: 3rem auto; text-align: center; }
+        .center-card .form-card { text-align: left; }
+        .role-buttons a { display: block; padding: 0.9rem; margin: 0.9rem 0; border-radius: 6px; color: #fff; text-decoration: none; font-weight: 600; }
+        .role-buttons .admin-btn { background: #1d4ed8; }
+        .role-buttons .student-btn { background: #059669; }
+
+        @media (max-width: 640px) {
+            body { padding: 0.75rem; }
+            .navbar { padding: 0.75rem 1rem; }
+            .nav-user { margin-left: 0; width: 100%; justify-content: space-between; }
+            .exam-section, .panel { padding: 1rem; }
+            .exam-table th, .exam-table td { padding: 0.6rem; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="role-{% if user.is_authenticated and user.is_staff %}admin{% else %}student{% endif %}">
+{% with current=request.resolver_match.url_name %}
+    <header class="navbar" id="site-navbar">
+        <a class="brand" href="{% if user.is_authenticated %}{% if user.is_staff %}{% url 'accounts:admin_dashboard' %}{% else %}{% url 'accounts:student_dashboard' %}{% endif %}{% else %}{% url 'core:home' %}{% endif %}">Online Exam Portal</a>
+        {% if user.is_authenticated %}
+            <span class="role-tag" id="role-tag">{% if user.is_staff %}Admin{% else %}Student{% endif %}</span>
+            <nav class="nav-links" aria-label="Main navigation">
+                {% if user.is_staff %}
+                    <a href="{% url 'accounts:admin_dashboard' %}" class="{% if current == 'admin_dashboard' %}active{% endif %}">Dashboard</a>
+                    <a href="{% url 'exams:create' %}" class="{% if current == 'create' %}active{% endif %}">Create Exam</a>
+                {% else %}
+                    <a href="{% url 'accounts:student_dashboard' %}" class="{% if current == 'student_dashboard' %}active{% endif %}">Dashboard</a>
+                    <a href="{% url 'exams:list' %}" class="{% if current == 'list' or current == 'available' %}active{% endif %}">Available Exams</a>
+                {% endif %}
+            </nav>
+            <div class="nav-user">
+                <span class="user-badge" id="nav-username">{{ user.username }}</span>
+                <form method="post" action="{% url 'accounts:logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn" id="logout-button">Logout</button>
+                </form>
+            </div>
+        {% endif %}
+    </header>
+{% endwith %}
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}<li class="message {{ message.tags }}">{{ message }}</li>{% endfor %}
+        </ul>
+    {% endif %}
+
+    <main>
+{% block content %}{% endblock %}
+    </main>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
