@@ -153,10 +153,30 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='student_answers')
     selected_option = models.CharField(max_length=1, choices=Question.OPTION_CHOICES, null=True, blank=True)
     marked_for_review = models.BooleanField(default=False)
+    visited = models.BooleanField(default=False)
     saved_at = models.DateTimeField(auto_now=True, null=True)
+
+    # The five question-grid states (design spec 4.6) and their display labels.
+    STATE_LABELS = {
+        'NOT_VISITED': 'Not Visited',
+        'NOT_ANSWERED': 'Not Answered',
+        'ANSWERED': 'Answered',
+        'MARKED_FOR_REVIEW': 'Marked for Review',
+        'ANSWERED_MARKED_FOR_REVIEW': 'Answered & Marked for Review',
+    }
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['attempt', 'question'], name='unique_attempt_question_answer')]
+
+    @property
+    def display_state(self):
+        """Exactly one grid state per question; the review flag is independent of the answer."""
+        answered = self.selected_option is not None
+        if self.marked_for_review:
+            return 'ANSWERED_MARKED_FOR_REVIEW' if answered else 'MARKED_FOR_REVIEW'
+        if answered:
+            return 'ANSWERED'
+        return 'NOT_ANSWERED' if self.visited else 'NOT_VISITED'
 
     def clean(self):
         errors = {}

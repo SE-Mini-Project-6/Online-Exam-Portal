@@ -34,7 +34,7 @@ class Sprint1AbhiTests(TestCase):
         self.assertEqual(self.client.get(self.take_url).status_code, 200)
         attempt = Attempt.objects.get(student=self.student, exam=self.exam)
         self.assertEqual(attempt.status, Attempt.IN_PROGRESS)
-        self.assertEqual(attempt.answers.count(), 0)
+        self.assertEqual(attempt.answers.exclude(selected_option__isnull=True).count(), 0)
 
     def test_question_exactly_four_choices_and_one_correct(self):
         self.assertEqual(len(self.q1.options()), 4)
@@ -89,7 +89,7 @@ class Sprint1AbhiTests(TestCase):
         self.client.force_login(self.other)
         response = self.client.get(self.take_url)
         self.assertContains(response, '2+2?')
-        self.assertEqual(Attempt.objects.get(student=self.other, exam=self.exam).answers.count(), 0)
+        self.assertEqual(Attempt.objects.get(student=self.other, exam=self.exam).answers.exclude(selected_option__isnull=True).count(), 0)
         self.assertEqual(Attempt.objects.get(student=self.student, exam=self.exam).answers.count(), 1)
 
     def test_confirm_page_and_submission_lock(self):
