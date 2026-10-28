@@ -95,9 +95,18 @@
         .btn-nav { background: #fff; border: 1px solid #10b981; color: #047857; padding: 0.6rem 1.4rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
         .btn-nav:disabled { opacity: 0.4; cursor: not-allowed; }
         .q-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .q-grid button { width: 2.6rem; height: 2.6rem; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; font-weight: 600; cursor: pointer; }
-        .q-grid button.answered { background: #d1fae5; border-color: #10b981; }
-        .q-grid button.current { background: #10b981; color: #fff; border-color: #059669; }
+        .q-grid button { position: relative; width: 2.6rem; height: 2.6rem; border-radius: 6px; border: 2px solid #cbd5e1; background: #fff; color: #475569; font-weight: 600; cursor: pointer; }
+        .q-grid button.current { outline: 3px solid #0f172a; outline-offset: 2px; }
+        .q-grid button[data-state="NOT_VISITED"], .q-legend .swatch[data-state="NOT_VISITED"] { background: #fff; border-color: #cbd5e1; color: #475569; }
+        .q-grid button[data-state="NOT_ANSWERED"], .q-legend .swatch[data-state="NOT_ANSWERED"] { background: #fee2e2; border-color: #f87171; color: #991b1b; }
+        .q-grid button[data-state="ANSWERED"], .q-legend .swatch[data-state="ANSWERED"] { background: #d1fae5; border-color: #10b981; color: #065f46; }
+        .q-grid button[data-state="MARKED_FOR_REVIEW"], .q-legend .swatch[data-state="MARKED_FOR_REVIEW"] { background: #ede9fe; border-color: #8b5cf6; color: #5b21b6; }
+        .q-grid button[data-state="ANSWERED_MARKED_FOR_REVIEW"], .q-legend .swatch[data-state="ANSWERED_MARKED_FOR_REVIEW"] { background: #d1fae5; border-color: #8b5cf6; color: #065f46; }
+        .q-grid button[data-state*="MARKED"]::after { content: "\2691"; position: absolute; top: -9px; right: -6px; font-size: 0.85rem; color: #7c3aed; }
+        .q-legend { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; padding: 0; margin: 1.25rem 0 0; font-size: 0.85rem; color: #475569; }
+        .q-legend li { display: flex; align-items: center; gap: 0.4rem; }
+        .q-legend .swatch { display: inline-block; width: 1.1rem; height: 1.1rem; border-radius: 4px; border: 2px solid #cbd5e1; position: relative; }
+        .q-legend .ring { outline: 3px solid #0f172a; outline-offset: 1px; background: #fff; }
         .save-status { min-height: 1.4rem; font-size: 0.9rem; color: #64748b; margin-bottom: 0.5rem; }
         .save-status.error { color: #b91c1c; }
     </style>
@@ -157,9 +166,16 @@
             <h3>Question Navigator</h3>
             <div class="q-grid" id="question-grid">
                 {% for item in navigator %}
-                <button type="submit" name="goto" value="{{ item.number }}" class="{% if item.current %}current{% elif item.answered %}answered{% endif %}">{{ item.number }}</button>
+                <button type="submit" name="goto" value="{{ item.number }}" class="{% if item.current %}current{% endif %}" data-number="{{ item.number }}" data-state="{{ item.state }}" title="Question {{ item.number }}: {{ item.label }}" aria-label="Question {{ item.number }}: {{ item.label }}{% if item.current %} (current question){% endif %}">{{ item.number }}</button>
                 {% endfor %}
             </div>
+            <ul class="q-legend" id="grid-legend">
+                {% for state, label in state_labels.items %}
+                <li><span class="swatch" data-state="{{ state }}"></span>{{ label }}</li>
+                {% endfor %}
+                <li><span class="swatch ring"></span>Current question</li>
+            </ul>
+            {{ state_labels|json_script:"state-labels" }}
             <p><button type="submit" class="btn-start" name="action" value="review_submission">Save and review submission</button></p>
         </form>
         {% else %}
@@ -180,6 +196,19 @@
         var csrf = form.querySelector('input[name=csrfmiddlewaretoken]').value;
         var latest = 0;
 
+        var stateLabels = JSON.parse(document.getElementById('state-labels').textContent);
+        var currentNumber = form.querySelector('input[name=current]').value;
+
+        // Reflect the saved state of this question in the grid straight away.
+        function updateGrid(data) {
+            var button = document.querySelector('#question-grid button[data-number="' + currentNumber + '"]');
+            if (!button || !data.displayState) { return; }
+            button.dataset.state = data.displayState;
+            var text = 'Question ' + currentNumber + ': ' + stateLabels[data.displayState];
+            button.title = text;
+            button.setAttribute('aria-label', text + ' (current question)');
+        }
+
         function setStatus(text, isError) {
             status.textContent = text;
             status.className = 'save-status' + (isError ? ' error' : '');
@@ -199,7 +228,7 @@
                 if (response.ok) {
                     setStatus('Saved (' + ms + ' ms)', false);
                     console.log('autosave latency: ' + ms + ' ms');
-                    return;
+                    return response.json().then(updateGrid);
                 }
                 return response.json().then(function (data) {
                     setStatus('Not saved: ' + (data.error ? data.error.message : response.status), true);

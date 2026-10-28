@@ -130,6 +130,7 @@ def take_exam(request, exam_id):
             answer, _ = Answer.objects.get_or_create(attempt=attempt, question=question)
             answer.selected_option = selected
             answer.marked_for_review = review
+            answer.visited = True
             answer.save()
             # Preserve legacy session behavior for teammates' Sprint-1 navigation tests.
             all_answers = request.session.get('exam_answers', {})
@@ -138,11 +139,11 @@ def take_exam(request, exam_id):
             all_answers[str(exam.pk)] = answers
             request.session['exam_answers'] = all_answers
         elif selected is None:
-            # A review flag can be changed on an already-saved answer.
-            existing = Answer.objects.filter(attempt=attempt, question=question).first()
-            if existing is not None:
-                existing.marked_for_review = review
-                existing.save()
+            # The review flag is independent of the answer, so it can be set on an unanswered question.
+            Answer.objects.update_or_create(
+                attempt=attempt, question=question,
+                defaults={'marked_for_review': review, 'visited': True},
+            )
         # Invalid option values are ignored rather than stored.
         if request.POST.get('action') == 'review_submission':
             return redirect('exams:submit', exam_id=exam.pk)
@@ -153,17 +154,23 @@ def take_exam(request, exam_id):
     number = _question_number(request.GET.get('question'), total)
     question = questions[number - 1] if total else None
     selected_answer = saved.get(question.pk) if question else None
-    navigator = [
-        {'number': i, 'answered': bool(saved.get(q.pk) and saved[q.pk].selected_option),
-         'current': i == number}
-        for i, q in enumerate(questions, start=1)
-    ]
+    if question is not None and (selected_answer is None or not selected_answer.visited):
+        # Opening a question marks it visited (Not Visited -> Not Answered) and persists it.
+        selected_answer, _ = Answer.objects.update_or_create(
+            attempt=attempt, question=question, defaults={'visited': True},
+        )
+        saved[question.pk] = selected_answer
+    navigator = []
+    for i, q in enumerate(questions, start=1):
+        state = saved[q.pk].display_state if q.pk in saved else 'NOT_VISITED'
+        navigator.append({'number': i, 'state': state, 'label': Answer.STATE_LABELS[state], 'current': i == number})
     return render(request, 'exams/take_exam.html', {
         'exam': exam, 'current_time': now, 'user': request.user, 'attempt': attempt,
         'question': question, 'number': number, 'total': total,
         'selected': selected_answer.selected_option if selected_answer else None,
         'marked_for_review': selected_answer.marked_for_review if selected_answer else False,
         'navigator': navigator,
+        'state_labels': Answer.STATE_LABELS,
         'prev_number': number - 1 if number > 1 else None,
         'next_number': number + 1 if number < total else None,
     })

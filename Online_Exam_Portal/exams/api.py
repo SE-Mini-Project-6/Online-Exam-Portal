@@ -19,14 +19,6 @@ def _error(status, code, message):
     )
 
 
-def display_state(answer):
-    """Navigator state for one question (design spec 4.6); a saved row means it was visited."""
-    answered = answer.selected_option is not None
-    if answer.marked_for_review:
-        return 'ANSWERED_MARKED_FOR_REVIEW' if answered else 'MARKED_FOR_REVIEW'
-    return 'ANSWERED' if answered else 'NOT_ANSWERED'
-
-
 def _parse_payload(request):
     """Return (fields, error_message). fields maps model field names to validated values."""
     try:
@@ -77,6 +69,7 @@ def answer_detail(request, attempt_id, question_id):
     fields, problem = _parse_payload(request)
     if problem:
         return _error(400, 'VALIDATION_ERROR', problem)
+    fields['visited'] = True  # saving anything for a question means the student has been to it
 
     try:
         with transaction.atomic():
@@ -96,7 +89,7 @@ def answer_detail(request, attempt_id, question_id):
         'questionId': question.id,
         'selectedOption': answer.selected_option,
         'markedForReview': answer.marked_for_review,
-        'displayState': display_state(answer),
+        'displayState': answer.display_state,
         'savedAt': answer.saved_at.isoformat() if answer.saved_at else None,
     })
     response['Server-Timing'] = f'save;dur={(time.perf_counter() - started) * 1000:.1f}'
