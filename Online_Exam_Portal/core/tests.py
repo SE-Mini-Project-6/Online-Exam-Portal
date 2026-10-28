@@ -2,10 +2,11 @@
 Core tests for the Online Exam Portal.
 Tests cover homepage and role selection functionality.
 """
-from django.test import TestCase, SimpleTestCase
+from django.test import TestCase, SimpleTestCase, override_settings
 from django.urls import reverse, resolve
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)  # plain-HTTP test client; HTTPS is covered in accounts/test_security.py
 class HomeTests(SimpleTestCase):
     """Test suite for homepage and role selection."""
 
@@ -26,6 +27,7 @@ class HomeTests(SimpleTestCase):
         self.assertContains(response, 'Student Login')
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)
 class URLConfigurationTests(TestCase):
     """Test URL configuration is correct."""
 

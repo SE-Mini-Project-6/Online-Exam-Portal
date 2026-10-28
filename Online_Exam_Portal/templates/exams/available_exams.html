@@ -42,7 +42,9 @@
                                 {% endif %}
                             </td>
                             <td style="text-align: center;">
-                                {% if exam.is_currently_available %}
+                                {% if user.is_staff %}
+                                    <span class="badge" id="take-btn-{{ exam.id }}">Students only</span>
+                                {% elif exam.is_currently_available %}
                                     <a href="{% url 'exams:take' exam.id %}" class="btn-action btn-take" id="take-btn-{{ exam.id }}">Start Exam</a>
                                 {% elif exam.is_currently_upcoming %}
                                     <button disabled class="btn-action btn-disabled" id="take-btn-{{ exam.id }}">Upcoming</button>

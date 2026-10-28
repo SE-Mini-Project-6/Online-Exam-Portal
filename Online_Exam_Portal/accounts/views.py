@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
@@ -114,9 +114,14 @@ def student_dashboard(request):
 
 
 
-@csrf_exempt
+@require_POST
 def logout_view(request):
-    """Logout view that clears the session."""
+    """
+    Logout view that clears the session.
+
+    POST-only and CSRF-protected (no csrf_exempt): a GET or cross-site request must not
+    be able to sign a user out (SEC-REQ-01/02). The navbar logout control is a POST form.
+    """
     from django.contrib.auth import logout
     logout(request)
     messages.info(request, 'You have been successfully logged out.')
