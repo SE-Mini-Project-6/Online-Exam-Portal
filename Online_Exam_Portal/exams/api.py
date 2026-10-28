@@ -8,6 +8,7 @@ from django.db import transaction
 from django.http import JsonResponse
 
 from .models import Answer, Attempt, Question
+from .timing import sync_attempt
 
 OPTIONS = ('A', 'B', 'C', 'D')
 
@@ -63,9 +64,6 @@ def answer_detail(request, attempt_id, question_id):
         return _error(404, 'QUESTION_NOT_FOUND', 'Question not found in this exam.')
     if attempt.status == Attempt.SUBMITTED:
         return _error(409, 'ATTEMPT_ALREADY_FINALIZED', 'This exam attempt has already been finalized.')
-    if not attempt.exam.is_available():
-        return _error(403, 'EXAM_NOT_AVAILABLE', 'This exam is not currently available.')
-
     fields, problem = _parse_payload(request)
     if problem:
         return _error(400, 'VALIDATION_ERROR', problem)
@@ -73,8 +71,10 @@ def answer_detail(request, attempt_id, question_id):
 
     try:
         with transaction.atomic():
-            # Lock the attempt so a save cannot slip in while a submission finalizes it.
-            attempt = Attempt.objects.select_for_update().get(pk=attempt.pk)
+            # Lock is retained through the answer write; no late PATCH can slip in.
+            attempt, _ = sync_attempt(attempt.pk)
+            if not attempt.exam.is_available():
+                return _error(403, 'EXAM_NOT_AVAILABLE', 'This exam is not currently available.')
             if attempt.status == Attempt.SUBMITTED:
                 return _error(409, 'ATTEMPT_ALREADY_FINALIZED', 'This exam attempt has already been finalized.')
             answer, created = Answer.objects.get_or_create(attempt=attempt, question=question, defaults=fields)

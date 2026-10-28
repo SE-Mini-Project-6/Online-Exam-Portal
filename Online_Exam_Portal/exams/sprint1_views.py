@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from .forms import QuestionForm
 from .models import Answer, Attempt, Exam, Question
+from .timing import sync_attempt
 
 
 def _staff_only(request):
@@ -81,6 +82,7 @@ def _question_number(value, total, default=1):
     return max(1, min(number, total)) if total else 1
 
 
+@transaction.atomic
 @login_required
 def take_exam(request, exam_id):
     """Persistent answers and review flags, while preserving original navigation and JSON API."""
@@ -89,6 +91,8 @@ def take_exam(request, exam_id):
     if request.user.is_staff and not _wants_json(request):
         return _students_only_response()
     attempt = Attempt.objects.filter(exam=exam, student=request.user).first()
+    if attempt and (exam.is_available() or exam.is_expired()):
+        attempt, _ = sync_attempt(attempt.pk)
     if attempt and attempt.status == Attempt.SUBMITTED:
         if request.method != 'GET':
             return HttpResponse('This attempt has already been submitted.', status=409)
@@ -119,6 +123,11 @@ def take_exam(request, exam_id):
 
     # One attempt per student per exam. Navigating reloads persisted answers, not session state.
     attempt, _ = Attempt.objects.get_or_create(exam=exam, student=request.user)
+    attempt, _ = sync_attempt(attempt.pk)
+    if attempt.status == Attempt.SUBMITTED:
+        if request.method == "POST":
+            return HttpResponse("This attempt has already been submitted.", status=409)
+        return render(request, "exams/submitted.html", {"exam": exam, "attempt": attempt})
     questions = list(exam.questions.all())
     total = len(questions)
     if request.method == 'POST' and total:
@@ -166,6 +175,7 @@ def take_exam(request, exam_id):
         navigator.append({'number': i, 'state': state, 'label': Answer.STATE_LABELS[state], 'current': i == number})
     return render(request, 'exams/take_exam.html', {
         'exam': exam, 'current_time': now, 'user': request.user, 'attempt': attempt,
+        'deadline_iso': attempt.deadline_at.isoformat(),
         'question': question, 'number': number, 'total': total,
         'selected': selected_answer.selected_option if selected_answer else None,
         'marked_for_review': selected_answer.marked_for_review if selected_answer else False,
@@ -176,12 +186,15 @@ def take_exam(request, exam_id):
     })
 
 
+@transaction.atomic
 @login_required
 def submit_exam(request, exam_id):
     if _staff_only(request):
         return _students_only_response()
     exam = get_object_or_404(Exam, pk=exam_id)
     attempt = Attempt.objects.filter(exam=exam, student=request.user).first()
+    if attempt and (exam.is_available() or exam.is_expired()):
+        attempt, _ = sync_attempt(attempt.pk)
     if attempt and attempt.status == Attempt.SUBMITTED:
         if request.method == 'POST':
             return HttpResponse('This attempt has already been submitted.', status=409)
@@ -195,6 +208,9 @@ def submit_exam(request, exam_id):
     if request.method == 'GET':
         if attempt is None:
             attempt, _ = Attempt.objects.get_or_create(exam=exam, student=request.user)
+        attempt, _ = sync_attempt(attempt.pk)
+        if attempt.status == Attempt.SUBMITTED:
+            return render(request, 'exams/submitted.html', {'exam': exam, 'attempt': attempt})
         return render(request, 'exams/confirm_submission.html', {
             'exam': exam,
             'total': exam.questions.count(),
@@ -205,19 +221,8 @@ def submit_exam(request, exam_id):
     if request.POST.get('confirmed') != 'yes':
         return HttpResponse('Confirmation is required.', status=400)
 
-    with transaction.atomic():
-        attempt, _ = Attempt.objects.get_or_create(exam=exam, student=request.user)
-        attempt = Attempt.objects.select_for_update().get(pk=attempt.pk)
-        if attempt.status == Attempt.SUBMITTED:
-            return HttpResponse('This attempt has already been submitted.', status=409)
-        # Score is authoritative on the server and is saved atomically with the lock.
-        score = sum(
-            1 for answer in attempt.answers.select_related('question')
-            if answer.selected_option == answer.question.correct_option
-            and answer.question.exam_id == exam.pk
-        )
-        attempt.score = score
-        attempt.status = Attempt.SUBMITTED
-        attempt.submitted_at = timezone.now()
-        attempt.save(update_fields=['score', 'status', 'submitted_at'])
+    attempt, _ = Attempt.objects.get_or_create(exam=exam, student=request.user)
+    attempt, finalized_now = sync_attempt(attempt.pk, manual=True)
+    if not finalized_now:
+        return HttpResponse('This attempt has already been submitted.', status=409)
     return redirect('exams:take', exam_id=exam.pk)
