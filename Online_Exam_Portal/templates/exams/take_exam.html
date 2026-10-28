@@ -116,6 +116,8 @@
         <div class="exam-header">
             <h2 id="exam-title-heading">{{ exam.title }}</h2>
             <span class="status-pill" id="exam-window-status">&#x25CF; Active Availability Window</span>
+            <div class="exam-timer" id="exam-countdown" role="timer"
+                 data-deadline="{{ deadline_iso }}">Time remaining: --:--</div>
         </div>
 
         <div class="meta-grid">
@@ -261,4 +263,29 @@
         }
     })();
     </script>
+
+<script>
+(function () {
+    var label = document.getElementById('exam-countdown');
+    if (!label) return;
+    var deadline = Date.parse(label.dataset.deadline);
+    var redirected = false;
+    label.style.cssText = 'font-size:1.1rem;font-weight:700;color:#9a3412;margin:1rem 0';
+    function renderTimer() {
+        var ms = Math.max(0, deadline - Date.now());
+        var seconds = Math.ceil(ms / 1000);
+        label.textContent = 'Time remaining: ' + Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0');
+        if (ms <= 0 && !redirected) {
+            redirected = true;
+            label.textContent = 'Time expired â€” finalizing on server...';
+            document.querySelectorAll('#question-form input, #question-form button').forEach(function (el) {
+                el.disabled = true;
+            });
+            window.location.assign("{% url 'exams:submit' exam.id %}");
+        }
+    }
+    renderTimer();
+    setInterval(renderTimer, 1000);
+})();
+</script>
 {% endblock %}

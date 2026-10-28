@@ -140,6 +140,9 @@ class Attempt(models.Model):
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default=IN_PROGRESS)
     score = models.PositiveIntegerField(null=True, blank=True)
     submitted_at = models.DateTimeField(null=True, blank=True)
+    # Authoritative server-side start/deadline; never accept these from the client.
+    started_at = models.DateTimeField(null=True, blank=True)
+    deadline_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['exam', 'student'], name='unique_student_exam_attempt')]
