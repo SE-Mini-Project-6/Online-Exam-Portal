@@ -8,13 +8,31 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdirectory'
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key secret in production!
-SECRET_KEY = 'django-insecure-dev-key-do-not-use-in-production'
+
+
+def _env_bool(name, default=False):
+    return os.getenv(name, str(default)).strip().lower() in ('1', 'true', 'yes', 'on')
+
+
+def _env_list(name):
+    """Comma-separated environment variable -> list of non-empty strings."""
+    return [item.strip() for item in os.getenv(name, '').split(',') if item.strip()]
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
+DEBUG = _env_bool('DJANGO_DEBUG', False)
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: keep the secret key secret in production!
+# Deployments MUST set DJANGO_SECRET_KEY; the fallback exists only so local runs and
+# CI work without configuration. `manage.py check --deploy` flags the fallback (W009).
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY') or 'django-insecure-dev-key-do-not-use-in-production'
+
+# Comma-separated host names, e.g. DJANGO_ALLOWED_HOSTS=exam.example.edu
+# With DEBUG off Django rejects every request unless the host is listed here.
+ALLOWED_HOSTS = _env_list('DJANGO_ALLOWED_HOSTS')
+
+# Origins trusted for CSRF over HTTPS, e.g. https://exam.example.edu
+CSRF_TRUSTED_ORIGINS = _env_list('DJANGO_CSRF_TRUSTED_ORIGINS')
 
 # Application definition
 INSTALLED_APPS = [
@@ -69,6 +87,13 @@ DATABASES = {
     }
 }
 
+# Password storage (SEC-REQ-01, design spec 3.6): salted, one-way, slow hash only.
+# PBKDF2 must stay first so new and re-hashed passwords never use a weaker algorithm.
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+]
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -96,6 +121,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # target of `manage.py collectstatic`
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -110,10 +136,22 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# Keep credentials and authenticated sessions protected in non-debug deployments.
+# Transport protection (SEC-REQ-04, design spec 3.6 / Fig. 3): HTTPS-only outside DEBUG.
+# HTTP requests are redirected to HTTPS and cookies/credentials never travel in clear text.
+# See docs/https_deployment.md for the deployment steps and the environment variables.
 SECURE_SSL_REDIRECT = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
 SECURE_HSTS_PRELOAD = not DEBUG
+
+# Behind a TLS-terminating reverse proxy (nginx, a PaaS router) the app only sees plain
+# HTTP, so SECURE_SSL_REDIRECT would loop forever. Set DJANGO_BEHIND_PROXY=true ONLY when
+# the proxy overwrites X-Forwarded-Proto itself and the app is not reachable directly.
+if _env_bool('DJANGO_BEHIND_PROXY', False):
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'

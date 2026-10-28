@@ -2,7 +2,7 @@
 Authentication tests for the Online Exam Portal.
 Tests cover login functionality, password security, and role-aware sessions.
 """
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
@@ -10,6 +10,7 @@ from django.urls import reverse
 User = get_user_model()
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)  # plain-HTTP test client; HTTPS is covered in test_security.py
 class AuthenticationTests(TestCase):
     """Test suite for authentication and login functionality."""
 

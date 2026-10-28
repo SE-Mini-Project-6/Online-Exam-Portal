@@ -14,6 +14,15 @@ def _staff_only(request):
     return request.user.is_staff
 
 
+def _wants_json(request):
+    return request.headers.get('Accept') == 'application/json' or request.GET.get('format') == 'json'
+
+
+def _students_only_response():
+    """Design spec 3.6: Student operations verify role = STUDENT (admins never create attempts)."""
+    return HttpResponseForbidden('Only students may take or submit exams.')
+
+
 @login_required
 def question_list(request, exam_id):
     if not _staff_only(request):
@@ -76,6 +85,9 @@ def _question_number(value, total, default=1):
 def take_exam(request, exam_id):
     """Persistent answers and review flags, while preserving original navigation and JSON API."""
     exam = get_object_or_404(Exam, pk=exam_id)
+    # Admins may read exam metadata as JSON (design 4.7.2) but never start an attempt.
+    if request.user.is_staff and not _wants_json(request):
+        return _students_only_response()
     attempt = Attempt.objects.filter(exam=exam, student=request.user).first()
     if attempt and attempt.status == Attempt.SUBMITTED:
         if request.method != 'GET':
@@ -159,6 +171,8 @@ def take_exam(request, exam_id):
 
 @login_required
 def submit_exam(request, exam_id):
+    if _staff_only(request):
+        return _students_only_response()
     exam = get_object_or_404(Exam, pk=exam_id)
     attempt = Attempt.objects.filter(exam=exam, student=request.user).first()
     if attempt and attempt.status == Attempt.SUBMITTED:

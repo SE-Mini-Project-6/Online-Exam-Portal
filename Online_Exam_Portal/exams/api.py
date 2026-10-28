@@ -52,10 +52,14 @@ def _parse_payload(request):
 
 def answer_detail(request, attempt_id, question_id):
     started = time.perf_counter()
-    if request.method != 'PATCH':
-        return _error(405, 'VALIDATION_ERROR', 'Only PATCH is supported on this endpoint.')
+    # Authentication comes first so anonymous callers always get 401, whatever the method.
     if not request.user.is_authenticated:
         return _error(401, 'AUTHENTICATION_REQUIRED', 'Please sign in to continue.')
+    if request.method != 'PATCH':
+        return _error(405, 'VALIDATION_ERROR', 'Only PATCH is supported on this endpoint.')
+    # Design spec 3.6: Student operations verify role = STUDENT.
+    if request.user.is_staff:
+        return _error(403, 'FORBIDDEN', 'Only students can save exam answers.')
 
     attempt = Attempt.objects.select_related('exam').filter(pk=attempt_id).first()
     if attempt is None:
