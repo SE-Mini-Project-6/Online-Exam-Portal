@@ -87,7 +87,7 @@ DATABASES = {
         # NFR-06: with the default deferred transactions, a request that reads and then writes fails
         # at once with "database is locked" when other students are writing. IMMEDIATE transactions
         # plus WAL and a longer busy timeout make writers queue instead. PostgreSQL is still the
-        # recommended production database (docs/SPRINT2_PERFORMANCE_RELIABILITY.md).
+        # recommended production database (Deliverable-4-Test-Validation/performance_reliability_validation.md).
         'OPTIONS': {
             'timeout': 30,
             'transaction_mode': 'IMMEDIATE',
@@ -95,6 +95,18 @@ DATABASES = {
         },
     }
 }
+
+# PostgreSQL is opt-in so the default development setup stays zero-config:
+# DJANGO_DB_ENGINE=postgres DJANGO_DB_NAME=... DJANGO_DB_USER=... DJANGO_DB_PASSWORD=... [DJANGO_DB_HOST/PORT]
+if os.getenv('DJANGO_DB_ENGINE', '').lower() in ('postgres', 'postgresql'):
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DJANGO_DB_NAME', 'exam_portal'),
+        'USER': os.getenv('DJANGO_DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DJANGO_DB_PASSWORD', ''),
+        'HOST': os.getenv('DJANGO_DB_HOST', 'localhost'),
+        'PORT': os.getenv('DJANGO_DB_PORT', '5432'),
+    }
 
 # Password storage (SEC-REQ-01, design spec 3.6): salted, one-way, slow hash only.
 # PBKDF2 must stay first so new and re-hashed passwords never use a weaker algorithm.

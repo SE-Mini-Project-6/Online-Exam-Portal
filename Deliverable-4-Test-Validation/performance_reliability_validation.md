@@ -2,8 +2,9 @@
 
 Requirements: NFR-01, NFR-02, NFR-04, NFR-06. Owner: @Aditya-TJ.
 
-**Summary.** Absolute response-time targets (NFR-01, NFR-02) are met at 50 concurrent students when students
-pace themselves like real test takers. They are not met in a worst-case run where every student sends requests
+**Summary.** On PostgreSQL, NFR-01 is met in every run and NFR-02 in all but one (section 3a). The SQLite numbers
+below come first and are worse. Absolute response-time targets (NFR-01, NFR-02) are met at 50 concurrent students
+on SQLite when students pace themselves like real test takers. They are not met in a worst-case run where every student sends requests
 back to back. The relative-growth target (NFR-06, no more than 20% rise in mean response time) is **not met** in
 any 50-student run on the current SQLite and development-server setup. NFR-04 is covered by existing automated
 tests. Details and caveats follow.
@@ -83,6 +84,36 @@ pacing run is itself conservative. That is an argument for the target being reac
 measurement of it. A real 50-student test on the target deployment (PostgreSQL, production WSGI server, separate
 client machines) has not been run.
 
+## 3a. Re-run on PostgreSQL 17
+
+Same harness, same machine, PostgreSQL 17.11 on localhost (`DJANGO_DB_ENGINE=postgres`, see section 7), 15 rounds
+per student, 750 page loads and 750 saves at 50 users. No failed requests in any run.
+
+| Pacing | Measure | 1 user mean | 50 users mean | 50 users p95 | 50 users max | Growth of mean |
+|---|---|---|---|---|---|---|
+| 3 s think | Question page | 120.8 | 146.5 | 249.3 | 354.2 | +21.3% |
+| 3 s think | Autosave | 109.2 | 130.7 | 228.4 | 364.4 | +19.8% |
+| 1 s think | Question page | 142.3 | 1200.6 | 1600.4 | 2138.5 | +744% |
+| 1 s think | Autosave | 119.6 | 1205.7 | 1638.6 | 2118.4 | +908% |
+| none (stress) | Question page | 91.6 | 853.1 | 1020.5 | 1660.9 | +832% |
+| none (stress) | Autosave | 88.0 | 836.2 | 995.0 | 1191.5 | +850% |
+
+What changed against SQLite:
+
+- The long tail is gone. Worst case is 2.1 s instead of 19 s, and the stress run now meets NFR-01 and NFR-02.
+- At 3 s pacing the means rise 21.3% and 19.8%, essentially at the 20% limit: autosave passes by 0.2 points and the
+  question page misses by 1.3. That is within run-to-run noise, so I treat NFR-06 as borderline rather than met.
+- At 1 s pacing the server is saturated (about 50 requests per second from one Python process) and the
+  autosave maximum of 2118 ms is over the 2 s target. The same run in stress pacing stays under it. This is a
+  throughput limit of a single local process, not a locking problem.
+- The single-user baseline is higher on PostgreSQL (about 100 ms against 15 to 30 ms) because Django opens a new
+  database connection per request (`CONN_MAX_AGE` is 0). Persistent connections or a pooler would likely lower both
+  the baseline and the loaded times. That has not been tried.
+
+Revised verdict: NFR-01 met at every pacing on PostgreSQL. NFR-02 met except the 1 s pacing run (2118 ms against
+2000 ms). NFR-06 borderline at realistic pacing and not met under heavier load. The client generator still shares
+the interpreter with the server, so the heavier-load numbers are pessimistic.
+
 ## 4. Defect found and fixed: `database is locked`
 
 The first load run on the unchanged code failed badly: with 50 concurrent students, 476 of 500 requests (5 rounds
@@ -123,6 +154,9 @@ remains available and is well under 2 s.
   that the report contains each NFR check, no errors occurred and no data is left behind.
 - `test_sqlite_writers_queue_instead_of_failing` pins the SQLite options that fixed the lock failures.
 
+PostgreSQL is selected with environment variables (`DJANGO_DB_ENGINE=postgres`, `DJANGO_DB_NAME`, `DJANGO_DB_USER`,
+`DJANGO_DB_PASSWORD`, optional `DJANGO_DB_HOST` and `DJANGO_DB_PORT`); SQLite stays the default.
+
 The 50-user run itself is not part of the unit suite. Django's in-memory test database uses shared-cache table
 locks that ignore the busy timeout, so concurrent writers fail there regardless of the fix, and a 50-user run
 takes minutes. It is a manual/CI-optional measurement against the file database.
@@ -133,7 +167,7 @@ Full suite after this story: 136 tests, all passing.
 
 | Item | Deviation | Follow-up |
 |---|---|---|
-| Database | SRS/SADS assume a relational database for production. Development uses SQLite, which serialises writers. NFR-06 is not met on it | Run the same harness against PostgreSQL and a production WSGI server (gunicorn/uvicorn) and record the result before claiming NFR-06 |
+| Database | SRS/SADS assume a relational database for production. Development uses SQLite, which serialises writers | PostgreSQL run recorded in section 3a. Still to do: production WSGI server (gunicorn/uvicorn on Linux) and persistent connections |
 | Server | Measured on Django's development-style threaded server in a single process | Repeat with multiple workers on separate load-generating machines |
 | NFR-06 wording | A 20% relative rise is nearly impossible from a very fast single-user baseline | Team to confirm whether the intended test is relative or an absolute ceiling |
 | Question page writes | Opening a question writes the "visited" flag, so every page view is a database write | Candidate optimisation if PostgreSQL results are still short of target |
