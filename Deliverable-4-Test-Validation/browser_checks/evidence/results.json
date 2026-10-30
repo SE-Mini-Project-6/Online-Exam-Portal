@@ -1,0 +1,530 @@
+[
+  {
+    "browser": "chrome",
+    "version": "148.0.7778.169",
+    "viewport": "desktop",
+    "results": [
+      {
+        "check": "login page renders form",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student login: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1262 innerWidth=1262"
+      },
+      {
+        "check": "student dashboard shows username",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student dashboard lists the exam",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student dashboard: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1247 innerWidth=1262"
+      },
+      {
+        "check": "available exams: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1262 innerWidth=1262"
+      },
+      {
+        "check": "question page shows question 1 of 3",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "countdown timer renders",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "question page: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1247 innerWidth=1262"
+      },
+      {
+        "check": "answer click autosaves within 2 s",
+        "ok": true,
+        "detail": "76 ms incl. polling"
+      },
+      {
+        "check": "grid shows answered + marked for review",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "refresh keeps saved answer",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Next moves to question 2",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "confirmation shows 1 of 3 answered",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "confirm submission: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1262 innerWidth=1262"
+      },
+      {
+        "check": "submission reaches submitted page",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "submitted: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1262 innerWidth=1262"
+      },
+      {
+        "check": "admin dashboard shows username",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "admin dashboard: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1247 innerWidth=1262"
+      },
+      {
+        "check": "create exam form renders",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "create exam: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1247 innerWidth=1262"
+      },
+      {
+        "check": "question list renders 3 questions",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "question list: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1262 innerWidth=1262"
+      },
+      {
+        "check": "add question: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1247 innerWidth=1262"
+      },
+      {
+        "check": "no severe browser console errors",
+        "ok": true,
+        "detail": "[]"
+      }
+    ]
+  },
+  {
+    "browser": "chrome",
+    "version": "148.0.7778.169",
+    "viewport": "phone",
+    "results": [
+      {
+        "check": "login page renders form",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student login: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=482 innerWidth=482"
+      },
+      {
+        "check": "student dashboard shows username",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student dashboard lists the exam",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student dashboard: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=467 innerWidth=482"
+      },
+      {
+        "check": "available exams: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=467 innerWidth=482"
+      },
+      {
+        "check": "question page shows question 1 of 3",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "countdown timer renders",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "question page: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=467 innerWidth=482"
+      },
+      {
+        "check": "answer click autosaves within 2 s",
+        "ok": true,
+        "detail": "110 ms incl. polling"
+      },
+      {
+        "check": "grid shows answered + marked for review",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "refresh keeps saved answer",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Next moves to question 2",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "confirmation shows 1 of 3 answered",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "confirm submission: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=482 innerWidth=482"
+      },
+      {
+        "check": "submission reaches submitted page",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "submitted: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=482 innerWidth=482"
+      },
+      {
+        "check": "admin dashboard shows username",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "admin dashboard: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=467 innerWidth=482"
+      },
+      {
+        "check": "create exam form renders",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "create exam: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=467 innerWidth=482"
+      },
+      {
+        "check": "question list renders 3 questions",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "question list: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=467 innerWidth=482"
+      },
+      {
+        "check": "add question: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=467 innerWidth=482"
+      },
+      {
+        "check": "no severe browser console errors",
+        "ok": true,
+        "detail": "[]"
+      }
+    ]
+  },
+  {
+    "browser": "firefox",
+    "version": "150.0",
+    "viewport": "desktop",
+    "results": [
+      {
+        "check": "login page renders form",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student login: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "student dashboard shows username",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student dashboard lists the exam",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student dashboard: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "available exams: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "question page shows question 1 of 3",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "countdown timer renders",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "question page: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "answer click autosaves within 2 s",
+        "ok": true,
+        "detail": "23 ms incl. polling"
+      },
+      {
+        "check": "grid shows answered + marked for review",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "refresh keeps saved answer",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Next moves to question 2",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "confirmation shows 1 of 3 answered",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "confirm submission: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "submission reaches submitted page",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "submitted: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "admin dashboard shows username",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "admin dashboard: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "create exam form renders",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "create exam: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "question list renders 3 questions",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "question list: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "add question: fits desktop width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=1280 innerWidth=1280"
+      },
+      {
+        "check": "console log check",
+        "ok": true,
+        "detail": "not available in Firefox/geckodriver"
+      }
+    ]
+  },
+  {
+    "browser": "firefox",
+    "version": "150.0",
+    "viewport": "phone",
+    "results": [
+      {
+        "check": "login page renders form",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student login: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "student dashboard shows username",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student dashboard lists the exam",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "student dashboard: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "available exams: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "question page shows question 1 of 3",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "countdown timer renders",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "question page: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "answer click autosaves within 2 s",
+        "ok": true,
+        "detail": "36 ms incl. polling"
+      },
+      {
+        "check": "grid shows answered + marked for review",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "refresh keeps saved answer",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Next moves to question 2",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "confirmation shows 1 of 3 answered",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "confirm submission: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "submission reaches submitted page",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "submitted: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "admin dashboard shows username",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "admin dashboard: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "create exam form renders",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "create exam: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "question list renders 3 questions",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "question list: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "add question: fits phone width (no horizontal scroll)",
+        "ok": true,
+        "detail": "scrollWidth=500 innerWidth=500"
+      },
+      {
+        "check": "console log check",
+        "ok": true,
+        "detail": "not available in Firefox/geckodriver"
+      }
+    ]
+  }
+]
