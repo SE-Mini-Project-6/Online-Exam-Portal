@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from .forms import ExamForm
-from .models import Exam, Question
+from .models import Attempt, Exam, Question
 
 
 @login_required
@@ -56,3 +56,16 @@ def available_exams(request):
     })
 
 from .sprint1_views import take_exam  # noqa: E402; shared URL handler
+
+
+@login_required
+def student_result(request, exam_id):
+    """The signed-in student's own result. The score is only sent to the page once results are released."""
+    if request.user.is_staff:
+        return redirect('accounts:admin_dashboard')
+    exam = get_object_or_404(Exam, pk=exam_id)
+    attempt = Attempt.objects.filter(exam=exam, student=request.user, status=Attempt.SUBMITTED).first()
+    context = {'exam': exam, 'submitted': attempt is not None, 'released': exam.results_released}
+    if attempt is not None and exam.results_released:
+        context.update(score=attempt.score, total=exam.questions.count())
+    return render(request, 'exams/results.html', context)

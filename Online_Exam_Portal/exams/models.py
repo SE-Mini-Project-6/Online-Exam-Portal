@@ -9,6 +9,8 @@ class Exam(models.Model):
     start_at = models.DateTimeField()
     end_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
+    # Students see their score only after an admin releases results.
+    results_released = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('start_at', 'title')

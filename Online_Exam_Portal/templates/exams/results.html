@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Result - {{ exam.title }}{% endblock %}
+{% block content %}
+<div class="panel form-card" id="result-panel">
+    <h1 class="page-title">Result: {{ exam.title }}</h1>
+    {% if not submitted %}
+        <p id="result-not-submitted">You have not submitted this exam, so there is no result yet.</p>
+    {% elif not released %}
+        <p id="result-not-released">Your exam was submitted. Results have not been released yet; check back later.</p>
+    {% else %}
+        <p>Your score: <strong id="result-score">{{ score }} of {{ total }}</strong></p>
+    {% endif %}
+    <a class="back-link" href="{% url 'accounts:student_dashboard' %}">&larr; Return to dashboard</a>
+</div>
+{% endblock %}
