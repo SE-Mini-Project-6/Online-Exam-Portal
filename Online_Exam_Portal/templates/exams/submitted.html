@@ -6,6 +6,7 @@
     <p>{{ exam.title }}</p>
     <p>Your answers are locked. Your score has been saved securely.</p>
     <p>Submitted: {{ attempt.submitted_at }}</p>
+    <p><a href="{% url 'exams:result' exam.id %}">View result</a></p>
     <a class="back-link" href="{% url 'accounts:student_dashboard' %}">Return to dashboard</a>
 </div>
 {% endblock %}
