@@ -84,6 +84,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        # NFR-06: with the default deferred transactions, a request that reads and then writes fails
+        # at once with "database is locked" when other students are writing. IMMEDIATE transactions
+        # plus WAL and a longer busy timeout make writers queue instead. PostgreSQL is still the
+        # recommended production database (docs/SPRINT2_PERFORMANCE_RELIABILITY.md).
+        'OPTIONS': {
+            'timeout': 30,
+            'transaction_mode': 'IMMEDIATE',
+            'init_command': 'PRAGMA journal_mode=WAL;',
+        },
     }
 }
 
