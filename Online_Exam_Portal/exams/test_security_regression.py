@@ -134,6 +134,12 @@ class RoleAuthorizationTests(SecurityTestCase):
         self.assertEqual(response.json()['title'], 'Security exam')
         self.assertEqual(Attempt.objects.count(), 0)
 
+    def test_admin_json_metadata_is_get_only(self):
+        self.client.force_login(self.admin)
+        response = self.client.post(self.take_url, {'format': 'json'})
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Attempt.objects.count(), 0)
+
     def test_admin_cannot_save_answers_through_the_api(self):
         attempt = Attempt.objects.create(exam=self.exam, student=self.student)
         self.client.force_login(self.admin)
@@ -204,6 +210,27 @@ class OwnershipTests(SecurityTestCase):
         self.client.force_login(self.other)
         self.assertNotContains(self.client.get(self.take_url), 'value="A" checked')
         self.assertEqual(self.attempt.answers.count(), 1)
+
+    def test_owner_cannot_read_foreign_attempt_through_result_route(self):
+        self.client.force_login(self.other)
+        response = self.client.get(reverse('exams:result', args=[self.exam.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['submitted'])
+        self.assertNotContains(response, '1 / 2')
+
+    def test_cross_exam_question_is_not_available_for_attempt_autosave(self):
+        other_exam = Exam.objects.create(
+            title='Other exam', duration_minutes=20,
+            start_at=self.exam.start_at, end_at=self.exam.end_at,
+        )
+        foreign_question = Question.objects.create(
+            exam=other_exam, text='Foreign question', option_a='A', option_b='B',
+            option_c='C', option_d='D', correct_option='A',
+        )
+        self.client.force_login(self.student)
+        response = self.patch(self.attempt, foreign_question, {'selectedOption': 'B'})
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(Answer.objects.filter(attempt=self.attempt, question=foreign_question).exists())
 
     def test_owner_can_still_save_their_own_answer(self):
         self.client.force_login(self.student)

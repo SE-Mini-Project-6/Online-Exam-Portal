@@ -87,13 +87,16 @@ def _question_number(value, total, default=1):
 def take_exam(request, exam_id):
     """Persistent answers and review flags, while preserving original navigation and JSON API."""
     exam = get_object_or_404(Exam, pk=exam_id)
-    # Admins may read exam metadata as JSON (design 4.7.2) but never start an attempt.
-    if request.user.is_staff and not _wants_json(request):
+    # Attempts are student-owned; staff may inspect only public exam metadata.
+    wants_json = _wants_json(request)
+    if request.user.is_staff and (not wants_json or request.method != 'GET'):
         return _students_only_response()
     attempt = Attempt.objects.filter(exam=exam, student=request.user).first()
     if attempt and (exam.is_available() or exam.is_expired()):
         attempt, _ = sync_attempt(attempt.pk)
     if attempt and attempt.status == Attempt.SUBMITTED:
+        if wants_json:
+            return JsonResponse({'error': 'This attempt has already been submitted.'}, status=409)
         if request.method != 'GET':
             return HttpResponse('This attempt has already been submitted.', status=409)
         return render(request, 'exams/submitted.html', {'exam': exam, 'attempt': attempt})
@@ -110,7 +113,7 @@ def take_exam(request, exam_id):
             return JsonResponse({'error': msg, 'status': 'expired'}, status=403)
         return HttpResponseForbidden(msg)
 
-    if request.headers.get('Accept') == 'application/json' or request.GET.get('format') == 'json':
+    if wants_json:
         return JsonResponse({
             'id': exam.id, 'title': exam.title,
             'duration_minutes': exam.duration_minutes,
