@@ -2,9 +2,11 @@ from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.http import HttpResponseForbidden
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 from exams.models import Attempt, Exam
 
 
@@ -135,7 +137,26 @@ def admin_submissions(request):
         'exams': exams,
         'selected_exam': selected_exam,
         'roster': roster,
+        'current_time': timezone.now(),
     })
+
+
+@login_required
+@require_POST
+def release_exam_results(request, exam_id):
+    """Release submitted scores once the exam window is closed and attempts are complete."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("You don't have access to release exam results.")
+    exam = get_object_or_404(Exam, pk=exam_id)
+    if exam.end_at > timezone.now() or exam.attempts.filter(status=Attempt.IN_PROGRESS).exists():
+        messages.error(request, 'Results can be released after the exam closes and all attempts are submitted.')
+    elif not exam.results_released:
+        exam.results_released = True
+        exam.save(update_fields=['results_released'])
+        messages.success(request, f'Results released for {exam.title}.')
+    else:
+        messages.info(request, f'Results are already released for {exam.title}.')
+    return redirect(f"{reverse('accounts:admin_submissions')}?exam={exam.pk}")
 
 
 @login_required

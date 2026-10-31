@@ -21,6 +21,15 @@
 </section>
 
 {% if selected_exam %}
+        {% if selected_exam.results_released %}
+            <p id="results-released">Results have been released to students.</p>
+        {% else %}
+            <p>Student scores remain hidden until results are released.</p>
+            <form method="post" action="{% url 'accounts:release_exam_results' selected_exam.id %}">
+                {% csrf_token %}
+                <button type="submit" {% if selected_exam.end_at > current_time %}disabled{% endif %}>Release results</button>
+            </form>
+        {% endif %}
 <section class="panel">
     <div class="section-header">
         <h2>{{ selected_exam.title }}</h2>
