@@ -11,5 +11,6 @@ urlpatterns = [
 
     # Role-aware dashboard URLs
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('admin-submissions/', views.admin_submissions, name='admin_submissions'),
     path('student-dashboard/', views.student_dashboard, name='student_dashboard'),
 ]

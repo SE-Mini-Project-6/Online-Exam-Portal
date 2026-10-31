@@ -1,0 +1,88 @@
+# GitHub Issue: Implement Student and Admin login with secure password handling
+User story
+As a user or team member, I need implement student and admin login with secure password handling so the Online Exam Portal satisfies its documented requirements.
+
+Acceptance criteria
+Provisioned users sign in; role-aware sessions; passwords stored with Django salted password hash; invalid credentials rejected.
+Include automated/manual test evidence appropriate for the change.
+Update docs and link any design deviation, if applicable.
+
+Definition of done
+Assignee opens a branch and pull request; repo owner reviews and merges after checks pass. Do not close this issue before the stated criteria are met.
+
+# Resolved PR:
+This pull request sets up the foundational structure for the Online Exam Portal Django project, focusing on secure authentication, role-based access, and initial app configuration. It introduces separate login flows for admin and student users, role-aware dashboards, and comprehensive tests to ensure authentication and routing are working as expected. The core project files, settings, and URLs are established, along with templates for user-facing pages.
+
+Authentication & Role Management
+
+Implemented secure admin and student login views in accounts/views.py, with role-aware session redirects and logout functionality. Admin and student dashboards are protected and rendered based on user roles.
+Added comprehensive authentication tests in accounts/tests.py, covering login, password security, session persistence, CSRF protection, and role-based access.
+Project & App Configuration
+
+Created project scaffolding: manage.py, settings.py, asgi.py, wsgi.py, and urls.py for the main project and accounts app, including middleware, installed apps, authentication backends, and security settings.
+Core Application & Routing
+
+Established core app with a homepage view, URL configuration, and a simple home template that provides role selection and login links.
+Testing & Quality Assurance
+
+Added core tests in core/tests.py to verify homepage accessibility, presence of login links, and correctness of URL configurations for both admin and student flows.
+User Interface
+
+Added an initial admin_dashboard.html template with navigation and logout button, outlining admin management features.
+
+# GitHub Issue: Create exam configuration and availability windows
+User story
+As a user or team member, I need create exam configuration and availability windows so the Online Exam Portal satisfies its documented requirements.
+
+Acceptance criteria
+Admin can create title, duration, start/end timestamps; invalid intervals rejected; saved exam appears in dashboard.
+Include automated/manual test evidence appropriate for the change.
+Update docs and link any design deviation, if applicable.
+
+Definition of done
+Assignee opens a branch and pull request; repo owner reviews and merges after checks pass. Do not close this issue before the stated criteria are met.
+
+# Resolved PR:
+Introduced 'exams' app with models, forms, views, and URLs for exam management.
+Implemented exam creation form with validation for duration and availability.
+Updated admin dashboard to manage and display configured exams.
+Added tests for exam creation and validation scenarios.
+Enhanced README with exam configuration details and test evidence.
+
+# GitHub Issue: Student available-exam list and window enforcement
+User story
+As a user or team member, I need student available-exam list and window enforcement so the Online Exam Portal satisfies its documented requirements.
+
+Acceptance criteria
+Student sees appropriate available exams; early/expired access is blocked on server; scheduled times are displayed.
+Include automated/manual test evidence appropriate for the change.
+Update docs and link any design deviation, if applicable.
+
+Definition of done
+Assignee opens a branch and pull request; repo owner reviews and merges after checks pass. Do not close this issue before the stated criteria are met.
+
+# Resolved PR:
+Implements the student available-exam list and strict server-side window enforcement for the Online Exam Portal in accordance with FR-05, SEC-REQ-02, SEC-OBJ-01, and NFR-04.
+
+This PR also integrates the latest changes from main and registers the core app with explicit namespacing to ensure all existing modules (accounts, exams, core) function seamlessly.
+
+Key Changes
+Student Available-Exam List (accounts/views.py, student_dashboard.html):
+
+Queries configured exams ordered chronologically by scheduled start_at.
+Renders a responsive table displaying exam title, duration, formatted scheduled window timestamps, and availability status.
+Status indicators:
+Available Now: Current time is within window; renders an active Start Exam button.
+Upcoming: Current time is before start_at; action button is disabled.
+Closed: Window has elapsed (now > end_at); action button is disabled.
+Server-Side Window Enforcement (exams/views.py, take_exam.html):
+
+Guards exam attempts at /exams/<id>/take/ and /exams/<id>/:
+Early Access Guard: Rejects access before start_at with HTTP 403 Forbidden ("This exam has not started yet. Early access is blocked on server.").
+Expired Access Guard: Rejects access after end_at with HTTP 403 Forbidden ("This exam availability window has expired. Access is blocked on server.").
+Active Window: Grants access (HTTP 200 OK) and renders attempt rules and metadata.
+Enforces @login_required redirecting unauthenticated users to /accounts/login/ (HTTP 302).
+Supports REST API clients returning JSON responses (Accept: application/json or ?format=json).
+Core App & Test Harness Cleanup:
+
+Registered core app in INSTALLED_APPS and added app_name = 'core' to core/urls.py to fix reverse namespace resolution.

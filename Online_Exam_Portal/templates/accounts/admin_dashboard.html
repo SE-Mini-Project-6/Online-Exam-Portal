@@ -18,6 +18,7 @@
     <div class="card">
         <h3>View Submissions</h3>
         <p>Review student submissions and results.</p>
+        <a href="{% url 'accounts:admin_submissions' %}">Open submissions dashboard</a>
     </div>
     <div class="card">
         <h3>Release Results</h3>
@@ -39,7 +40,10 @@
                             <td class="exam-title">{{ exam.title }}</td>
                             <td>{{ exam.duration_minutes }} minutes</td>
                             <td>{{ exam.start_at|date:"M j, Y, g:i A" }} - {{ exam.end_at|date:"M j, Y, g:i A" }}</td>
-                            <td><a href="{% url 'exams:questions' exam.id %}">Manage questions</a></td>
+                            <td>
+                                <a href="{% url 'exams:questions' exam.id %}">Manage questions</a>
+                                <br><a href="{% url 'accounts:admin_submissions' %}?exam={{ exam.id }}">View submissions</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

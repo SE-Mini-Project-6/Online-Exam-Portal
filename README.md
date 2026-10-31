@@ -252,6 +252,12 @@ Manual verification steps:
 - **Version Control:** Git
 - **Repository Hosting:** GitHub
 
+## Admin submissions dashboard
+
+Staff can open **View Submissions** from the admin dashboard or choose **View submissions** beside a configured exam. The page at `/accounts/admin-submissions/` lists active student accounts for the selected exam, including students who have not started. It shows `Not started`, `In progress`, or `Submitted`, the submission timestamp when available, and the score only after submission. Students receive HTTP 403; anonymous visitors are redirected to login.
+
+Automated coverage is in `Online_Exam_Portal/accounts/test_submissions.py`. Run it from `Online_Exam_Portal` with `python manage.py test accounts.test_submissions`. Manual browser steps and the interface/design note are recorded in `Deliverable-4-Test-Validation/admin_submissions_dashboard.md`.
+
 ---
 
 ## Repository Structure

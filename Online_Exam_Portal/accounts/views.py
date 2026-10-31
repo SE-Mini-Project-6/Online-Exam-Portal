@@ -1,11 +1,11 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
 from django.utils import timezone
-from exams.models import Exam
+from exams.models import Attempt, Exam
 
 
 def landing_url_name(user):
@@ -94,6 +94,47 @@ def admin_dashboard(request):
         'user': request.user,
         'is_admin': True,
         'exams': Exam.objects.all(),
+    })
+
+
+@login_required
+def admin_submissions(request):
+    """Show the student roster and attempt status for a staff-selected exam."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("You don't have access to exam submissions.")
+
+    exams = Exam.objects.all()
+    selected_exam = None
+    roster = []
+    exam_id = request.GET.get('exam')
+    if exam_id:
+        selected_exam = exams.filter(pk=exam_id).first()
+        if selected_exam is not None:
+            attempts = {
+                attempt.student_id: attempt
+                for attempt in Attempt.objects.filter(exam=selected_exam).select_related('student')
+            }
+            total_questions = selected_exam.questions.count()
+            students = get_user_model().objects.filter(
+                is_staff=False,
+                is_active=True,
+            ).order_by('username')
+            for student in students:
+                attempt = attempts.get(student.pk)
+                submitted = attempt is not None and attempt.status == Attempt.SUBMITTED
+                roster.append({
+                    'student': student,
+                    'attempt': attempt,
+                    'state': 'Submitted' if submitted else ('In progress' if attempt else 'Not started'),
+                    'score': f'{attempt.score} / {total_questions}' if submitted and attempt.score is not None else '—',
+                })
+
+    return render(request, 'accounts/admin_submissions.html', {
+        'user': request.user,
+        'is_admin': True,
+        'exams': exams,
+        'selected_exam': selected_exam,
+        'roster': roster,
     })
 
 
