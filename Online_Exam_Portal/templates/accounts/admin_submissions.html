@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Exam Submissions{% endblock %}
+{% block content %}
+<section class="panel">
+    <div class="section-header">
+        <div>
+            <h1>Exam submissions</h1>
+            <p>Select an exam to view each active student’s attempt state and submitted score.</p>
+        </div>
+    </div>
+    <form method="get" class="form-stack">
+        <label for="exam">Exam</label>
+        <select id="exam" name="exam" required>
+            <option value="">Choose an exam</option>
+            {% for exam in exams %}
+                <option value="{{ exam.id }}" {% if selected_exam.id == exam.id %}selected{% endif %}>{{ exam.title }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">View roster</button>
+    </form>
+</section>
+
+{% if selected_exam %}
+<section class="panel">
+    <div class="section-header">
+        <h2>{{ selected_exam.title }}</h2>
+        <span>{{ selected_exam.questions.count }} questions</span>
+    </div>
+    {% if roster %}
+        <div class="table-wrap">
+            <table class="exam-table">
+                <thead>
+                    <tr><th>Student</th><th>Submission state</th><th>Submitted at</th><th>Score</th></tr>
+                </thead>
+                <tbody>
+                    {% for row in roster %}
+                        <tr>
+                            <td>{{ row.student.username }}</td>
+                            <td>{{ row.state }}</td>
+                            <td>{% if row.attempt.submitted_at %}{{ row.attempt.submitted_at|date:"M j, Y, g:i A" }}{% else %}—{% endif %}</td>
+                            <td>{{ row.score }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No active student accounts are available for this exam.</p>
+    {% endif %}
+</section>
+{% elif request.GET.exam %}
+    <p class="message error" role="alert">The selected exam does not exist.</p>
+{% endif %}
+{% endblock %}
