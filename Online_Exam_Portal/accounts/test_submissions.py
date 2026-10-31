@@ -93,3 +93,28 @@ class AdminSubmissionsDashboardTests(TestCase):
 
         self.assertContains(response, reverse('accounts:admin_submissions'))
         self.assertContains(response, f'?exam={self.exam.pk}')
+
+    def test_results_release_requires_staff_post_and_completed_exam(self):
+        url = reverse('accounts:release_exam_results', args=[self.exam.pk])
+        self.client.force_login(self.admin)
+        self.assertEqual(self.client.get(url).status_code, 405)
+        self.assertEqual(self.client.post(url).status_code, 302)
+        self.exam.refresh_from_db()
+        self.assertFalse(self.exam.results_released)
+
+        self.progress_attempt.delete()
+        self.exam.end_at = timezone.now() - timedelta(minutes=1)
+        self.exam.save()
+        self.assertRedirects(self.client.post(url), f'{self.url}?exam={self.exam.pk}')
+        self.exam.refresh_from_db()
+        self.assertTrue(self.exam.results_released)
+
+    def test_results_cannot_be_released_with_open_attempt_or_by_student(self):
+        self.exam.end_at = timezone.now() - timedelta(minutes=1)
+        self.exam.save()
+        self.client.force_login(self.admin)
+        self.client.post(reverse('accounts:release_exam_results', args=[self.exam.pk]))
+        self.exam.refresh_from_db()
+        self.assertFalse(self.exam.results_released)
+        self.client.force_login(self.submitted_student)
+        self.assertEqual(self.client.post(reverse('accounts:release_exam_results', args=[self.exam.pk])).status_code, 403)
