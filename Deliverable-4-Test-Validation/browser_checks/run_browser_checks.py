@@ -85,7 +85,20 @@ class Run:
         self.browser, self.viewport = browser, viewport
         self.results = []
         self.driver = make_driver(browser)
-        self.driver.set_window_size(*VIEWPORTS[viewport])
+        width, height = VIEWPORTS[viewport]
+        self.driver.set_window_size(width, height)
+        if browser == 'chrome':
+            # Headless Chrome can clamp the outer window to >=500 px. Set the
+            # actual page viewport so a declared 375 px phone check is genuine.
+            self.driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {
+                'width': width, 'height': height, 'deviceScaleFactor': 1,
+                'mobile': viewport == 'phone',
+            })
+        else:
+            extra_width, extra_height = self.driver.execute_script(
+                'return [window.outerWidth-window.innerWidth, window.outerHeight-window.innerHeight]')
+            self.driver.set_window_size(width + extra_width, height + extra_height)
+        self.viewport_checked = False
         self.shots = EVIDENCE / browser
         self.shots.mkdir(parents=True, exist_ok=True)
 
@@ -95,6 +108,12 @@ class Run:
     def fits(self, label):
         """No horizontal scrolling: the page must fit the viewport width."""
         d = self.driver
+        if not self.viewport_checked:
+            # about:blank has no viewport meta tag, so verify the loaded app.
+            actual = d.execute_script('return [window.innerWidth, window.innerHeight]')
+            self.check('actual viewport matches declared dimensions',
+                       actual == list(VIEWPORTS[self.viewport]), actual)
+            self.viewport_checked = True
         width, inner = d.execute_script('return [document.documentElement.scrollWidth, window.innerWidth]')
         self.check(f'{label}: fits {self.viewport} width (no horizontal scroll)', width <= inner + 1,
                    f'scrollWidth={width} innerWidth={inner}')

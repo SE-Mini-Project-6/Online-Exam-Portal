@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   browser-flows:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -22,11 +22,14 @@ jobs:
         include:
           - chrome: '157'
             firefox: '159'
+            os: ubuntu-latest
           - chrome: '158'
             firefox: '160'
+            os: windows-latest
     env:
       PYTHONUNBUFFERED: '1'
       SE_AVOID_STATS: 'true'
+      SE_TIMEOUT: '120'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
