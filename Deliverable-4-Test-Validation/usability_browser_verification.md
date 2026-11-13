@@ -20,6 +20,8 @@ The browser runner accepts `--evidence-dir`, `--chrome-version` and `--firefox-v
 
 **Issue #29 reconciliation:** its closed status and checked boxes do not establish that the five-user study occurred. The current session log remains empty. Complete the actual study before marking NFR-03 verified.
 
+**Current browser result:** the final readiness CI on source commit `0aa9548` passed 252/252 checks across Chrome 157/158 and Firefox 159/160, at 1280x800 and 375x812. [Results, exact versions and artifact links](../docs/VALIDATION_RESULTS.md#browser-matrix-at-review-date). The historical one-version matrix below is superseded for browser compatibility by that execution. The five-user walkthrough remains pending.
+
 The scripted run does not replace the five-user walkthrough. NFR-03 asks whether a first-time student
 understands the exam without help, which only people can show. Nothing in section 3 has been filled in with
 invented results.

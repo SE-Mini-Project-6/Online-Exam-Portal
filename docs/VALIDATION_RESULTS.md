@@ -10,7 +10,7 @@ Revision prepared 14 November 2026. Actual branch results are recorded here afte
 | Browser flows / mobile layout | Passed: installed Chrome 148.0.7778.169 and Firefox 160.0, exact 1280x800 and 375x812 page viewports, 122/122 checks; [results](evidence/browser-completed/results.json), [summary](evidence/browser-completed.txt) |
 | Before/after 50-user load measurement | Measured: question mean 439.1 -> 301.4 ms; strict maximum/growth targets still fail; [before](evidence/load-before.json), [after](evidence/load-after.json) |
 | Five-user usability | Pending real participants |
-| Required second browser versions | Pending exact version matrix |
+| Required second browser versions | Passed: Chrome 157.0.8103.50 / 158.0.8127.18 and Firefox 159.0.1 / 160.0, desktop + exact phone viewports, 252/252 CI checks; [run and artifacts](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43497888502) |
 | Target HTTPS/uptime/scheduler | Pending target-environment evidence |
 | Human review / freeze | Pending team approval |
 
@@ -26,7 +26,16 @@ Firefox now sets the page viewport through WebDriver BiDi; Chrome uses device me
 
 ## Browser matrix at review date
 
-The new optional/PR browser workflow requests Chrome 157/158 and Firefox 159/160 at desktop and phone widths, checks actual requested major versions, and uploads results/screenshots even when a job fails. No pass is claimed until the job finishes successfully. Chrome 158 is an early-stable Windows release at review time; 157 is the broadly stable major. The explicitly tested version matrix is more useful than an unqualified "latest" label and must be refreshed when releases change.
+The optional/PR browser workflow requests Chrome 157/158 and Firefox 159/160 at desktop and phone widths, checks actual requested major versions, and uploads results/screenshots even when a job fails. Both final jobs passed on source commit `0aa9548b23a3c29e6becbbdb08dce551b9c426b3`. Chrome 158 is an early-stable Windows release at review time; 157 is the broadly stable major. The explicitly tested version matrix must be refreshed when releases change.
+
+| CI runner | Browser | Desktop checks | Phone checks |
+|---|---|---|---|
+| Ubuntu | Chrome 157.0.8103.50 | 31/31 | 32/32 |
+| Ubuntu | Firefox 159.0.1 | 31/31 | 32/32 |
+| Windows | Chrome 158.0.8127.18 | 31/31 | 32/32 |
+| Windows | Firefox 160.0 | 31/31 | 32/32 |
+
+[Ubuntu artifacts](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43497888502/artifacts/14071893839) and [Windows artifacts](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43497888502/artifacts/14073505432) contain exact versions, per-check results and screenshots. Final [Django PR CI](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43497888460) and [push CI](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43497878922) also passed. Artifacts may expire according to repository retention; the run logs and this summary identify the verified source commit.
 
 Version references: [Google November release log](https://chromereleases.googleblog.com/2026/11/) (157 stable, 158 early stable); [Mozilla Firefox 160](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/160), [159](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/159).
 
