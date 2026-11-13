@@ -21,6 +21,7 @@ import uuid
 from pathlib import Path
 
 from selenium import webdriver
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -74,6 +75,7 @@ def make_driver(name):
         options.set_capability('goog:loggingPrefs', {'browser': 'ALL'})
         return webdriver.Chrome(options=options)
     options = webdriver.FirefoxOptions()
+    options.enable_bidi = True
     if FIREFOX_VERSION:
         options.browser_version = FIREFOX_VERSION
     options.add_argument('-headless')
@@ -95,9 +97,12 @@ class Run:
                 'mobile': viewport == 'phone',
             })
         else:
-            extra_width, extra_height = self.driver.execute_script(
-                'return [window.outerWidth-window.innerWidth, window.outerHeight-window.innerHeight]')
-            self.driver.set_window_size(width + extra_width, height + extra_height)
+            # Set the browsing viewport directly; native window minimum sizes
+            # otherwise silently turn a requested 375 px test into 500 px.
+            self.driver.browsing_context.set_viewport(
+                context=self.driver.current_window_handle,
+                viewport={'width': width, 'height': height},
+            )
         self.viewport_checked = False
         self.shots = EVIDENCE / browser
         self.shots.mkdir(parents=True, exist_ok=True)
@@ -120,7 +125,14 @@ class Run:
         d.save_screenshot(str(self.shots / f'{self.viewport}-{label.replace(" ", "_")}.png'))
 
     def wait(self, condition, timeout=10):
-        return WebDriverWait(self.driver, timeout).until(condition)
+        return WebDriverWait(self.driver, timeout,
+                             ignored_exceptions=(StaleElementReferenceException,)).until(condition)
+
+    def click(self, selector):
+        def click_current(driver):
+            driver.find_element(By.CSS_SELECTOR, selector).click()
+            return True
+        self.wait(click_current)
 
     def login(self, path, user):
         d = self.driver
@@ -176,7 +188,7 @@ class Run:
 
         d.get(f'{BASE}/exams/{exam_id}/take/?question=1')  # refresh keeps the saved answer (NFR-02)
         self.check('refresh keeps saved answer', d.find_element(By.CSS_SELECTOR, 'input[name=answer][value=B]').is_selected())
-        d.find_elements(By.CSS_SELECTOR, '.q-nav button')[1].click()  # Next
+        self.click('.q-nav button:last-child')  # resolve again if navigation made it stale
         self.wait(lambda dr: 'Question 2 of 3' in dr.find_element(By.ID, 'question-progress').text)
         self.check('Next moves to question 2', True)
 

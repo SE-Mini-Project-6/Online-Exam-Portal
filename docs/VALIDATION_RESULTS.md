@@ -7,7 +7,7 @@ Revision prepared 14 November 2026. Actual branch results are recorded here afte
 | System check | Passed: no issues |
 | Migration consistency | Passed: no changes detected |
 | Full regression suite | Passed: 147 tests in 236.170 s; [verbose log](evidence/regression.txt) |
-| Browser flows / mobile layout | Passed: installed Chrome 148.0.7778.169 and Firefox 160.0, desktop + phone, 118/118 checks; [results](evidence/browser-current/results.json), [summary](evidence/browser-current.txt) |
+| Browser flows / mobile layout | Passed: installed Chrome 148.0.7778.169 and Firefox 160.0, exact 1280x800 and 375x812 page viewports, 122/122 checks; [results](evidence/browser-completed/results.json), [summary](evidence/browser-completed.txt) |
 | Before/after 50-user load measurement | Measured: question mean 439.1 -> 301.4 ms; strict maximum/growth targets still fail; [before](evidence/load-before.json), [after](evidence/load-after.json) |
 | Five-user usability | Pending real participants |
 | Required second browser versions | Pending exact version matrix |
@@ -20,7 +20,9 @@ Raw outputs are retained under `docs/evidence/`. Record errors and failed target
 
 Local readiness branch `evaluation-readiness`, based on main `7abce9eb8c6d4016a5125738c3b93a4404597f93`; 14 November 2026, Windows, Python 3.13.13, Django 5.2.18, SQLite. Full regression ran outside the restricted socket sandbox against Django's isolated temporary test database. Browser checks used temporary local fixture accounts/exam and removed them after the run. Browser screenshots and JSON retain the actual installed versions, not a claim that Chrome 148 is current stable.
 
-Mobile evidence: [Chrome phone question](evidence/browser-current/chrome/phone-question_page.png) and [Firefox phone question](evidence/browser-current/firefox/phone-question_page.png). Both runs check that the first answer lies inside the initial viewport and that collapsed instructions can be opened. This fixes the layout obstruction; it does not replace participant confirmation of usability.
+Mobile evidence: [Chrome phone question](evidence/browser-completed/chrome/phone-question_page.png) and [Firefox phone question](evidence/browser-completed/firefox/phone-question_page.png). Both runs check that the first answer lies inside the initial viewport and that collapsed instructions can be opened. Each run also verifies the actual page width and height. Historical `browser-current` screenshots used native-window sizing, which could be clamped to 500 px; they are superseded for exact-phone-width acceptance by `browser-completed`. This fixes the layout obstruction; it does not replace participant confirmation of usability.
+
+Firefox now sets the page viewport through WebDriver BiDi; Chrome uses device metrics. The navigation helper resolves the button again if a completed page transition invalidated its previous element reference. No failed application assertion is ignored or converted into a pass.
 
 ## Browser matrix at review date
 
