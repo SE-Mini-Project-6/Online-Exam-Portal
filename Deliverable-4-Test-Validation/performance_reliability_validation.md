@@ -2,6 +2,19 @@
 
 Requirements: NFR-01, NFR-02, NFR-04, NFR-06. Owner: @Aditya-TJ.
 
+## Readiness remeasurement (14 November 2026)
+
+The attempt view now checks an existing deadline once instead of twice and defers HTML rendering until its write transaction has committed. Answer writes still retain the attempt transaction/locking guard. Two new regression tests cover rendering outside the transaction and a single non-extending deadline check on refresh.
+
+Matched local SQLite runs: Python 3.13.13, Django 5.2.18, Windows, same laptop and threaded server; 1 versus 50 students, 5 rounds per student, 1000 ms randomized mean think time. Baseline has 25 page/save requests; concurrent phase 250 each. No request failures or server exceptions in either run. These are short local diagnostics, not production or broadband acceptance tests.
+
+| Measure | Before concurrent mean / max | After concurrent mean / max | After mean growth versus its 1-user baseline |
+|---|---|---|---|
+| Question GET | 439.1 / 7468.7 ms | 301.4 / 6766.8 ms | +803.3% |
+| Autosave PATCH | 164.4 / 5820.4 ms | 173.5 / 5079.7 ms | +461.8% |
+
+Question mean improved about 31%; autosave mean did not improve. NFR-01 maximum, NFR-02 maximum and both NFR-06 growth checks **still fail**. p95 question latency passes but does not replace the all-response requirement. No success is inferred from absence of HTTP errors. Raw [before](../docs/evidence/load-before.json) and [after](../docs/evidence/load-after.json) JSON is retained. Historical longer SQLite/PostgreSQL runs remain below. Further target-deployment tuning and repeated controlled measurements, or an explicit evaluator-approved deviation, are required.
+
 **Summary.** On PostgreSQL, NFR-01 is met in every run and NFR-02 in all but one (section 3a). The SQLite numbers
 below come first and are worse. Absolute response-time targets (NFR-01, NFR-02) are met at 50 concurrent students
 on SQLite when students pace themselves like real test takers. They are not met in a worst-case run where every student sends requests

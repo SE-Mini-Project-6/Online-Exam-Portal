@@ -10,6 +10,7 @@ Writes results.json and screenshots to Deliverable-4-Test-Validation/browser_che
 Selenium Manager downloads the matching chromedriver/geckodriver on first run.
 """
 import json
+import argparse
 import os
 import socket
 import subprocess
@@ -26,6 +27,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 ROOT = Path(__file__).resolve().parents[2]
 PROJECT = ROOT / 'Online_Exam_Portal'
 EVIDENCE = Path(__file__).resolve().parent / 'evidence'
+CHROME_VERSION = None
+FIREFOX_VERSION = None
 PORT = 8791
 BASE = f'http://127.0.0.1:{PORT}'
 TAG = uuid.uuid4().hex[:6]
@@ -43,7 +46,7 @@ U.objects.create_user('bc-student-{TAG}', password='{PASSWORD}')
 U.objects.create_user('bc-admin-{TAG}', password='{PASSWORD}', is_staff=True)
 now = timezone.now()
 exam = Exam.objects.create(title='Browser check {TAG}', duration_minutes=30,
-                           start_at=now - timedelta(minutes=5), end_at=now + timedelta(hours=2))
+                           start_at=now - timedelta(hours=1), end_at=now + timedelta(hours=2))
 for i in range(1, 4):
     Question.objects.create(exam=exam, text=f'Question {{i}}: which option is correct?', option_a='Alpha',
                             option_b='Beta', option_c='Gamma', option_d='Delta', correct_option='A')
@@ -65,10 +68,14 @@ def manage(*args):
 def make_driver(name):
     if name == 'chrome':
         options = webdriver.ChromeOptions()
+        if CHROME_VERSION:
+            options.browser_version = CHROME_VERSION
         options.add_argument('--headless=new')
         options.set_capability('goog:loggingPrefs', {'browser': 'ALL'})
         return webdriver.Chrome(options=options)
     options = webdriver.FirefoxOptions()
+    if FIREFOX_VERSION:
+        options.browser_version = FIREFOX_VERSION
     options.add_argument('-headless')
     return webdriver.Firefox(options=options)
 
@@ -126,6 +133,17 @@ class Run:
         self.check('countdown timer renders',
                    'Time remaining' in d.find_element(By.ID, 'exam-countdown').text)
         self.fits('question page')
+        if self.viewport == 'phone':
+            top, bottom, height = d.execute_script(
+                'const r = document.querySelector("input[name=answer]").getBoundingClientRect();'
+                'return [r.top, r.bottom, window.innerHeight];')
+            self.check('phone: first answer visible without scrolling', 0 <= top < bottom <= height,
+                       f'first answer bottom={bottom:.0f}, viewport height={height}')
+        details = d.find_element(By.ID, 'exam-details')
+        self.check('exam details collapsed initially', details.get_attribute('open') is None)
+        details.find_element(By.TAG_NAME, 'summary').click()
+        self.check('exam instructions can be expanded', d.find_element(By.ID, 'exam-instructions').is_displayed())
+        details.find_element(By.TAG_NAME, 'summary').click()
 
         # NFR-03 tasks: answer, mark for review, move on, submit.
         d.find_element(By.CSS_SELECTOR, 'input[name=answer][value=B]').click()
@@ -151,6 +169,9 @@ class Run:
         self.wait(lambda dr: 'submitted successfully' in dr.find_element(By.TAG_NAME, 'h1').text)
         self.check('submission reaches submitted page', True)
         self.fits('submitted')
+        d.get(f'{BASE}/exams/{exam_id}/result/')
+        self.check('student result withheld before release', 'not been released' in d.find_element(By.TAG_NAME, 'main').text.lower())
+        self.fits('withheld result')
         self.logout()
 
     def admin_flow(self, exam_id):
@@ -169,6 +190,11 @@ class Run:
 
     def finish(self):
         info = self.driver.capabilities
+        requested = CHROME_VERSION if self.browser == 'chrome' else FIREFOX_VERSION
+        if requested:
+            self.check('requested browser major version used',
+                       info.get('browserVersion', '').split('.')[0] == requested.split('.')[0],
+                       f'requested={requested}, actual={info.get("browserVersion")}')
         console = []
         if self.browser == 'chrome':
             console = [e for e in self.driver.get_log('browser') if e['level'] == 'SEVERE']
@@ -181,7 +207,16 @@ class Run:
 
 
 def main():
-    EVIDENCE.mkdir(exist_ok=True)
+    global EVIDENCE, CHROME_VERSION, FIREFOX_VERSION
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--evidence-dir', type=Path, default=EVIDENCE,
+                        help='Use a new directory to preserve historical evidence.')
+    parser.add_argument('--chrome-version', help='Explicit Selenium browser version; downloads may be needed.')
+    parser.add_argument('--firefox-version', help='Explicit Selenium browser version; downloads may be needed.')
+    args = parser.parse_args()
+    EVIDENCE = args.evidence_dir.resolve()
+    CHROME_VERSION, FIREFOX_VERSION = args.chrome_version, args.firefox_version
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
     with socket.socket() as probe:
         if probe.connect_ex(('127.0.0.1', PORT)) == 0:
             sys.exit(f'Port {PORT} is already in use; stop that server or change PORT, '
@@ -202,7 +237,14 @@ def main():
             for viewport in VIEWPORTS:
                 # The student flow consumes the attempt, so each run gets a fresh student attempt.
                 manage('shell', '-c', f'from exams.models import Attempt; Attempt.objects.filter(exam_id={exam_id}).delete()')
-                run = Run(browser, viewport)
+                try:
+                    run = Run(browser, viewport)
+                except Exception as exc:
+                    report.append({'browser': browser, 'version': None, 'viewport': viewport,
+                                   'results': [{'check': 'browser starts', 'ok': False,
+                                                'detail': f'{type(exc).__name__}: {str(exc)[:250]}'}]})
+                    print(f'{browser}: browser startup failed: {type(exc).__name__}: {str(exc)[:250]}', flush=True)
+                    break
                 try:
                     run.student_flow(exam_id)
                     run.admin_flow(exam_id)

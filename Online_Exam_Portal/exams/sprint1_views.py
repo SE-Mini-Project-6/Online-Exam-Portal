@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.response import TemplateResponse
 from django.utils import timezone
 
 from .forms import QuestionForm
@@ -99,7 +100,7 @@ def take_exam(request, exam_id):
             return JsonResponse({'error': 'This attempt has already been submitted.'}, status=409)
         if request.method != 'GET':
             return HttpResponse('This attempt has already been submitted.', status=409)
-        return render(request, 'exams/submitted.html', {'exam': exam, 'attempt': attempt})
+        return TemplateResponse(request, 'exams/submitted.html', {'exam': exam, 'attempt': attempt})
 
     now = timezone.now()
     if exam.is_upcoming(now):
@@ -125,12 +126,13 @@ def take_exam(request, exam_id):
         return HttpResponse(status=405)
 
     # One attempt per student per exam. Navigating reloads persisted answers, not session state.
-    attempt, _ = Attempt.objects.get_or_create(exam=exam, student=request.user)
-    attempt, _ = sync_attempt(attempt.pk)
+    if attempt is None:
+        attempt, _ = Attempt.objects.get_or_create(exam=exam, student=request.user)
+        attempt, _ = sync_attempt(attempt.pk)
     if attempt.status == Attempt.SUBMITTED:
         if request.method == "POST":
             return HttpResponse("This attempt has already been submitted.", status=409)
-        return render(request, "exams/submitted.html", {"exam": exam, "attempt": attempt})
+        return TemplateResponse(request, "exams/submitted.html", {"exam": exam, "attempt": attempt})
     questions = list(exam.questions.all())
     total = len(questions)
     if request.method == 'POST' and total:
@@ -176,7 +178,10 @@ def take_exam(request, exam_id):
     for i, q in enumerate(questions, start=1):
         state = saved[q.pk].display_state if q.pk in saved else 'NOT_VISITED'
         navigator.append({'number': i, 'state': state, 'label': Answer.STATE_LABELS[state], 'current': i == number})
-    return render(request, 'exams/take_exam.html', {
+    # Resolve all attempt state while locked, but render the template after the
+    # atomic view returns. SQLite otherwise holds its writer lock during HTML
+    # rendering and unnecessarily queues every other student's save behind it.
+    return TemplateResponse(request, 'exams/take_exam.html', {
         'exam': exam, 'current_time': now, 'user': request.user, 'attempt': attempt,
         'deadline_iso': attempt.deadline_at.isoformat(),
         'question': question, 'number': number, 'total': total,

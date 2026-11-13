@@ -1,0 +1,47 @@
+name: Browser compatibility evidence
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'Online_Exam_Portal/**'
+      - 'Deliverable-4-Test-Validation/browser_checks/run_browser_checks.py'
+      - '.github/workflows/browser-compatibility.yml'
+      - 'requirements*.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  browser-flows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - chrome: '157'
+            firefox: '159'
+          - chrome: '158'
+            firefox: '160'
+    env:
+      PYTHONUNBUFFERED: '1'
+      SE_AVOID_STATS: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-browser.txt
+      - name: Student/admin flows at desktop and phone widths
+        run: >-
+          python Deliverable-4-Test-Validation/browser_checks/run_browser_checks.py
+          --chrome-version ${{ matrix.chrome }}
+          --firefox-version ${{ matrix.firefox }}
+          --evidence-dir docs/evidence/browser-ci
+      - name: Save exact versions, results and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-chrome-${{ matrix.chrome }}-firefox-${{ matrix.firefox }}
+          path: docs/evidence/browser-ci/

@@ -12,6 +12,14 @@ Owner: @Aditya-TJ.
 | Five-user walkthrough (NFR-03) | **Not yet conducted.** Needs five people. Protocol and log are ready below (section 3) |
 | Findings logged and retested | 1 fixed and retested, 1 open |
 
+## Readiness follow-up (14 November 2026)
+
+The question page now puts availability details and instructions in an accessible, keyboard-operable disclosure, closed initially. The timer remains visible and the phone layout uses compact spacing so the first answer does not require scrolling past the full rules panel. This addresses the layout cause of F-02; participant confirmation is still pending. Current rerun results and screenshots are indexed in [readiness validation](../docs/VALIDATION_RESULTS.md). Historical results below have been preserved rather than overwritten.
+
+The browser runner accepts `--evidence-dir`, `--chrome-version` and `--firefox-version` for separately recorded version combinations. Explicit versions may require Selenium-managed downloads. Record the agreed assessment-date versions before claiming the latest-two-version requirement.
+
+**Issue #29 reconciliation:** its closed status and checked boxes do not establish that the five-user study occurred. The current session log remains empty. Complete the actual study before marking NFR-03 verified.
+
 The scripted run does not replace the five-user walkthrough. NFR-03 asks whether a first-time student
 understands the exam without help, which only people can show. Nothing in section 3 has been filled in with
 invented results.
@@ -52,7 +60,7 @@ Host: Windows 11.
 | ID | Found by | Finding | Severity | Status |
 |---|---|---|---|---|
 | F-01 | Chrome console check | Every page triggered `GET /favicon.ico` 404, logged as a SEVERE console error in Chrome. Firefox does not report it | Low | **Fixed and retested.** Inline SVG `<link rel="icon">` added to `templates/base.html`. Chrome re-run: 25/25 at both widths. Regression test `exams/test_browser_compat.py` |
-| F-02 | Reviewing phone screenshots (375 px) | On the question page the timer, duration/window panel and instruction list come before the question. A phone user has to scroll past roughly one screen before seeing the question and options. Nothing is broken and there is no horizontal scroll, but it may confuse first-time users | Medium (usability) | **Open.** Not changed in this story because the exam page layout belongs to the team's review-grid and timer work. Should be confirmed or dismissed by the walkthrough, then fixed if participants stumble |
+| F-02 | Reviewing phone screenshots (375 px) | The timer, availability panel and instruction list pushed question options below the initial phone viewport. | Medium (usability) | **Layout revised; participant confirmation pending.** Details/rules are now collapsed initially; timer stays visible and mobile spacing is reduced. See readiness browser evidence for measured option visibility; the five-user walkthrough still needs to confirm usability. |
 
 Not a finding but worth stating: the test suite and scripted run use the development server over HTTP
 (`DJANGO_DEBUG=True`). With `DEBUG` off the site redirects to HTTPS, so browser behaviour behind TLS (mixed content,

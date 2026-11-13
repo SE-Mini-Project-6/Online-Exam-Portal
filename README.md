@@ -1,5 +1,22 @@
 # Online Exam Portal
 
+## Run and review the current implementation
+
+```powershell
+python -m pip install -r requirements.txt
+cd Online_Exam_Portal
+python manage.py migrate
+python manage.py createsuperuser
+$env:DJANGO_DEBUG = "True"  # local HTTP development only
+python manage.py runserver
+```
+
+Use Django admin to provision student accounts with `is_staff=False`. Accounts are pre-provisioned; self-registration is outside scope. Run `python manage.py test --noinput` from `Online_Exam_Portal` for the complete regression suite.
+
+**Evaluation entry point:** [docs evidence index](docs/README.md), [current test-case revision](docs/TEST_CASE_EXECUTION.md), [validation results](docs/VALIDATION_RESULTS.md), and [remaining team acceptance](docs/TEAM_ACCEPTANCE.md). Read the [design deviation register](docs/DESIGN_DEVIATIONS.md) alongside the original Part 1 PDFs. Historical documents are baselines; pending real-participant study, browser matrix, demo recordings and freeze approval must not be inferred from closed issues.
+
+The existing [generic demo](Project_Demo/Project_Demo_Video.mp4) is historical evidence. Separate one-minute Sprint 1 and two-minute Sprint 2 recordings remain pending; [recording scripts](docs/DEMO_SCRIPTS.md) are ready. **Release freeze is not active.**
+
 ## Software Engineering Mini Project
 
 This repository contains the work for **Mini Project 6 – Online Exam Portal**.

@@ -34,11 +34,11 @@ Errors use `{ "error": { "code", "message", "requestId" } }`:
 Every response carries a `Server-Timing: save;dur=<ms>` header.
 
 ## Differences from the design specification
-- **Deadline:** the spec computes `start_time + duration_minutes`. `Attempt` has no start time
-  yet, so the server enforces the exam availability window only. Per-attempt deadlines belong
-  with the timer / auto-submit work.
-- **Navigator state:** `displayState` follows spec 4.6 but `Answer` has no `visited` field, so a
-  saved row counts as visited (`NOT_ANSWERED`). A row exists only once the student interacted.
+- **Deadline (resolved in Sprint 2):** `Attempt.started_at` and `deadline_at` are persisted by
+  the server; the deadline is capped by exam availability. Late writes are rejected and
+  abandoned sessions can be finalized with the scheduled management command.
+- **Navigator state (resolved in Sprint 2):** `Answer.visited` is persisted (migration 0005),
+  and `Answer.display_state` derives all five grid states independently of the current ring.
 - **Schema:** `Answer.saved_at` (named in the spec's data design) was added (migration 0004).
 
 ## Measuring autosave latency

@@ -109,6 +109,21 @@
         .q-legend .ring { outline: 3px solid #0f172a; outline-offset: 1px; background: #fff; }
         .save-status { min-height: 1.4rem; font-size: 0.9rem; color: #64748b; margin-bottom: 0.5rem; }
         .save-status.error { color: #b91c1c; }
+        .exam-details { margin-bottom: 1.25rem; }
+        .exam-details summary { cursor: pointer; color: #047857; font-weight: 600; padding: 0.5rem 0; }
+        .exam-details .meta-grid { margin: 0.75rem 0; }
+        .exam-details .instructions-box { margin-bottom: 0; }
+        .exam-timer { font-size: 1.1rem; font-weight: 700; color: #9a3412; margin-top: 0.75rem; }
+        @media (max-width: 640px) {
+            .exam-container { padding: 1rem; }
+            .exam-header { padding-bottom: 0.75rem; margin-bottom: 0.5rem; }
+            .exam-header h2 { font-size: 1.25rem; margin-bottom: 0.4rem; overflow-wrap: anywhere; }
+            .status-pill { font-size: 0.75rem; padding: 0.2rem 0.5rem; }
+            .q-text { font-size: 1.05rem; overflow-wrap: anywhere; }
+            .q-option { padding: 0.65rem; overflow-wrap: anywhere; }
+            .btn-nav { padding: 0.6rem 0.8rem; }
+            .btn-start { width: 100%; padding: 0.85rem; }
+        }
     </style>
 {% endblock %}
 {% block content %}
@@ -120,6 +135,8 @@
                  data-deadline="{{ deadline_iso }}">Time remaining: --:--</div>
         </div>
 
+        <details class="exam-details" id="exam-details">
+        <summary>Exam details and instructions</summary>
         <div class="meta-grid">
             <div class="meta-item">
                 <span class="meta-label">Duration</span>
@@ -145,6 +162,7 @@
             </ul>
         </div>
 
+        </details>
         {% if question %}
         <form method="post" id="question-form" data-autosave-url="{% url 'api:answer_detail' attempt.id question.id %}">
             {% csrf_token %}
@@ -270,7 +288,6 @@
     if (!label) return;
     var deadline = Date.parse(label.dataset.deadline);
     var redirected = false;
-    label.style.cssText = 'font-size:1.1rem;font-weight:700;color:#9a3412;margin:1rem 0';
     function renderTimer() {
         var ms = Math.max(0, deadline - Date.now());
         var seconds = Math.ceil(ms / 1000);
