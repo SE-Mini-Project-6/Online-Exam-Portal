@@ -18,7 +18,7 @@ Raw outputs are retained under `docs/evidence/`. Record errors and failed target
 
 ## Scope and provenance
 
-Local readiness branch `codex/evaluator-readiness`, based on main `7abce9eb8c6d4016a5125738c3b93a4404597f93`; 14 November 2026, Windows, Python 3.13.13, Django 5.2.18, SQLite. Full regression ran outside the restricted socket sandbox against Django's isolated temporary test database. Browser checks used temporary local fixture accounts/exam and removed them after the run. Browser screenshots and JSON retain the actual installed versions, not a claim that Chrome 148 is current stable.
+Local readiness branch `evaluation-readiness`, based on main `7abce9eb8c6d4016a5125738c3b93a4404597f93`; 14 November 2026, Windows, Python 3.13.13, Django 5.2.18, SQLite. Full regression ran outside the restricted socket sandbox against Django's isolated temporary test database. Browser checks used temporary local fixture accounts/exam and removed them after the run. Browser screenshots and JSON retain the actual installed versions, not a claim that Chrome 148 is current stable.
 
 Mobile evidence: [Chrome phone question](evidence/browser-current/chrome/phone-question_page.png) and [Firefox phone question](evidence/browser-current/firefox/phone-question_page.png). Both runs check that the first answer lies inside the initial viewport and that collapsed instructions can be opened. This fixes the layout obstruction; it does not replace participant confirmation of usability.
 
