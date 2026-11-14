@@ -1,0 +1,51 @@
+{
+  "users": 50,
+  "pages": {
+    "single": {
+      "n": 25,
+      "mean": 36.51669999904698,
+      "median": 31.699699997261632,
+      "p95": 60.02930000249762,
+      "max": 62.86519999412121
+    },
+    "concurrent": {
+      "n": 250,
+      "mean": 439.12633239963907,
+      "median": 53.94114999944577,
+      "p95": 2979.9582000050577,
+      "max": 7468.68519999407
+    },
+    "mean_growth": 11.02535640983713
+  },
+  "saves": {
+    "single": {
+      "n": 25,
+      "mean": 30.904776000243146,
+      "median": 33.66700000333367,
+      "p95": 36.920300000929274,
+      "max": 42.95790000469424
+    },
+    "concurrent": {
+      "n": 250,
+      "mean": 164.35668119997717,
+      "median": 36.52929999952903,
+      "p95": 893.7502999979188,
+      "max": 5820.377299998654
+    },
+    "mean_growth": 4.31816445453881
+  },
+  "errors": {
+    "single": [],
+    "concurrent": []
+  },
+  "wall_s": 13.172205099996063,
+  "checks": {
+    "NFR-01 page <= 3000 ms (max under load)": false,
+    "NFR-01 page <= 3000 ms (p95 under load)": true,
+    "NFR-02 autosave <= 2000 ms (max under load)": false,
+    "NFR-06 page mean growth <= 20%": false,
+    "NFR-06 autosave mean growth <= 20%": false,
+    "No failed requests": true
+  },
+  "server_errors": {}
+}

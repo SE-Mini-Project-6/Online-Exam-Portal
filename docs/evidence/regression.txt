@@ -1,0 +1,207 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+
+Found 147 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: accounts, core, messages, staticfiles
+  Apply all migrations: admin, auth, contenttypes, exams, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying exams.0001_initial... OK
+  Applying exams.0002_question... OK
+  Applying exams.0003_attempt_answer... OK
+  Applying exams.0004_answer_saved_at... OK
+  Applying exams.0005_answer_visited... OK
+  Applying exams.0006_attempt_deadline_at_attempt_started_at... OK
+  Applying exams.0007_exam_results_released... OK
+test_credentials_posted_over_http_are_never_processed (accounts.test_security.HttpsEnforcementTests.test_credentials_posted_over_http_are_never_processed) ... ok
+test_https_request_is_served_with_hsts_and_secure_cookies (accounts.test_security.HttpsEnforcementTests.test_https_request_is_served_with_hsts_and_secure_cookies) ... ok
+test_plain_http_request_is_redirected_to_https (accounts.test_security.HttpsEnforcementTests.test_plain_http_request_is_redirected_to_https) ... ok
+test_debug_mode_relaxes_https_for_local_development_only (accounts.test_security.HttpsSettingsModuleTests.test_debug_mode_relaxes_https_for_local_development_only) ... ok
+test_default_configuration_is_https_only (accounts.test_security.HttpsSettingsModuleTests.test_default_configuration_is_https_only) ... ok
+test_deployment_environment_variables_are_honoured (accounts.test_security.HttpsSettingsModuleTests.test_deployment_environment_variables_are_honoured) ... ok
+test_manage_check_deploy_is_clean_with_production_environment (accounts.test_security.HttpsSettingsModuleTests.test_manage_check_deploy_is_clean_with_production_environment) ... ok
+test_login_post_without_csrf_token_is_rejected (accounts.test_security.LogoutAndCsrfTests.test_login_post_without_csrf_token_is_rejected) ... ok
+test_logout_post_with_csrf_token_ends_the_session (accounts.test_security.LogoutAndCsrfTests.test_logout_post_with_csrf_token_ends_the_session) ... ok
+test_logout_post_without_csrf_token_is_rejected (accounts.test_security.LogoutAndCsrfTests.test_logout_post_without_csrf_token_is_rejected) ... ok
+test_logout_rejects_get (accounts.test_security.LogoutAndCsrfTests.test_logout_rejects_get) ... ok
+test_changed_password_replaces_the_old_hash (accounts.test_security.PasswordHandlingTests.test_changed_password_replaces_the_old_hash) ... ok
+test_failed_login_message_is_identical_for_wrong_password_and_unknown_user (accounts.test_security.PasswordHandlingTests.test_failed_login_message_is_identical_for_wrong_password_and_unknown_user) ... ok
+test_inactive_account_cannot_log_in (accounts.test_security.PasswordHandlingTests.test_inactive_account_cannot_log_in) ... ok
+test_missing_credentials_are_rejected_without_a_server_error (accounts.test_security.PasswordHandlingTests.test_missing_credentials_are_rejected_without_a_server_error) ... ok
+test_password_hasher_configuration_is_not_weakened (accounts.test_security.PasswordHandlingTests.test_password_hasher_configuration_is_not_weakened) ... ok
+test_password_is_stored_as_a_salted_pbkdf2_hash_never_plaintext (accounts.test_security.PasswordHandlingTests.test_password_is_stored_as_a_salted_pbkdf2_hash_never_plaintext) ... ok
+test_same_password_produces_different_hashes_per_user (accounts.test_security.PasswordHandlingTests.test_same_password_produces_different_hashes_per_user) ... ok
+test_successful_login_never_echoes_the_password_or_its_hash (accounts.test_security.PasswordHandlingTests.test_successful_login_never_echoes_the_password_or_its_hash) ... ok
+test_weak_passwords_are_rejected_by_the_configured_validators (accounts.test_security.PasswordHandlingTests.test_weak_passwords_are_rejected_by_the_configured_validators) ... ok
+test_admin_dashboard_links_to_submission_roster (accounts.test_submissions.AdminSubmissionsDashboardTests.test_admin_dashboard_links_to_submission_roster) ... ok
+test_exam_selection_excludes_students_with_only_another_exam_attempt (accounts.test_submissions.AdminSubmissionsDashboardTests.test_exam_selection_excludes_students_with_only_another_exam_attempt) ... ok
+test_results_cannot_be_released_with_open_attempt_or_by_student (accounts.test_submissions.AdminSubmissionsDashboardTests.test_results_cannot_be_released_with_open_attempt_or_by_student) ... ok
+test_results_release_requires_staff_post_and_completed_exam (accounts.test_submissions.AdminSubmissionsDashboardTests.test_results_release_requires_staff_post_and_completed_exam) ... ok
+test_staff_sees_selected_exam_roster_states_and_submitted_score (accounts.test_submissions.AdminSubmissionsDashboardTests.test_staff_sees_selected_exam_roster_states_and_submitted_score) ... ok
+test_student_is_forbidden_and_anonymous_user_is_redirected (accounts.test_submissions.AdminSubmissionsDashboardTests.test_student_is_forbidden_and_anonymous_user_is_redirected) ... ok
+test_admin_and_student_can_both_login (accounts.tests.AuthenticationTests.test_admin_and_student_can_both_login)
+Test that both admin and student can login successfully. ... ok
+test_admin_login_invalid (accounts.tests.AuthenticationTests.test_admin_login_invalid)
+Test admin login rejected with invalid credentials. ... ok
+test_admin_login_valid (accounts.tests.AuthenticationTests.test_admin_login_valid)
+Test admin signs in with valid credentials. ... ok
+test_admin_user_creation (accounts.tests.AuthenticationTests.test_admin_user_creation)
+Test that admin user is created with is_staff=True. ... ok
+test_csrf_protection (accounts.tests.AuthenticationTests.test_csrf_protection)
+Test that CSRF protection is in place for login. ... ok
+test_logout_post_succeeds_without_csrf_forbidden (accounts.tests.AuthenticationTests.test_logout_post_succeeds_without_csrf_forbidden)
+Test that POST to logout works and successfully clears authentication. ... ok
+test_multiple_failed_login_attempts (accounts.tests.AuthenticationTests.test_multiple_failed_login_attempts)
+Test that multiple failed login attempts are handled. ... ok
+test_password_hashing_security (accounts.tests.AuthenticationTests.test_password_hashing_security)
+Test that passwords are stored with salted hash (not plain text). ... ok
+test_role_aware_session_redirect (accounts.tests.AuthenticationTests.test_role_aware_session_redirect)
+Test role-aware session redirect after login. ... ok
+test_session_persistence (accounts.tests.AuthenticationTests.test_session_persistence)
+Test that session persists across requests. ... ok
+test_student_dashboard_has_only_bottom_logout_button (accounts.tests.AuthenticationTests.test_student_dashboard_has_only_bottom_logout_button)
+Test that student dashboard contains only the bottom logout button and no navbar logout link. ... ok
+test_student_login_invalid (accounts.tests.AuthenticationTests.test_student_login_invalid)
+Test student login rejected with invalid credentials. ... ok
+test_student_login_valid (accounts.tests.AuthenticationTests.test_student_login_valid)
+Test student signs in with valid credentials. ... ok
+test_student_user_creation (accounts.tests.AuthenticationTests.test_student_user_creation)
+Test that regular student user is created with is_staff=False. ... ok
+test_accounts_urls_configured (core.tests.URLConfigurationTests.test_accounts_urls_configured)
+Test that accounts app URLs are properly configured. ... ok
+test_answer_can_be_changed_and_refresh_preserves_it (exams.test_autosave.AnswerAutosaveTests.test_answer_can_be_changed_and_refresh_preserves_it) ... ok
+test_autosave_persists_answer_and_review_flag_independently (exams.test_autosave.AnswerAutosaveTests.test_autosave_persists_answer_and_review_flag_independently) ... ok
+test_exam_page_is_wired_for_autosave_and_latency_command_runs (exams.test_autosave.AnswerAutosaveTests.test_exam_page_is_wired_for_autosave_and_latency_command_runs) ... ok
+test_invalid_input_is_rejected_with_error_codes (exams.test_autosave.AnswerAutosaveTests.test_invalid_input_is_rejected_with_error_codes) ... ok
+test_requires_login_and_ownership (exams.test_autosave.AnswerAutosaveTests.test_requires_login_and_ownership) ... ok
+test_saves_blocked_after_finalization_and_outside_window (exams.test_autosave.AnswerAutosaveTests.test_saves_blocked_after_finalization_and_outside_window) ... ok
+test_pages_declare_icon_viewport_and_language (exams.test_browser_compat.BrowserCompatibilityMarkupTests.test_pages_declare_icon_viewport_and_language) ... ok
+test_admin_pages_show_admin_navigation (exams.test_layout.SharedLayoutAndRoutingTests.test_admin_pages_show_admin_navigation) ... ok
+test_anonymous_visitor_sees_only_login_links (exams.test_layout.SharedLayoutAndRoutingTests.test_anonymous_visitor_sees_only_login_links) ... ok
+test_each_role_is_routed_to_its_own_dashboard (exams.test_layout.SharedLayoutAndRoutingTests.test_each_role_is_routed_to_its_own_dashboard) ... ok
+test_login_pages_are_role_specific (exams.test_layout.SharedLayoutAndRoutingTests.test_login_pages_are_role_specific) ... ok
+test_pages_share_one_base_layout_with_single_logout (exams.test_layout.SharedLayoutAndRoutingTests.test_pages_share_one_base_layout_with_single_logout) ... ok
+test_server_still_blocks_students_from_admin_pages (exams.test_layout.SharedLayoutAndRoutingTests.test_server_still_blocks_students_from_admin_pages) ... ok
+test_student_pages_have_no_admin_links (exams.test_layout.SharedLayoutAndRoutingTests.test_student_pages_have_no_admin_links) ... ok
+test_anonymous_and_staff_are_redirected (exams.test_results.StudentResultVisibilityTests.test_anonymous_and_staff_are_redirected) ... ok
+test_no_score_before_submission (exams.test_results.StudentResultVisibilityTests.test_no_score_before_submission) ... ok
+test_released_result_shows_the_score (exams.test_results.StudentResultVisibilityTests.test_released_result_shows_the_score) ... ok
+test_releasing_and_unreleasing_toggles_visibility (exams.test_results.StudentResultVisibilityTests.test_releasing_and_unreleasing_toggles_visibility) ... ok
+test_student_only_ever_sees_their_own_score (exams.test_results.StudentResultVisibilityTests.test_student_only_ever_sees_their_own_score) ... ok
+test_unreleased_result_hides_the_score (exams.test_results.StudentResultVisibilityTests.test_unreleased_result_hides_the_score) ... ok
+test_display_state_precedence (exams.test_review_grid.ReviewAndGridTests.test_display_state_precedence) ... ok
+test_form_fallback_can_mark_unanswered_question_for_review (exams.test_review_grid.ReviewAndGridTests.test_form_fallback_can_mark_unanswered_question_for_review) ... ok
+test_grid_shows_all_five_states_and_persists_across_refresh (exams.test_review_grid.ReviewAndGridTests.test_grid_shows_all_five_states_and_persists_across_refresh) ... ok
+test_opening_a_question_marks_it_visited (exams.test_review_grid.ReviewAndGridTests.test_opening_a_question_marks_it_visited) ... ok
+test_review_cannot_change_after_submission (exams.test_review_grid.ReviewAndGridTests.test_review_cannot_change_after_submission) ... ok
+test_review_toggles_independently_of_answer (exams.test_review_grid.ReviewAndGridTests.test_review_toggles_independently_of_answer) ... ok
+test_cross_exam_question_is_not_available_for_attempt_autosave (exams.test_security_regression.OwnershipTests.test_cross_exam_question_is_not_available_for_attempt_autosave) ... ok
+test_exam_page_never_shows_another_students_saved_answer (exams.test_security_regression.OwnershipTests.test_exam_page_never_shows_another_students_saved_answer) ... ok
+test_forbidden_response_leaks_no_attempt_data (exams.test_security_regression.OwnershipTests.test_forbidden_response_leaks_no_attempt_data) ... ok
+test_other_student_cannot_patch_a_foreign_attempt (exams.test_security_regression.OwnershipTests.test_other_student_cannot_patch_a_foreign_attempt) ... ok
+test_other_students_submission_never_touches_a_foreign_attempt (exams.test_security_regression.OwnershipTests.test_other_students_submission_never_touches_a_foreign_attempt) ... ok
+test_owner_can_still_save_their_own_answer (exams.test_security_regression.OwnershipTests.test_owner_can_still_save_their_own_answer) ... ok
+test_owner_cannot_read_foreign_attempt_through_result_route (exams.test_security_regression.OwnershipTests.test_owner_cannot_read_foreign_attempt_through_result_route) ... ok
+test_unknown_attempt_returns_404_not_a_server_error (exams.test_security_regression.OwnershipTests.test_unknown_attempt_returns_404_not_a_server_error) ... ok
+test_api_answer_update_after_submit_returns_409 (exams.test_security_regression.PostSubmitMutationTests.test_api_answer_update_after_submit_returns_409) ... ok
+test_api_review_flag_and_new_answer_after_submit_return_409 (exams.test_security_regression.PostSubmitMutationTests.test_api_review_flag_and_new_answer_after_submit_return_409) ... ok
+test_confirmation_is_required_to_finalize (exams.test_security_regression.PostSubmitMutationTests.test_confirmation_is_required_to_finalize) ... ok
+test_editing_the_answer_key_after_submit_does_not_change_the_stored_score (exams.test_security_regression.PostSubmitMutationTests.test_editing_the_answer_key_after_submit_does_not_change_the_stored_score) ... ok
+test_model_layer_refuses_answer_changes_after_submit (exams.test_security_regression.PostSubmitMutationTests.test_model_layer_refuses_answer_changes_after_submit) ... ok
+test_second_submit_returns_409_and_keeps_score_and_timestamp (exams.test_security_regression.PostSubmitMutationTests.test_second_submit_returns_409_and_keeps_score_and_timestamp) ... ok
+test_unsupported_api_methods_are_rejected_for_the_owner (exams.test_security_regression.PostSubmitMutationTests.test_unsupported_api_methods_are_rejected_for_the_owner) ... ok
+test_web_form_post_after_submit_returns_409 (exams.test_security_regression.PostSubmitMutationTests.test_web_form_post_after_submit_returns_409) ... ok
+test_admin_can_still_read_exam_metadata_as_json (exams.test_security_regression.RoleAuthorizationTests.test_admin_can_still_read_exam_metadata_as_json) ... ok
+test_admin_cannot_save_answers_through_the_api (exams.test_security_regression.RoleAuthorizationTests.test_admin_cannot_save_answers_through_the_api) ... ok
+test_admin_cannot_start_or_submit_an_attempt (exams.test_security_regression.RoleAuthorizationTests.test_admin_cannot_start_or_submit_an_attempt) ... ok
+test_admin_json_metadata_is_get_only (exams.test_security_regression.RoleAuthorizationTests.test_admin_json_metadata_is_get_only) ... ok
+test_anonymous_api_call_gets_401_with_stable_error_code (exams.test_security_regression.RoleAuthorizationTests.test_anonymous_api_call_gets_401_with_stable_error_code) ... ok
+test_anonymous_user_is_redirected_to_login_on_every_protected_page (exams.test_security_regression.RoleAuthorizationTests.test_anonymous_user_is_redirected_to_login_on_every_protected_page) ... ok
+test_exam_list_offers_start_button_to_students_but_not_to_admins (exams.test_security_regression.RoleAuthorizationTests.test_exam_list_offers_start_button_to_students_but_not_to_admins) ... ok
+test_student_cannot_use_the_django_admin_site (exams.test_security_regression.RoleAuthorizationTests.test_student_cannot_use_the_django_admin_site) ... ok
+test_student_gets_403_on_every_staff_endpoint_and_nothing_changes (exams.test_security_regression.RoleAuthorizationTests.test_student_gets_403_on_every_staff_endpoint_and_nothing_changes) ... ok
+test_all_correct_answers_score_three (exams.test_sprint1_abhi.Sprint1AbhiTests.test_all_correct_answers_score_three) ... ok
+test_all_four_relational_models_exist (exams.test_sprint1_abhi.Sprint1AbhiTests.test_all_four_relational_models_exist) ... ok
+test_answer_persists_across_session_and_is_user_scoped (exams.test_sprint1_abhi.Sprint1AbhiTests.test_answer_persists_across_session_and_is_user_scoped) ... ok
+test_confirm_page_and_submission_lock (exams.test_sprint1_abhi.Sprint1AbhiTests.test_confirm_page_and_submission_lock) ... ok
+test_cross_exam_answer_reference_rejected (exams.test_sprint1_abhi.Sprint1AbhiTests.test_cross_exam_answer_reference_rejected) ... ok
+test_grading_unanswered_zero_and_review_flag_ignored (exams.test_sprint1_abhi.Sprint1AbhiTests.test_grading_unanswered_zero_and_review_flag_ignored) ... ok
+test_invalid_mcq_rejected_and_not_persisted (exams.test_sprint1_abhi.Sprint1AbhiTests.test_invalid_mcq_rejected_and_not_persisted) ... ok
+test_invalid_option_does_not_create_answer (exams.test_sprint1_abhi.Sprint1AbhiTests.test_invalid_option_does_not_create_answer) ... ok
+test_non_staff_cannot_manage_questions (exams.test_sprint1_abhi.Sprint1AbhiTests.test_non_staff_cannot_manage_questions) ... ok
+test_question_exactly_four_choices_and_one_correct (exams.test_sprint1_abhi.Sprint1AbhiTests.test_question_exactly_four_choices_and_one_correct) ... ok
+test_staff_can_create_edit_delete_questions (exams.test_sprint1_abhi.Sprint1AbhiTests.test_staff_can_create_edit_delete_questions) ... ok
+test_submission_rejected_outside_exam_window (exams.test_sprint1_abhi.Sprint1AbhiTests.test_submission_rejected_outside_exam_window) ... ok
+test_admin_can_delete_exam (exams.test_sprint1_criteria.ExamAdminCrudTests.test_admin_can_delete_exam) ... ok
+test_admin_can_update_exam (exams.test_sprint1_criteria.ExamAdminCrudTests.test_admin_can_update_exam) ... ok
+test_exam_window_caps_stored_deadline (exams.test_sprint2_timer.ServerTimerTests.test_exam_window_caps_stored_deadline) ... ok
+test_expiry_finalizes_score_and_locks_answer_once (exams.test_sprint2_timer.ServerTimerTests.test_expiry_finalizes_score_and_locks_answer_once) ... ok
+test_first_access_stores_deadline_which_refresh_cannot_extend (exams.test_sprint2_timer.ServerTimerTests.test_first_access_stores_deadline_which_refresh_cannot_extend) ... ok
+test_late_patch_is_denied_and_cannot_change_deadline (exams.test_sprint2_timer.ServerTimerTests.test_late_patch_is_denied_and_cannot_change_deadline) ... ok
+test_repeat_manual_submission_does_not_regrade (exams.test_sprint2_timer.ServerTimerTests.test_repeat_manual_submission_does_not_regrade) ... ok
+test_scheduled_sweep_closes_abandoned_attempt_once (exams.test_sprint2_timer.ServerTimerTests.test_scheduled_sweep_closes_abandoned_attempt_once) ... ok
+test_active_exam_access_is_granted_with_200 (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_active_exam_access_is_granted_with_200) ... ok
+test_anonymous_user_redirected_to_login (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_anonymous_user_redirected_to_login) ... ok
+test_available_exams_json_api (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_available_exams_json_api) ... ok
+test_available_exams_view_renders_correctly (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_available_exams_view_renders_correctly) ... ok
+test_detail_url_route_enforces_windows (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_detail_url_route_enforces_windows) ... ok
+test_early_access_is_blocked_on_server_with_403 (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_early_access_is_blocked_on_server_with_403) ... ok
+test_exam_model_availability_methods (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_exam_model_availability_methods) ... ok
+test_exam_window_enforcement_json_api (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_exam_window_enforcement_json_api) ... ok
+test_expired_access_is_blocked_on_server_with_403 (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_expired_access_is_blocked_on_server_with_403) ... ok
+test_nonexistent_exam_returns_404 (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_nonexistent_exam_returns_404) ... ok
+test_student_dashboard_displays_appropriate_status_badges (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_student_dashboard_displays_appropriate_status_badges) ... ok
+test_student_dashboard_displays_exams_and_scheduled_times (exams.tests.ExamAvailabilityAndWindowEnforcementTests.test_student_dashboard_displays_exams_and_scheduled_times) ... ok
+test_admin_can_access_exam_create_page (exams.tests.ExamConfigurationTests.test_admin_can_access_exam_create_page) ... ok
+test_anonymous_users_redirected_to_login (exams.tests.ExamConfigurationTests.test_anonymous_users_redirected_to_login) ... ok
+test_duration_exceeding_window_is_rejected (exams.tests.ExamConfigurationTests.test_duration_exceeding_window_is_rejected) ... ok
+test_empty_duration_is_handled_gracefully (exams.tests.ExamConfigurationTests.test_empty_duration_is_handled_gracefully) ... ok
+test_end_before_start_is_rejected (exams.tests.ExamConfigurationTests.test_end_before_start_is_rejected) ... ok
+test_equal_start_and_end_is_rejected (exams.tests.ExamConfigurationTests.test_equal_start_and_end_is_rejected) ... ok
+test_exam_str_returns_title (exams.tests.ExamConfigurationTests.test_exam_str_returns_title) ... ok
+test_model_clean_validation (exams.tests.ExamConfigurationTests.test_model_clean_validation) ... ok
+test_non_positive_duration_is_rejected (exams.tests.ExamConfigurationTests.test_non_positive_duration_is_rejected) ... ok
+test_saved_exam_appears_on_admin_dashboard (exams.tests.ExamConfigurationTests.test_saved_exam_appears_on_admin_dashboard) ... ok
+test_students_cannot_create_exams (exams.tests.ExamConfigurationTests.test_students_cannot_create_exams) ... ok
+test_valid_exam_configuration_is_saved (exams.tests.ExamConfigurationTests.test_valid_exam_configuration_is_saved) ... ok
+test_answers_are_not_accepted_after_window_closes (exams.tests.QuestionNavigationTests.test_answers_are_not_accepted_after_window_closes) ... ok
+test_any_order_navigation_preserves_answers (exams.tests.QuestionNavigationTests.test_any_order_navigation_preserves_answers) ... ok
+test_first_question_and_direct_navigation (exams.tests.QuestionNavigationTests.test_first_question_and_direct_navigation) ... ok
+test_invalid_option_is_ignored (exams.tests.QuestionNavigationTests.test_invalid_option_is_ignored) ... ok
+test_invalid_question_number_falls_back_safely (exams.tests.QuestionNavigationTests.test_invalid_question_number_falls_back_safely) ... ok
+test_home_url_resolves (core.tests.HomeTests.test_home_url_resolves)
+Test that home URL resolves correctly. ... ok
+test_homepage_contains_login_links (core.tests.HomeTests.test_homepage_contains_login_links)
+Test that homepage contains links to both login types. ... ok
+test_html_renders_after_attempt_transaction_commits (exams.test_performance.ExamTransactionTests.test_html_renders_after_attempt_transaction_commits) ... ok
+test_refresh_checks_deadline_once_without_extending_it (exams.test_performance.ExamTransactionTests.test_refresh_checks_deadline_once_without_extending_it) ... ok
+test_measure_load_reports_every_target_and_cleans_up (exams.test_performance.LoadMeasurementTests.test_measure_load_reports_every_target_and_cleans_up) ... ok
+test_sqlite_writers_queue_instead_of_failing (exams.test_performance.LoadMeasurementTests.test_sqlite_writers_queue_instead_of_failing) ... ok
+
+----------------------------------------------------------------------
+Ran 147 tests in 236.170s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+
+  Applying sessions.0001_initial... OK
+System check identified no issues (0 silenced).

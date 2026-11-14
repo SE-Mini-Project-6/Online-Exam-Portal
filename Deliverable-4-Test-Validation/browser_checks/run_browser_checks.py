@@ -10,6 +10,7 @@ Writes results.json and screenshots to Deliverable-4-Test-Validation/browser_che
 Selenium Manager downloads the matching chromedriver/geckodriver on first run.
 """
 import json
+import argparse
 import os
 import socket
 import subprocess
@@ -20,12 +21,15 @@ import uuid
 from pathlib import Path
 
 from selenium import webdriver
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
 ROOT = Path(__file__).resolve().parents[2]
 PROJECT = ROOT / 'Online_Exam_Portal'
 EVIDENCE = Path(__file__).resolve().parent / 'evidence'
+CHROME_VERSION = None
+FIREFOX_VERSION = None
 PORT = 8791
 BASE = f'http://127.0.0.1:{PORT}'
 TAG = uuid.uuid4().hex[:6]
@@ -43,7 +47,7 @@ U.objects.create_user('bc-student-{TAG}', password='{PASSWORD}')
 U.objects.create_user('bc-admin-{TAG}', password='{PASSWORD}', is_staff=True)
 now = timezone.now()
 exam = Exam.objects.create(title='Browser check {TAG}', duration_minutes=30,
-                           start_at=now - timedelta(minutes=5), end_at=now + timedelta(hours=2))
+                           start_at=now - timedelta(hours=1), end_at=now + timedelta(hours=2))
 for i in range(1, 4):
     Question.objects.create(exam=exam, text=f'Question {{i}}: which option is correct?', option_a='Alpha',
                             option_b='Beta', option_c='Gamma', option_d='Delta', correct_option='A')
@@ -65,10 +69,15 @@ def manage(*args):
 def make_driver(name):
     if name == 'chrome':
         options = webdriver.ChromeOptions()
+        if CHROME_VERSION:
+            options.browser_version = CHROME_VERSION
         options.add_argument('--headless=new')
         options.set_capability('goog:loggingPrefs', {'browser': 'ALL'})
         return webdriver.Chrome(options=options)
     options = webdriver.FirefoxOptions()
+    options.enable_bidi = True
+    if FIREFOX_VERSION:
+        options.browser_version = FIREFOX_VERSION
     options.add_argument('-headless')
     return webdriver.Firefox(options=options)
 
@@ -78,7 +87,23 @@ class Run:
         self.browser, self.viewport = browser, viewport
         self.results = []
         self.driver = make_driver(browser)
-        self.driver.set_window_size(*VIEWPORTS[viewport])
+        width, height = VIEWPORTS[viewport]
+        self.driver.set_window_size(width, height)
+        if browser == 'chrome':
+            # Headless Chrome can clamp the outer window to >=500 px. Set the
+            # actual page viewport so a declared 375 px phone check is genuine.
+            self.driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {
+                'width': width, 'height': height, 'deviceScaleFactor': 1,
+                'mobile': viewport == 'phone',
+            })
+        else:
+            # Set the browsing viewport directly; native window minimum sizes
+            # otherwise silently turn a requested 375 px test into 500 px.
+            self.driver.browsing_context.set_viewport(
+                context=self.driver.current_window_handle,
+                viewport={'width': width, 'height': height},
+            )
+        self.viewport_checked = False
         self.shots = EVIDENCE / browser
         self.shots.mkdir(parents=True, exist_ok=True)
 
@@ -88,13 +113,26 @@ class Run:
     def fits(self, label):
         """No horizontal scrolling: the page must fit the viewport width."""
         d = self.driver
+        if not self.viewport_checked:
+            # about:blank has no viewport meta tag, so verify the loaded app.
+            actual = d.execute_script('return [window.innerWidth, window.innerHeight]')
+            self.check('actual viewport matches declared dimensions',
+                       actual == list(VIEWPORTS[self.viewport]), actual)
+            self.viewport_checked = True
         width, inner = d.execute_script('return [document.documentElement.scrollWidth, window.innerWidth]')
         self.check(f'{label}: fits {self.viewport} width (no horizontal scroll)', width <= inner + 1,
                    f'scrollWidth={width} innerWidth={inner}')
         d.save_screenshot(str(self.shots / f'{self.viewport}-{label.replace(" ", "_")}.png'))
 
     def wait(self, condition, timeout=10):
-        return WebDriverWait(self.driver, timeout).until(condition)
+        return WebDriverWait(self.driver, timeout,
+                             ignored_exceptions=(StaleElementReferenceException,)).until(condition)
+
+    def click(self, selector):
+        def click_current(driver):
+            driver.find_element(By.CSS_SELECTOR, selector).click()
+            return True
+        self.wait(click_current)
 
     def login(self, path, user):
         d = self.driver
@@ -126,6 +164,17 @@ class Run:
         self.check('countdown timer renders',
                    'Time remaining' in d.find_element(By.ID, 'exam-countdown').text)
         self.fits('question page')
+        if self.viewport == 'phone':
+            top, bottom, height = d.execute_script(
+                'const r = document.querySelector("input[name=answer]").getBoundingClientRect();'
+                'return [r.top, r.bottom, window.innerHeight];')
+            self.check('phone: first answer visible without scrolling', 0 <= top < bottom <= height,
+                       f'first answer bottom={bottom:.0f}, viewport height={height}')
+        details = d.find_element(By.ID, 'exam-details')
+        self.check('exam details collapsed initially', details.get_attribute('open') is None)
+        details.find_element(By.TAG_NAME, 'summary').click()
+        self.check('exam instructions can be expanded', d.find_element(By.ID, 'exam-instructions').is_displayed())
+        details.find_element(By.TAG_NAME, 'summary').click()
 
         # NFR-03 tasks: answer, mark for review, move on, submit.
         d.find_element(By.CSS_SELECTOR, 'input[name=answer][value=B]').click()
@@ -139,7 +188,7 @@ class Run:
 
         d.get(f'{BASE}/exams/{exam_id}/take/?question=1')  # refresh keeps the saved answer (NFR-02)
         self.check('refresh keeps saved answer', d.find_element(By.CSS_SELECTOR, 'input[name=answer][value=B]').is_selected())
-        d.find_elements(By.CSS_SELECTOR, '.q-nav button')[1].click()  # Next
+        self.click('.q-nav button:last-child')  # resolve again if navigation made it stale
         self.wait(lambda dr: 'Question 2 of 3' in dr.find_element(By.ID, 'question-progress').text)
         self.check('Next moves to question 2', True)
 
@@ -151,6 +200,9 @@ class Run:
         self.wait(lambda dr: 'submitted successfully' in dr.find_element(By.TAG_NAME, 'h1').text)
         self.check('submission reaches submitted page', True)
         self.fits('submitted')
+        d.get(f'{BASE}/exams/{exam_id}/result/')
+        self.check('student result withheld before release', 'not been released' in d.find_element(By.TAG_NAME, 'main').text.lower())
+        self.fits('withheld result')
         self.logout()
 
     def admin_flow(self, exam_id):
@@ -169,6 +221,11 @@ class Run:
 
     def finish(self):
         info = self.driver.capabilities
+        requested = CHROME_VERSION if self.browser == 'chrome' else FIREFOX_VERSION
+        if requested:
+            self.check('requested browser major version used',
+                       info.get('browserVersion', '').split('.')[0] == requested.split('.')[0],
+                       f'requested={requested}, actual={info.get("browserVersion")}')
         console = []
         if self.browser == 'chrome':
             console = [e for e in self.driver.get_log('browser') if e['level'] == 'SEVERE']
@@ -181,7 +238,16 @@ class Run:
 
 
 def main():
-    EVIDENCE.mkdir(exist_ok=True)
+    global EVIDENCE, CHROME_VERSION, FIREFOX_VERSION
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--evidence-dir', type=Path, default=EVIDENCE,
+                        help='Use a new directory to preserve historical evidence.')
+    parser.add_argument('--chrome-version', help='Explicit Selenium browser version; downloads may be needed.')
+    parser.add_argument('--firefox-version', help='Explicit Selenium browser version; downloads may be needed.')
+    args = parser.parse_args()
+    EVIDENCE = args.evidence_dir.resolve()
+    CHROME_VERSION, FIREFOX_VERSION = args.chrome_version, args.firefox_version
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
     with socket.socket() as probe:
         if probe.connect_ex(('127.0.0.1', PORT)) == 0:
             sys.exit(f'Port {PORT} is already in use; stop that server or change PORT, '
@@ -202,7 +268,14 @@ def main():
             for viewport in VIEWPORTS:
                 # The student flow consumes the attempt, so each run gets a fresh student attempt.
                 manage('shell', '-c', f'from exams.models import Attempt; Attempt.objects.filter(exam_id={exam_id}).delete()')
-                run = Run(browser, viewport)
+                try:
+                    run = Run(browser, viewport)
+                except Exception as exc:
+                    report.append({'browser': browser, 'version': None, 'viewport': viewport,
+                                   'results': [{'check': 'browser starts', 'ok': False,
+                                                'detail': f'{type(exc).__name__}: {str(exc)[:250]}'}]})
+                    print(f'{browser}: browser startup failed: {type(exc).__name__}: {str(exc)[:250]}', flush=True)
+                    break
                 try:
                     run.student_flow(exam_id)
                     run.admin_flow(exam_id)
