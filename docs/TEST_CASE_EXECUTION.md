@@ -51,17 +51,53 @@ Autosave fields: `selectedOption` = A/B/C/D/null; `markedForReview` = boolean; a
 | TC-09 / SEC-OBJ-01, SEC-REQ-01/02 | Anonymous protected requests; B PATCHes A's attempt; student requests each staff write route; staff tries student flow; cross-exam question ID. | Redirect/401 as route specifies; foreign/role access denied; no protected data leak or unauthorized database mutation. | `exams.test_security_regression`, `accounts.test_security` |
 | TC-10 / SEC-OBJ-02, SEC-REQ-03 | Record finalized score/answers. Try manual and late timeout submissions and answer/review writes; compare stored values. | Duplicate submission and finalized write rejected; grade and answer/review state unchanged. | `exams.test_security_regression`, `exams.test_sprint2_timer` |
 
+
 ## Additional planned coverage and outstanding evidence
 
-| Requirements | Execution / evidence | Completion gate |
+| Requirements | Execution / evidence | Completion gate / status |
 |---|---|---|
-| FR-03..05 | Exam creation/invalid intervals, four-option question create/edit/delete and early/closed access: `exams.tests`, `exams.test_sprint1_abhi`, `exams.test_sprint1_criteria` | Regression result and final browser walkthrough |
-| FR-17 | Roster with not started/in progress/submitted; grades hidden before submission: `accounts.test_submissions` | Regression result |
-| NFR-03 | Five actual first-time participants follow protocol in usability report | Real session log and fixed/retested findings; pending |
-| NFR-04 | Window guards plus observed target deployment availability throughout declared exam window | Local unit tests alone insufficient; operational observation pending |
-| NFR-05 | Review code boundaries; demonstrate representative additional question type and record touched modules | <=2-module target not demonstrated; pending or approved deviation |
-| NFR-07 | Desktop/phone scripted flows in two agreed current versions each of Chrome/Firefox; record exact versions and screenshots | All four browser-version combinations; only measured combinations may pass |
-| SEC-REQ-04 | Check HTTPS redirect, secure cookies and trusted proxy behavior on actual assessment deployment | Local configuration check is not a deployed TLS test |
+| FR-03..05 | Exam creation, invalid intervals, four-option question create/edit/delete and early/closed access: `exams.tests`, `exams.test_sprint1_abhi`, `exams.test_sprint1_criteria` | Automated regression evidence available; final browser walkthrough evidence should be reviewed |
+| FR-17 | Roster with not started/in progress/submitted; grades hidden before submission: `accounts.test_submissions` | Automated regression evidence available |
+| NFR-03 | Five first-time participants independently answered questions, marked a question for review, and submitted the exam. All 5/5 completed the tasks unaided; average completion time was 83 seconds, with no reported usability issues. | **PASS** — [Usability walkthrough](../Deliverable-4-Test-Validation/usability_browser_verification.md) |
+| NFR-04 | Local HTTPS exam-window access checks passed. Actual target-environment availability has not been verified. | **BLOCKED — TARGET ENVIRONMENT** |
+| NFR-05 | An isolated True/False question-type experiment changed one application module and generated zero migrations. | **PASS** — [Experiment evidence](evidence/final-maintainability.log) |
+| NFR-07 | Desktop and phone browser flows were verified across Chrome 157/158 and Firefox 159/160. All 252 CI checks passed. | **PASS** — [Browser CI evidence](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43889325512) |
+| NFR-01 | Existing PostgreSQL results met the absolute question-page latency target. The additional local SQLite test recorded a maximum of 19,907.98 ms against a 3,000 ms limit. | **PARTIAL** — target configuration verification pending |
+| NFR-02 | Existing PostgreSQL results met the absolute autosave latency target. The additional local SQLite test recorded a maximum of 11,303.09 ms against a 2,000 ms limit. | **PARTIAL** — target configuration verification pending |
+| NFR-06 | Existing PostgreSQL and SQLite runs failed the 20% mean response-time growth requirement. The additional local SQLite test measured +4,105.28% page growth and +5,067.56% autosave growth. | **FAIL** — performance improvement or approved deviation required |
+| FR-01 | Local HTTPS login timing passed 40/40 samples, with valid and invalid login responses below 2 seconds. | **BLOCKED** — target broadband verification pending |
+| SEC-REQ-04 | Local HTTPS security checks passed, including redirect, TLS/HSTS, CSRF, secure cookies and host rejection. Actual deployment configuration remains unverified. | **BLOCKED — TARGET ENVIRONMENT** |
+
+### Additional local SQLite load-test evidence
+
+A supplementary load test was conducted on a local Windows laptop using the SQLite database and the project's `measure_load` Django management command.
+
+**Test configuration:**
+- Database: SQLite
+- Concurrent users: 50
+- Rounds per user: 20
+- Concurrent question-page requests measured: 1,000
+- Concurrent autosave requests measured: 1,000
+- Failed HTTP requests: 0
+- Server errors: None reported
+- Total test duration: 28.15 seconds
+
+**Measured results:**
+
+| Metric | Measured value | Acceptance target | Result |
+|---|---:|---:|---|
+| NFR-01 question-page maximum | 19,907.98 ms | <=3,000 ms | FAIL |
+| NFR-01 question-page p95 | 3,289.88 ms | <=3,000 ms | FAIL |
+| NFR-02 autosave maximum | 11,303.09 ms | <=2,000 ms | FAIL |
+| NFR-06 question-page mean growth | +4,105.28% | <=20% | FAIL |
+| NFR-06 autosave mean growth | +5,067.56% | <=20% | FAIL |
+| Failed HTTP requests | 0 | 0 | PASS |
+
+**Evidence:** [Local SQLite 50-user load-test JSON](evidence/local_load_results.json)
+
+**Conclusion:** The local SQLite configuration failed the NFR-01, NFR-02 and NFR-06 performance requirements under 50 concurrent users. All requests completed without reported HTTP errors. These findings are retained as supplementary evidence and do not replace the earlier PostgreSQL or SQLite measurements.
+
+The five-user usability requirement (NFR-03) and browser compatibility requirement (NFR-07) are complete and passed. Target-network performance, deployed security, availability and unattended finalization require coordination with the deployment owner.
 
 ## Execution record policy
 
