@@ -125,18 +125,21 @@ class Run:
         d.save_screenshot(str(self.shots / f'{self.viewport}-{label.replace(" ", "_")}.png'))
 
     def wait(self, condition, timeout=10):
-        return WebDriverWait(self.driver, timeout,
-                             ignored_exceptions=(StaleElementReferenceException,)).until(condition)
-
-    def click(self, selector):
-        def click_current(driver):
+        def read_current_document(driver):
             try:
-                driver.find_element(By.CSS_SELECTOR, selector).click()
+                return condition(driver)
             except WebDriverException as exc:
                 # Chrome can report a detached node during mobile navigation.
                 if 'Node with given id does not belong to the document' not in str(exc):
                     raise
                 return False
+
+        return WebDriverWait(self.driver, timeout,
+                             ignored_exceptions=(StaleElementReferenceException,)).until(read_current_document)
+
+    def click(self, selector):
+        def click_current(driver):
+            driver.find_element(By.CSS_SELECTOR, selector).click()
             return True
         self.wait(click_current)
 
