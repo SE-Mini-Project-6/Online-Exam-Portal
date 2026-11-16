@@ -15,7 +15,7 @@ Use Django admin to provision student accounts with `is_staff=False`. Accounts a
 
 **Evaluation entry point:** [docs evidence index](docs/README.md), [current test-case revision](docs/TEST_CASE_EXECUTION.md), [validation results](docs/VALIDATION_RESULTS.md), and [remaining team acceptance](docs/TEAM_ACCEPTANCE.md). Read the [design deviation register](docs/DESIGN_DEVIATIONS.md) alongside the original Part 1 PDFs. Historical documents are baselines; pending real-participant study, browser matrix, demo recordings and freeze approval must not be inferred from closed issues.
 
-The existing [generic demo](Project_Demo/Project_Demo_Video.mp4) is historical evidence. Separate one-minute Sprint 1 and two-minute Sprint 2 recordings remain pending; [recording scripts](docs/DEMO_SCRIPTS.md) are ready. **Release freeze is not active.**
+Watch the [one-minute Sprint 1 demo](Project_Demo/Sprint_1_Demo.mp4) and [two-minute Sprint 2 demo](Project_Demo/Sprint_2_Demo.mp4), or follow the [live demo and viva run sheet](docs/FINAL_DEMO.md). Recording dates and source revisions are listed in the [demo notes](Project_Demo/README.md). **Release freeze is pending team approval.**
 
 ## Software Engineering Mini Project
 

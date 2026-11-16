@@ -29,7 +29,8 @@ This is the entry point for the final evaluation package. A closed issue is work
 ## Release, demos and individual contributions
 
 - [Remaining team actions](TEAM_ACCEPTANCE.md): honest checklist, owners, board and recording instructions, review/freeze gates.
-- [Demo scripts](DEMO_SCRIPTS.md): separate one-minute and two-minute recordings using the real application.
+- [Sprint recordings and source revisions](../Project_Demo/README.md), [live demo and viva notes](FINAL_DEMO.md), and [original recording plans](DEMO_SCRIPTS.md).
+- [Sprint backlog snapshot](SPRINT_BACKLOG.md): both sprints, issue links, owners and estimates.
 - [Existing freeze draft](SPRINT2_REVIEW_AND_FREEZE_DRAFT.md): remains pending until real team review and approval.
 - [Deployment guide](https_deployment.md) and [architecture/deployment notes](SPRINT2_ARCHITECTURE_DEPLOYMENT.md): HTTPS, environment variables, database and scheduling requirements.
 - [Sprint 1 Abhishek](SPRINT1_ABHI.md), [Sprint 1 Aditya Jaiswal](SPRINT1_Aditya_Jaiswal.md), [Sprint 1 Adithya Sundar](SPRINT1_ADITHYA_SUNDAR), [Sprint 2 Adithya Sundar](SPRINT2_ADITHYA_SUNDAR.md), [Sprint 2 timer](SPRINT2_ABHI_TIMER.md).
