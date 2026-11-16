@@ -56,7 +56,9 @@ A supplementary load test was run on a local Windows laptop using SQLite and the
 
 The run measured **1,000 concurrent page requests** and **1,000 concurrent autosave requests**, with no reported server errors; elapsed wall time was **28.15 seconds**. Successful HTTP requests do not imply acceptable latency or scalability.
 
-**Conclusion:** NFR-01, NFR-02 and NFR-06 failed in this local SQLite run. Existing PostgreSQL measurements met the absolute NFR-01 and NFR-02 latency thresholds, but NFR-06 remained failed. Target-deployment verification is still pending. The raw `local_load_results.json` must also be uploaded to repository evidence (or otherwise retained in an accessible location) to archive this run fully.
+**Conclusion:** NFR-01, NFR-02 and NFR-06 failed in this local SQLite run. Existing PostgreSQL measurements met the absolute NFR-01 and NFR-02 latency thresholds, but NFR-06 remained failed. Target-deployment verification is still pending. 
+The raw test evidence has been uploaded and committed to [docs/evidence/local_load_results.json](evidence/local_load_results.json), completing the local SQLite load-test evidence archive.
+
 
 ## Scope and provenance
 
