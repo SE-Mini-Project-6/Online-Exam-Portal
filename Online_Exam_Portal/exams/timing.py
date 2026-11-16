@@ -7,16 +7,23 @@ from django.utils import timezone
 from .models import Attempt
 
 
+def attempt_window_end(attempt):
+    return min(
+        attempt.started_at + timedelta(minutes=attempt.exam.duration_minutes),
+        attempt.exam.end_at,
+    )
+
+
 def sync_attempt(attempt_id, *, now=None, manual=False):
     """Get (attempt, finalized_now). Deadline and score are controlled by server.
 
     Answer writers must call this inside their own atomic transaction, so the
     row lock is retained until their answer update is committed.
     """
-    now = now or timezone.now()
     with transaction.atomic():
         attempt = (Attempt.objects.select_related('exam')
-                   .select_for_update().get(pk=attempt_id))
+                   .select_for_update(of=('self',)).get(pk=attempt_id))
+        now = now if now is not None else timezone.now()
         if attempt.status == Attempt.SUBMITTED:
             return attempt, False
 
@@ -25,10 +32,7 @@ def sync_attempt(attempt_id, *, now=None, manual=False):
             # Historic Sprint-1 rows have no recorded first-access timestamp.
             attempt.started_at = now
             changed.append('started_at')
-        bound = min(
-            attempt.started_at + timedelta(minutes=attempt.exam.duration_minutes),
-            attempt.exam.end_at,
-        )
+        bound = attempt_window_end(attempt)
         # A shorter admin availability window can shorten but not extend time.
         if attempt.deadline_at is None or bound < attempt.deadline_at:
             attempt.deadline_at = bound

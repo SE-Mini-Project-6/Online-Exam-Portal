@@ -73,10 +73,10 @@ class ExamTransactionTests(TransactionTestCase):
         self.assertEqual(transaction_states, [False])
         self.assertTrue(Attempt.objects.get().deadline_at)
 
-    def test_refresh_checks_deadline_once_without_extending_it(self):
+    def test_refresh_reads_active_visited_question_without_write_transaction(self):
         self.client.get(self.url)
         deadline = Attempt.objects.get().deadline_at
         with patch('exams.sprint1_views.sync_attempt', wraps=sync_attempt) as synchronize:
             self.assertEqual(self.client.get(self.url).status_code, 200)
-        self.assertEqual(synchronize.call_count, 1)
+        synchronize.assert_not_called()
         self.assertEqual(Attempt.objects.get().deadline_at, deadline)
