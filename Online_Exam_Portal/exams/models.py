@@ -91,13 +91,18 @@ class Exam(models.Model):
 
 class Question(models.Model):
     OPTION_CHOICES = [('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')]
+    DEFAULT_TYPE = 'mcq'
+    # Each type supplies a label and optional fixed options. With no fixed
+    # options, the author supplies all four labels as before.
+    TYPES = {DEFAULT_TYPE: ('Multiple choice', None)}
 
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='questions')
+    question_type = models.CharField(max_length=24, default=DEFAULT_TYPE, blank=True)
     text = models.TextField()
-    option_a = models.CharField(max_length=300)
-    option_b = models.CharField(max_length=300)
-    option_c = models.CharField(max_length=300)
-    option_d = models.CharField(max_length=300)
+    option_a = models.CharField(max_length=300, blank=True)
+    option_b = models.CharField(max_length=300, blank=True)
+    option_c = models.CharField(max_length=300, blank=True)
+    option_d = models.CharField(max_length=300, blank=True)
     correct_option = models.CharField(max_length=1, choices=OPTION_CHOICES)
 
     class Meta:
@@ -108,17 +113,28 @@ class Question(models.Model):
 
     def options(self):
         """Return (key, text) pairs in display order."""
+        fixed = self.TYPES.get(self.question_type, (None, None))[1]
+        if fixed is not None:
+            return fixed
         return [('A', self.option_a), ('B', self.option_b), ('C', self.option_c), ('D', self.option_d)]
+
+    def accepts_option(self, key):
+        return any(key == option for option, _ in self.options())
 
     def clean(self):
         errors = {}
+        self.question_type = self.question_type or self.DEFAULT_TYPE
+        kind = self.TYPES.get(self.question_type)
+        if kind is None:
+            errors['question_type'] = 'Select a supported question type.'
         if not self.text or not self.text.strip():
             errors['text'] = 'Question text is required.'
-        for field in ('option_a', 'option_b', 'option_c', 'option_d'):
-            if not getattr(self, field, None) or not getattr(self, field).strip():
-                errors[field] = 'All four options must be non-empty.'
-        if self.correct_option not in ('A', 'B', 'C', 'D'):
-            errors['correct_option'] = 'Select exactly one correct option (A, B, C, or D).'
+        if kind and kind[1] is None:
+            for field in ('option_a', 'option_b', 'option_c', 'option_d'):
+                if not getattr(self, field, None) or not getattr(self, field).strip():
+                    errors[field] = 'All four options must be non-empty.'
+        if not self.accepts_option(self.correct_option):
+            errors['correct_option'] = 'Select one of the options for this question.'
         if errors:
             raise ValidationError(errors)
 
@@ -187,8 +203,8 @@ class Answer(models.Model):
         errors = {}
         if self.question_id and self.attempt_id and self.question.exam_id != self.attempt.exam_id:
             errors['question'] = 'Question does not belong to this attempt exam.'
-        if self.selected_option is not None and self.selected_option not in ('A', 'B', 'C', 'D'):
-            errors['selected_option'] = 'Choose one of A, B, C, or D.'
+        if self.question_id and self.selected_option is not None and not self.question.accepts_option(self.selected_option):
+            errors['selected_option'] = 'Select one of the options for this question.'
         if self.attempt_id and self.attempt.status == Attempt.SUBMITTED:
             errors['attempt'] = 'Answers cannot be changed after submission.'
         if errors:

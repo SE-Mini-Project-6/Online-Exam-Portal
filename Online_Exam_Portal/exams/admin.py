@@ -1,10 +1,12 @@
 from django.contrib import admin
 
+from .forms import QuestionForm
 from .models import Exam, Question
 
 
 class QuestionInline(admin.StackedInline):
     model = Question
+    form = QuestionForm
     extra = 1
 
 

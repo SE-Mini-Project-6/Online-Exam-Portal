@@ -1,13 +1,14 @@
 {% extends "base.html" %}
-{% block title %}{% if editing %}Edit{% else %}Add{% endif %} MCQ{% endblock %}
+{% block title %}{% if editing %}Edit{% else %}Add{% endif %} Question{% endblock %}
 {% block content %}
 <div class="panel form-card">
-    <h1 class="page-title">{% if editing %}Edit{% else %}Add{% endif %} MCQ &mdash; {{ exam.title }}</h1>
-    <p class="help">Exactly four non-empty choices and one correct answer are required.</p>
+    <h1 class="page-title">{% if editing %}Edit{% else %}Add{% endif %} Question &mdash; {{ exam.title }}</h1>
+    <p class="help">For a multiple-choice question, enter four choices and select the correct answer.</p>
     <form method="post">
         {% csrf_token %}
         {{ form.non_field_errors }}
-        {% for field in form %}
+        {% for field in form.hidden_fields %}{{ field }}{{ field.errors }}{% endfor %}
+        {% for field in form.visible_fields %}
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}
         {% endfor %}
         <button type="submit" class="btn-primary">Save question</button>

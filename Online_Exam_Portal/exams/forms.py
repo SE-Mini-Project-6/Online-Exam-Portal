@@ -40,7 +40,18 @@ class ExamForm(forms.ModelForm):
 
 
 class QuestionForm(forms.ModelForm):
+    question_type = forms.ChoiceField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['question_type'].choices = [(key, spec[0]) for key, spec in Question.TYPES.items()]
+        if len(Question.TYPES) == 1:
+            self.fields['question_type'].widget = forms.HiddenInput()
+
+    def clean_question_type(self):
+        return self.cleaned_data['question_type'] or self.instance.question_type or Question.DEFAULT_TYPE
+
     class Meta:
         model = Question
-        fields = ('text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_option')
+        fields = ('question_type', 'text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_option')
         widgets = {'text': forms.Textarea(attrs={'rows': 3})}
