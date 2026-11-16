@@ -66,3 +66,37 @@ The deployment owner can use the [HTTPS and scheduler runbook](https_deployment.
 | `python Deliverable-4-Test-Validation/browser_checks/run_browser_checks.py --evidence-dir ../tmp/technical-browser` | Chrome 148.0.7778.169 30 desktop + 31 phone, Firefox 160.0 30 desktop + 31 phone, 122 passed and 0 failed. | [Browser log](evidence/technical-browser.log) |
 
 The pull request shows the GitHub Actions results for this branch. See [prior browser matrix](VALIDATION_RESULTS.md#browser-matrix-at-review-date) for the historical four-version run.
+
+
+## Final sign-off round
+
+PR #59 starts from `d7e11d2` (includes merged #56, #57 and #58). The [current checklist](FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) supersedes the earlier status table for this revision.
+
+### Matched load and SQL profiling
+
+Windows, Python 3.13.13, Django 5.2.18, local PostgreSQL 17 or SQLite. Run `python docs/tools/profile_exam_load.py --project Online_Exam_Portal --users 50 --rounds 5 --think-ms 1000 --json` after migrating a disposable database. Use the same wrapper against the baseline checkout. The reuse experiment adds `--conn-max-age 60` for that process. All runs use 25 single-student samples and 250 samples at 50 students per operation. Latency columns are milliseconds. Throughput is pages plus saves per second over the concurrent phase, including think time. The SQLite row is a current after-run. Historical SQLite runs appear above.
+
+| Run | Operation | Single mean | Single median | Single p95 | Single max | Concurrent mean | Concurrent median | Concurrent p95 | Concurrent max | Mean growth | Requests/s | Request errors |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| [postgres-baseline](evidence/final-postgres-baseline.json) | pages | 120.55 | 116.52 | 170.31 | 196.21 | 2856.33 | 1635.23 | 7742.66 | 11573.63 | +2269.39% | 19.19 | 0 |
+| [postgres-baseline](evidence/final-postgres-baseline.json) | saves | 127.57 | 133.37 | 153.42 | 251.48 | 1039.63 | 906.07 | 2586.22 | 3326.69 | +714.97% | 19.19 | 0 |
+| [postgres-after](evidence/final-postgres-after.json) | pages | 126.65 | 106.03 | 199.21 | 256.07 | 780.49 | 840.48 | 1107.89 | 1236.23 | +516.28% | 36.36 | 0 |
+| [postgres-after](evidence/final-postgres-after.json) | saves | 114.33 | 127.80 | 143.61 | 146.03 | 719.17 | 733.28 | 1098.01 | 1291.07 | +529.04% | 36.36 | 0 |
+| [postgres-reuse](evidence/final-postgres-reuse.json) | pages | 32.94 | 18.15 | 65.54 | 111.34 | 345.81 | 269.45 | 855.66 | 1002.23 | +949.99% | 54.80 | 0 |
+| [postgres-reuse](evidence/final-postgres-reuse.json) | saves | 35.06 | 45.55 | 51.54 | 52.61 | 199.81 | 175.41 | 439.95 | 552.76 | +469.95% | 54.80 | 0 |
+| [sqlite-after](evidence/final-sqlite-after.json) | pages | 86.03 | 29.15 | 40.92 | 1439.22 | 320.77 | 65.04 | 1598.36 | 6847.25 | +272.88% | 42.20 | 0 |
+| [sqlite-after](evidence/final-sqlite-after.json) | saves | 24.41 | 23.36 | 39.68 | 41.53 | 203.56 | 37.27 | 1241.00 | 6084.70 | +733.99% | 42.20 | 0 |
+
+NFR-01 and NFR-02 passed on PostgreSQL in both final configurations and failed the strict maximum on SQLite. NFR-06 failed every current run. The PostgreSQL baseline varied substantially from the prior round, so use the raw distributions and avoid attributing the full measured latency difference to the query change.
+
+`python docs/tools/profile_exam_sql.py <project-path>` recorded six statements on a visited-question GET before and after. Autosave went from 16 to 14 by reusing the question and locked attempt during validation, while keeping the transaction, deadline check, validation and write. [Baseline SQL](evidence/final-sql-baseline.jsonl) and [updated SQL](evidence/final-sql-after.jsonl).
+
+With normal PostgreSQL settings, the concurrent run opened 500 connections and consumed 15.17 process CPU seconds over 13.75 wall seconds, versus 500 connections and 21.95 CPU seconds over 26.05 wall seconds on the baseline. Experimental reuse reduced connections to 50 and concurrent CPU to 9.56 seconds over 9.12 wall seconds. Mean growth still exceeded the requirement because the single-user means also fell. SQLite serialized writes and showed long-tail requests. The threaded local server and load clients share a process, so its CPU counters include both and the measurements cannot isolate connection, lock and scheduling contributions. The harness also compares repeated visits from one student with independent first visits in the concurrent phase. The acceptance workload and threshold were retained. The next measurement needs an independent load client, representative PostgreSQL/WSGI deployment and database/server timing to distinguish waiting from execution. Compare connection persistence or a bounded pool with matching worker capacity and preserve the same acceptance run. Reuse remains an experiment.
+
+### Maintainability, operations and regression
+
+- `python docs/tools/measure_question_type.py` verified staff creation, existing MCQ rendering, rejection of invalid choices in both endpoints, autosave and grading. The isolated registry addition changed one application module and generated zero migrations. The preceding foundational refactor includes one migration that classifies existing rows as MCQ. The prototype type exists only in the disposable experiment. [Run output](evidence/final-maintainability.log).
+- `python docs/tools/verify_local_deployment.py --openssl openssl --attempts 20` verified loopback TLS, redirects, HSTS, CSRF, secure cookies, host checks, a timed exam window and separate finalizer invocations. The 40 login POSTs all finished within 2 s. [Run output](evidence/final-loopback.json), [target runbook](https_deployment.md).
+- Django checks and migration drift check passed. Complete regression suite: 147 passed, 0 failed in 40.447 s on GitHub Actions. [Django CI](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43889325603).
+- Chrome 157.0.8103.50 and 158.0.8127.18, Firefox 159.0.1 and 160.0 each passed 31 desktop and 32 phone checks, 252 total. The first run stopped in Chrome 157 phone navigation on a detached-node driver error after 18 of 19 recorded checks. The harness retries that error with fresh element lookup scoped to the original question, then still waits for and checks question 2. [Initial run](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43888512944), [passing run and screenshots](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43889325512).
+- Organization Project API reported missing `read:project` and `read:org` on the available credential. A maintainer can give the authorized account a credential with those read scopes or export the board and both sprint views. The available repository issue snapshot covers the issue side. Board fields and changes remain unverified. [Issue snapshot](SPRINT_BACKLOG.md).
