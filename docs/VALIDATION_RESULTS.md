@@ -38,6 +38,26 @@ Five non-team participants completed the locally hosted Online Exam Portal walkt
 
 **Outcome:** 5/5 participants and 15/15 required task completions succeeded unaided (100% observed success rate). Total elapsed time across sessions was 415 seconds; mean completion time was **83 seconds (1 min 23 sec)**. No usability problems were reported during these sessions. This verifies the observed NFR-03 three-task acceptance criterion for this five-person sample, not broader device/browser usability or the separate NFR-07 requirement. Exact session dates and individual browser versions should be confirmed in the [walkthrough log](../Deliverable-4-Test-Validation/usability_browser_verification.md#32-session-log) if not already recorded.
 
+## Additional local SQLite load test — 16 November 2026
+
+A supplementary load test was run on a local Windows laptop using SQLite and the Django `measure_load` command with **50 concurrent users** and **20 rounds per user**. The JSON output was saved as `local_load_results.json` and validated as valid JSON. This is additional evidence; it does not replace the project's earlier SQLite or PostgreSQL runs.
+
+| Measurement | Single-user baseline | 50-user load | Acceptance | Result |
+|---|---:|---:|---|---|
+| NFR-01 question-page mean | 14.64 ms | 615.48 ms | — | Measured |
+| NFR-01 question-page p95 | 26.97 ms | 3,289.88 ms | ≤3,000 ms | **FAIL** |
+| NFR-01 question-page maximum | 62.90 ms | 19,907.98 ms | ≤3,000 ms | **FAIL** |
+| NFR-02 autosave mean | 8.81 ms | 455.47 ms | — | Measured |
+| NFR-02 autosave p95 | 22.18 ms | 2,563.92 ms | — | Measured |
+| NFR-02 autosave maximum | 28.26 ms | 11,303.09 ms | ≤2,000 ms | **FAIL** |
+| NFR-06 question-page mean growth | — | +4,105.28% | ≤20% | **FAIL** |
+| NFR-06 autosave mean growth | — | +5,067.56% | ≤20% | **FAIL** |
+| Failed HTTP requests | 0 | 0 | 0 | **PASS** |
+
+The run measured **1,000 concurrent page requests** and **1,000 concurrent autosave requests**, with no reported server errors; elapsed wall time was **28.15 seconds**. Successful HTTP requests do not imply acceptable latency or scalability.
+
+**Conclusion:** NFR-01, NFR-02 and NFR-06 failed in this local SQLite run. Existing PostgreSQL measurements met the absolute NFR-01 and NFR-02 latency thresholds, but NFR-06 remained failed. Target-deployment verification is still pending. The raw `local_load_results.json` must also be uploaded to repository evidence (or otherwise retained in an accessible location) to archive this run fully.
+
 ## Scope and provenance
 
 Local readiness branch `evaluation-readiness`, based on main `7abce9eb8c6d4016a5125738c3b93a4404597f93`; 14 November 2026, Windows, Python 3.13.13, Django 5.2.18, SQLite. Full regression ran outside the restricted socket sandbox against Django's isolated temporary test database. Browser checks used temporary local fixture accounts/exam and removed them after the run. Browser screenshots and JSON retain the actual installed versions, not a claim that Chrome 148 is current stable.
