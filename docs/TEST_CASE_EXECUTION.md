@@ -17,6 +17,8 @@ For local HTTP, set `DJANGO_DEBUG=True` before `runserver`. For production/HTTPS
 
 ## Current route contract
 
+The [technical completion report](FINAL_TECHNICAL_COMPLETION.md) records follow-up execution for TC-01, TC-05, TC-07 and TC-08 and related NFRs. Local timing and expiry tests have evidence. Target-network latency, deployment uptime and the production scheduler still need validation on the declared target.
+
 | Operation | Actual route and response |
 |---|---|
 | Staff login | GET/POST `/accounts/login/`; successful form login redirects to role dashboard |

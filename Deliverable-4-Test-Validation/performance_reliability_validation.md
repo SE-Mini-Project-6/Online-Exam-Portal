@@ -2,6 +2,8 @@
 
 Requirements: NFR-01, NFR-02, NFR-04, NFR-06. Owner: @Aditya-TJ.
 
+The [technical follow-up](../docs/FINAL_TECHNICAL_COMPLETION.md) records a new matched SQLite and PostgreSQL 17 comparison and a request SQL profile. PostgreSQL completed within both absolute limits in the recorded loopback runs. SQLite still exceeded those limits in the matched follow-up, and the 20% growth limit still failed on both databases. Historical results below are unchanged.
+
 ## Readiness remeasurement (14 November 2026)
 
 The attempt view now checks an existing deadline once instead of twice and defers HTML rendering until its write transaction has committed. Answer writes still retain the attempt transaction/locking guard. Two new regression tests cover rendering outside the transaction and a single non-extending deadline check on refresh.

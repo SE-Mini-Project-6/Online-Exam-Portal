@@ -2,6 +2,8 @@
 
 Prepared 14 November 2026. **Release not frozen.** Repository issue closure is not an acceptance signature.
 
+PR #57 merged both sprint recordings and the presentation materials. The [technical completion report](FINAL_TECHNICAL_COMPLETION.md) records remaining load, maintainability, target deployment, and board checks. The organization board identifier is [Project #2](https://github.com/orgs/SE-Mini-Project-6/projects/2). Its contents and evaluator visibility still need confirmation by an authorized maintainer.
+
 | Gate | Owner | Current evidence / next action |
 |---|---|---|
 | Five-user usability study | Aditya-TJ (#29) | Not conducted. Recruit five first-time users; use the existing protocol and fill actual observations. No simulated participants. |

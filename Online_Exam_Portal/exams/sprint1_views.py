@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from .forms import QuestionForm
 from .models import Answer, Attempt, Exam, Question
-from .timing import sync_attempt
+from .timing import attempt_window_end, sync_attempt
 
 
 def _staff_only(request):
@@ -83,18 +83,35 @@ def _question_number(value, total, default=1):
     return max(1, min(number, total)) if total else 1
 
 
-@transaction.atomic
 @login_required
 def take_exam(request, exam_id):
     """Persistent answers and review flags, while preserving original navigation and JSON API."""
+    if request.method != 'GET':
+        return _take_exam_with_writes(request, exam_id)
+    return _take_exam(request, exam_id, writable=False)
+
+
+@transaction.atomic
+def _take_exam_with_writes(request, exam_id):
+    return _take_exam(request, exam_id, writable=True)
+
+
+def _take_exam(request, exam_id, *, writable):
     exam = get_object_or_404(Exam, pk=exam_id)
     # Attempts are student-owned; staff may inspect only public exam metadata.
     wants_json = _wants_json(request)
     if request.user.is_staff and (not wants_json or request.method != 'GET'):
         return _students_only_response()
+    now = timezone.now()
     attempt = Attempt.objects.filter(exam=exam, student=request.user).first()
-    if attempt and (exam.is_available() or exam.is_expired()):
-        attempt, _ = sync_attempt(attempt.pk)
+    if attempt:
+        attempt.exam = exam
+    if attempt and attempt.status != Attempt.SUBMITTED and not exam.is_upcoming(now):
+        if writable:
+            attempt, _ = sync_attempt(attempt.pk)
+        elif (not attempt.started_at or not attempt.deadline_at
+              or now >= attempt.deadline_at or attempt_window_end(attempt) < attempt.deadline_at):
+            return _take_exam_with_writes(request, exam_id)
     if attempt and attempt.status == Attempt.SUBMITTED:
         if wants_json:
             return JsonResponse({'error': 'This attempt has already been submitted.'}, status=409)
@@ -127,6 +144,8 @@ def take_exam(request, exam_id):
 
     # One attempt per student per exam. Navigating reloads persisted answers, not session state.
     if attempt is None:
+        if not writable:
+            return _take_exam_with_writes(request, exam_id)
         attempt, _ = Attempt.objects.get_or_create(exam=exam, student=request.user)
         attempt, _ = sync_attempt(attempt.pk)
     if attempt.status == Attempt.SUBMITTED:
@@ -169,11 +188,15 @@ def take_exam(request, exam_id):
     question = questions[number - 1] if total else None
     selected_answer = saved.get(question.pk) if question else None
     if question is not None and (selected_answer is None or not selected_answer.visited):
+        if not writable:
+            return _take_exam_with_writes(request, exam_id)
         # Opening a question marks it visited (Not Visited -> Not Answered) and persists it.
         selected_answer, _ = Answer.objects.update_or_create(
             attempt=attempt, question=question, defaults={'visited': True},
         )
         saved[question.pk] = selected_answer
+    if not writable and timezone.now() >= attempt.deadline_at:
+        return _take_exam_with_writes(request, exam_id)
     navigator = []
     for i, q in enumerate(questions, start=1):
         state = saved[q.pk].display_state if q.pk in saved else 'NOT_VISITED'
