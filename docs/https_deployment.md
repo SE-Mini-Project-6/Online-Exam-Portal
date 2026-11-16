@@ -117,7 +117,27 @@ Test classes that use the plain-HTTP test client declare
 `accounts/test_security.py` turn the redirect on explicitly and also load the real settings
 module in a subprocess to prove the defaults.
 
-## 6. Out of scope
+## 6. Scheduled expiry and a disposable verification run
+
+Run the finalizer once as the same service account that runs Django, with the same production environment, working directory, and database. Then configure a recurring job. On Linux, the following example uses the deployment account's crontab and a wrapper that loads the environment file managed by the deployment. Replace the paths with the installed paths.
+
+```sh
+#!/bin/sh
+set -eu
+set -a
+. /etc/exam-portal/environment
+set +a
+cd /srv/exam-portal/Online_Exam_Portal
+exec /srv/exam-portal/.venv/bin/python manage.py finalize_expired_attempts
+```
+
+Install the wrapper as `/srv/exam-portal/bin/finalize-expired`, make it executable, and add `* * * * * /srv/exam-portal/bin/finalize-expired` to the deployment account's crontab. Keep the environment file readable only by the appropriate service account and administrators. Use the same account for a manual smoke invocation before relying on the recurring job. In a multi-instance deployment, configure one scheduled job against the shared database.
+
+On the target, start a disposable student attempt and close the tab. After the deadline and one scheduler interval, verify that the stored attempt is submitted, the score is stable, a second invocation reports no additional finalization, and an authenticated late save is rejected. Keep scheduler logs and a separate availability observation through a declared exam window.
+
+Run `python docs/tools/verify_local_deployment.py --openssl openssl --attempts 20` from the repository root for the disposable loopback test. It generates and trusts a temporary certificate, exercises the production settings, submits valid and invalid credentials over TLS, and invokes the finalizer in separate processes. The script uses a separate SQLite database and prints a JSON report. The deployment host, certificate, reverse proxy and managed scheduler require their own checks.
+
+## 7. Out of scope
 
 Certificate issuance/renewal automation, database hardening (PostgreSQL TLS), and WAF or
 rate-limiting rules are not part of this story.

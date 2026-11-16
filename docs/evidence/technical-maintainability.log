@@ -1,0 +1,12 @@
+Migrations for 'exams':
+  exams\migrations\0008_question_question_type_alter_question_option_a_and_more.py
+    + Add field question_type to question
+    ~ Alter field option_a on question
+    ~ Alter field option_b on question
+    ~ Alter field option_c on question
+    ~ Alter field option_d on question
+Bad Request: /api/v1/attempts/1/answers/1
+10 objects imported automatically (use -v 2 for details).
+
+PASS: staff form, existing MCQ, true/false rendering, API rejection, form rejection, autosave and grading.
+Production modules changed: exams.models, exams.forms, exams.api, exams.sprint1_views. Generated schema migration counted separately.

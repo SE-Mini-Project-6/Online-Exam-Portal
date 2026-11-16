@@ -2,6 +2,8 @@
 
 Revision 1.1, 14 November 2026. This records facts for review; **team/evaluator acceptance is pending**. Original Part 1 documents remain the historical baseline. Current execution instructions are in [TEST_CASE_EXECUTION.md](TEST_CASE_EXECUTION.md).
 
+The [technical follow-up](FINAL_TECHNICAL_COMPLETION.md) measured the change impact (D-08), verified local TLS and external finalizer invocation (D-05 and D-09), and repeated the performance comparison (D-10). The remaining target limits and approval state are recorded there.
+
 | ID | Baseline | Implemented behavior | Consequence / verification |
 |---|---|---|---|
 | D-01 | REST/JSON catalogue for login, CRUD, submit and results | Django MVT/session authentication and server-rendered form routes. Versioned JSON PATCH API for autosave; optional JSON exam metadata/list. | Use current route table; do not execute obsolete design URLs or expect JSON from HTML forms. Security remains server-side. |

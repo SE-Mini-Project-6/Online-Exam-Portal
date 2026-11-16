@@ -1,5 +1,7 @@
 # Readiness branch validation
 
+See the [technical completion report](FINAL_TECHNICAL_COMPLETION.md) for the follow-up SQL profile, SQLite/PostgreSQL load runs, loopback TLS/login measurements, and change-impact experiment. Earlier results below are retained as historical evidence.
+
 ## Final demonstration check, 16 November 2026
 
 The post-merge [Django Actions run](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43594192327) passed on `41bc4aa`. A fresh local run on that application revision passed `manage.py check`, `makemigrations --check --dry-run`, and all 38 tests in `exams.test_sprint2_timer`, `accounts.test_security`, `accounts.test_submissions`, and `exams.test_results`. The timer tests include the expired-attempt management command. They exercise finalization behavior without establishing that a periodic job is installed on a deployment.
