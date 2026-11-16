@@ -1,0 +1,5 @@
+No changes detected
+10 objects imported automatically (use -v 2 for details).
+
+PASS: staff form, existing MCQ, true/false rendering, API rejection, form rejection, autosave and grading.
+Application modules changed: 1 (exams/models.py). Generated schema migrations: 0.

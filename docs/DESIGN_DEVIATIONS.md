@@ -20,3 +20,7 @@ The [technical follow-up](FINAL_TECHNICAL_COMPLETION.md) measured the change imp
 | D-12 | Final result denominator fixed to submitted exam | Result total uses current question count. | Avoid editing exam questions after attempts begin for the demo. Persisting an immutable exam/score snapshot is a possible future improvement. |
 
 Approval record: pending. At the team review, record reviewer, date, accepted/rejected IDs, rationale and any evaluator permission. Approval must be real; this file is not an approval declaration.
+
+## Final sign-off round
+
+The [isolated NFR-05 repeat](evidence/final-maintainability.log) met the module limit after introducing the shared option contract. NFR-06 remains open, and NFR-01 and NFR-02 still need acceptance results from the intended evaluation environment. The SQLite runs exceeded both absolute limits. No performance deviation is approved. See the [final results](FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) for measured gaps and evaluator decisions still required.

@@ -10,9 +10,6 @@ from django.http import JsonResponse
 from .models import Answer, Attempt, Question
 from .timing import sync_attempt
 
-OPTIONS = ('A', 'B', 'C', 'D')
-
-
 def _error(status, code, message):
     return JsonResponse(
         {'error': {'code': code, 'message': message, 'requestId': uuid.uuid4().hex}},
@@ -20,7 +17,7 @@ def _error(status, code, message):
     )
 
 
-def _parse_payload(request):
+def _parse_payload(request, question):
     """Return (fields, error_message). fields maps model field names to validated values."""
     try:
         payload = json.loads(request.body or b'{}')
@@ -31,8 +28,8 @@ def _parse_payload(request):
     fields = {}
     if 'selectedOption' in payload:
         option = payload['selectedOption']
-        if option is not None and option not in OPTIONS:
-            return None, 'selectedOption must be one of A, B, C, D or null.'
+        if option is not None and not question.accepts_option(option):
+            return None, 'selectedOption must be one of the options for this question or null.'
         fields['selected_option'] = option
     if 'markedForReview' in payload:
         if not isinstance(payload['markedForReview'], bool):
@@ -54,7 +51,7 @@ def answer_detail(request, attempt_id, question_id):
     if request.user.is_staff:
         return _error(403, 'FORBIDDEN', 'Only students can save exam answers.')
 
-    attempt = Attempt.objects.select_related('exam').filter(pk=attempt_id).first()
+    attempt = Attempt.objects.only('student_id', 'exam_id', 'status').filter(pk=attempt_id).first()
     if attempt is None:
         return _error(404, 'ATTEMPT_NOT_FOUND', 'Attempt not found.')
     if attempt.student_id != request.user.id:
@@ -64,7 +61,7 @@ def answer_detail(request, attempt_id, question_id):
         return _error(404, 'QUESTION_NOT_FOUND', 'Question not found in this exam.')
     if attempt.status == Attempt.SUBMITTED:
         return _error(409, 'ATTEMPT_ALREADY_FINALIZED', 'This exam attempt has already been finalized.')
-    fields, problem = _parse_payload(request)
+    fields, problem = _parse_payload(request, question)
     if problem:
         return _error(400, 'VALIDATION_ERROR', problem)
     fields['visited'] = True  # saving anything for a question means the student has been to it
@@ -77,8 +74,12 @@ def answer_detail(request, attempt_id, question_id):
                 return _error(403, 'EXAM_NOT_AVAILABLE', 'This exam is not currently available.')
             if attempt.status == Attempt.SUBMITTED:
                 return _error(409, 'ATTEMPT_ALREADY_FINALIZED', 'This exam attempt has already been finalized.')
-            answer, created = Answer.objects.get_or_create(attempt=attempt, question=question, defaults=fields)
+            answer, created = Answer.objects.select_related('question').get_or_create(
+                attempt=attempt, question=question, defaults=fields,
+            )
             if not created:
+                # Reuse the current, locked attempt for model validation.
+                answer.attempt = attempt
                 for name, value in fields.items():
                     setattr(answer, name, value)
                 answer.save()

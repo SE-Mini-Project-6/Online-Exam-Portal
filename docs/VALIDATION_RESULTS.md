@@ -52,3 +52,7 @@ Version references: [Google November release log](https://chromereleases.googleb
 The PDF execution addendum was generated from `docs/TEST_CASE_EXECUTION.md` and all six pages visually reviewed. It is a revision of expected steps/coverage, not an invented execution pass sheet. The design register, evidence index, demo scripts and remaining team acceptance checklist are prepared for real review.
 
 Five-person usability, final board linkage, two actual sprint recordings, deployed TLS/uptime/scheduler checks, quantitative maintainability evidence and human review/freeze remain separate outstanding gates. Performance failures remain visible. Do not use the green automated suite to close these gates.
+
+## Final sign-off round
+
+See the [final sign-off checklist](FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) for the updated status. PostgreSQL passed both absolute latency limits, SQLite failed both, and each failed the 20% growth criterion. Local HTTPS, exam-window access and the finalizer passed their smoke checks. The intended deployment and five-person usability study still need evidence. The historical browser matrix above applies to its original revision. See [current PR checks](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pull/59/checks).

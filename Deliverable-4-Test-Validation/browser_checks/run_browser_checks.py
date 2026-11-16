@@ -21,7 +21,7 @@ import uuid
 from pathlib import Path
 
 from selenium import webdriver
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -125,8 +125,17 @@ class Run:
         d.save_screenshot(str(self.shots / f'{self.viewport}-{label.replace(" ", "_")}.png'))
 
     def wait(self, condition, timeout=10):
+        def read_current_document(driver):
+            try:
+                return condition(driver)
+            except WebDriverException as exc:
+                # Chrome can report a detached node during mobile navigation.
+                if 'Node with given id does not belong to the document' not in str(exc):
+                    raise
+                return False
+
         return WebDriverWait(self.driver, timeout,
-                             ignored_exceptions=(StaleElementReferenceException,)).until(condition)
+                             ignored_exceptions=(StaleElementReferenceException,)).until(read_current_document)
 
     def click(self, selector):
         def click_current(driver):
@@ -188,7 +197,7 @@ class Run:
 
         d.get(f'{BASE}/exams/{exam_id}/take/?question=1')  # refresh keeps the saved answer (NFR-02)
         self.check('refresh keeps saved answer', d.find_element(By.CSS_SELECTOR, 'input[name=answer][value=B]').is_selected())
-        self.click('.q-nav button:last-child')  # resolve again if navigation made it stale
+        self.click('form:has(input[name=current][value="1"]) .q-nav button:last-child')
         self.wait(lambda dr: 'Question 2 of 3' in dr.find_element(By.ID, 'question-progress').text)
         self.check('Next moves to question 2', True)
 

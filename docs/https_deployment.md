@@ -141,3 +141,7 @@ Run `python docs/tools/verify_local_deployment.py --openssl openssl --attempts 2
 
 Certificate issuance/renewal automation, database hardening (PostgreSQL TLS), and WAF or
 rate-limiting rules are not part of this story.
+
+## Evidence from the final local smoke
+
+Run `python docs/tools/verify_local_deployment.py --openssl openssl --attempts 20` from the repository root. [The loopback run](evidence/final-loopback.json) checked production Django settings, HTTPS, availability before/during/after an exam window and finalization in two separate command invocations. The login timings cover the HTTPS POST through response, with redirect and cookie checks. On the authorized evaluation deployment, also capture browser dashboard arrival, target-network latency and scheduler logs across two consecutive real ticks with one disposable expired attempt.

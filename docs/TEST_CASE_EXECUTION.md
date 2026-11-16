@@ -66,3 +66,7 @@ Autosave fields: `selectedOption` = A/B/C/D/null; `markedForReview` = boolean; a
 ## Execution record policy
 
 Each final execution record must contain commit SHA, date, environment, command/manual steps, actual result, pass/fail/pending, evidence link and retest decision. The generated branch regression output and raw load JSON are linked from the current validation report. Original PDF security result summaries describe intended behavior; they are not historical execution proof without matching logs.
+
+## Final sign-off execution evidence
+
+NFR-01, NFR-02 and NFR-06 use 25 single-user and 250 concurrent page and save samples each per run. Evidence includes [PostgreSQL baseline](evidence/final-postgres-baseline.json), [updated PostgreSQL](evidence/final-postgres-after.json) and [updated SQLite](evidence/final-sqlite-after.json). NFR-05 uses the [isolated True/False experiment](evidence/final-maintainability.log). SEC-REQ-04, FR-01 timing and NFR-04 have [local HTTPS evidence](evidence/final-loopback.json). See [final acceptance status](FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) for environment limits and owners.

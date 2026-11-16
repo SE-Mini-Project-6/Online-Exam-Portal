@@ -37,3 +37,7 @@ Both videos capture live application states from seeded demo accounts. The [reco
 - Freeze approver and time: pending.
 
 The maintainer may fill these fields only after the events occur. Do not infer approval from a green test run.
+
+## Final sign-off handoff
+
+Use the [final checklist](FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) when approving the release. Assign a teammate to review PR #59 and the foundational migration, then record the approved commit. Aditya-TJ owns the usability study and performance evidence. Abhishek Anand owns target deployment verification, Project #2 access and the retrospective/freeze record. The team reviews SRS, SAD and testing documentation and brings any unresolved deviations to the evaluator.

@@ -159,7 +159,7 @@ def _take_exam(request, exam_id, *, writable):
         selected = request.POST.get('answer')
         review = request.POST.get('mark_for_review') == 'on'
         question = questions[current - 1]
-        if selected in ('A', 'B', 'C', 'D'):
+        if question.accepts_option(selected):
             answer, _ = Answer.objects.get_or_create(attempt=attempt, question=question)
             answer.selected_option = selected
             answer.marked_for_review = review

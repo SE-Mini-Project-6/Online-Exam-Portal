@@ -122,6 +122,26 @@ def main():
                             assert status == 200 and not any(v.startswith('sessionid=') for v in headers.get_all('Set-Cookie', []))
                         results[label].append(latency)
 
+                window_start = timezone.now() + timedelta(seconds=3)
+                window_end = window_start + timedelta(minutes=1)
+                window_exam = Exam.objects.create(title='Availability smoke exam', duration_minutes=1,
+                                                  start_at=window_start, end_at=window_end)
+                window_url = f'/exams/{window_exam.pk}/take/?format=json'
+                signed_in = {'Cookie': session.split(';')[0]}
+                before_window = request('GET', window_url, headers=signed_in)[0]
+                assert before_window == 403
+                time.sleep(max(0, (window_start-timezone.now()).total_seconds()) + 0.1)
+                during_window = []
+                while timezone.now() < window_end - timedelta(seconds=2):
+                    status = request('GET', window_url, headers=signed_in)[0]
+                    assert status == 200
+                    during_window.append(status)
+                    time.sleep(min(3, max(0, (window_end-timezone.now()).total_seconds()-1)))
+                assert during_window
+                time.sleep(max(0, (window_end-timezone.now()).total_seconds()) + 0.1)
+                after_window = request('GET', window_url, headers=signed_in)[0]
+                assert after_window == 403
+
                 now = timezone.now()
                 exam = Exam.objects.create(title='Scheduler smoke exam', duration_minutes=1,
                                            start_at=now-timedelta(minutes=2), end_at=now+timedelta(minutes=1))
@@ -137,7 +157,9 @@ def main():
                 assert 'Finalized 1' in ticks[0] and 'Finalized 0' in ticks[1]
                 print(json.dumps(dict(scope='localhost HTTPS, disposable SQLite',
                     checks=['production settings', 'HTTP redirect', 'allowed hosts', 'TLS/HSTS',
-                            'CSRF rejection', 'secure cookies', 'unattended finalization and repeat invocation'],
+                            'CSRF rejection', 'secure cookies', 'availability window', 'unattended finalization and repeat invocation'],
+                    availability={'duration_seconds': 60, 'before':before_window,
+                                  'during':during_window, 'after':after_window},
                     login={label: summarize(samples) for label, samples in results.items()},
                     login_samples_ms=results, scheduler_ticks=ticks), indent=2))
             finally:
