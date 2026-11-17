@@ -1,178 +1,229 @@
 # Online Exam Portal
 # SE Mini Project — Evaluation Checklist & GitHub Evidence
 
-**Project:** Online Exam Portal  
-**Repository:** https://github.com/SE-Mini-Project-6/Online-Exam-Portal  
-**GitHub Project Board:** https://github.com/orgs/SE-Mini-Project-6/projects/2
+The Online Exam Portal is a Django-based web application developed over two sprints. It provides separate Admin and Student dashboards for conducting online examinations, managing questions, submitting answers, grading exams and publishing results.
 
-This section maps the evaluator's 35 checklist requirements to their corresponding GitHub evidence.
+The project documentation, development work and testing results are organized below according to the evaluation checklist.
 
-## Quick Access — Important Links
+## Project Documentation & Results
 
-| Deliverable | GitHub Link |
+| Document | Link |
 |---|---|
-| Complete Evidence Index | [docs/README.md](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/README.md) |
-| SRS Document | [SRS — Deliverable 1](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
-| Test Plan | [Test Plan — Deliverable 2](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
-| Architecture & Design | [SAD — Deliverable 3](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
-| Test Cases | [Test Cases — Deliverable 4](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/Test_Case_Execution_Revision_1_1.pdf) |
+| ⭐ **Project Improvements — Before vs After** | **[View Improvements Report](PROJECT_IMPROVEMENTS.md)** |
+| Software Requirements Specification (SRS) | [SRS Document](SRS_Online_Exam_Portal.docx) |
+| Test Plan | [Test Plan Document](Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
+| Software Architecture & Design (SAD) | [Architecture & Design Document](Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
+| Test Cases & Validation | [Test Case Document](Deliverable-4-Test-Validation/Test_Case_Execution_Revision_1_1.pdf) |
 | GitHub Project Board | [Project #2](https://github.com/orgs/SE-Mini-Project-6/projects/2) |
-| Sprint Backlog | [Sprint 1 & 2 Stories](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
-| Pull Requests | [All Pull Requests](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls) |
-| GitHub Actions | [CI/CD Runs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions) |
-| Sprint 1 Demo | [60-Second Video](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Project_Demo/Sprint_1_Demo.mp4) |
-| Sprint 2 Demo | [120-Second Video](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Project_Demo/Sprint_2_Demo.mp4) |
-| Test Execution Results | [Validation Report](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/VALIDATION_RESULTS.md) |
-| Final Technical Checklist | [Final Sign-off Report](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) |
-| Final Demo Guide | [Live Demonstration & Viva](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_DEMO.md) |
+| Sprint Backlog | [Sprint 1 & Sprint 2](docs/SPRINT_BACKLOG.md) |
+| GitHub Issues | [Issues](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/issues) |
+| Pull Requests | [PR History](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr) |
+| GitHub Actions | [Automated Test Runs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions) |
+| Sprint 1 Demonstration | [1-Minute Video](Project_Demo/Sprint_1_Demo.mp4) |
+| Sprint 2 Demonstration | [2-Minute Video](Project_Demo/Sprint_2_Demo.mp4) |
 
 ---
 
-## PART 1 — Requirements & Design Documents
+## Part 1 — Requirements & Design Documents
 
-### A. Software Requirements Specification (SRS)
+### 1. Software Requirements Specification (SRS)
 
-| No. | Evaluation Requirement | GitHub Evidence |
+The SRS contains the project scope, functional requirements, non-functional requirements, use case diagrams and security requirements.
+
+| No. | Requirement | Document |
 |---|---|---|
-| 1 | Document follows IEEE format | [SRS Document](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
-| 2 | Introduction, project description and scope | [SRS — Introduction](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
-| 3 | Clearly defined Functional and Non-Functional Requirements | [SRS — FRs & NFRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
-| 4 | At least one UML Use Case Diagram | [SRS — UML Diagram](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
-| 5 | At least two security objectives and two security requirements | [SRS — Security Section](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
+| 1 | IEEE-standard SRS format | [SRS](SRS_Online_Exam_Portal.docx) |
+| 2 | Introduction and project description | [SRS](SRS_Online_Exam_Portal.docx) |
+| 3 | Functional Requirements (FRs) and Non-Functional Requirements (NFRs) | [SRS](SRS_Online_Exam_Portal.docx) |
+| 4 | UML Use Case Diagram | [SRS](SRS_Online_Exam_Portal.docx) |
+| 5 | Security objectives and security requirements | [SRS](SRS_Online_Exam_Portal.docx) |
 
-### B. Test Plan Document
+### 2. Test Plan Document
 
-| No. | Evaluation Requirement | GitHub Evidence |
+The Test Plan defines the testing approach, test environment, security validation and mapping of test cases to requirements.
+
+| No. | Requirement | Document |
 |---|---|---|
-| 6 | IEEE-standard Test Plan | [Test Plan PDF](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
-| 7 | Sections 3, 4 and 5 completed | [Test Plan — Sections 3–5](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
-| 8 | Section 5.1 covers security validation | [Test Plan — Section 5.1](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
-| 9 | Traceability between SRS and Test Plan | [Requirement-to-Test Traceability](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/TEST_CASE_EXECUTION.md) |
-| 10 | 7–10 test cases covering FRs and NFRs | [Original Test Cases](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/04_Member4_Deliverable4_Test_Case_Update_Online_Exam_Portal%20%281%29.pdf) |
+| 6 | IEEE-standard Test Plan format | [Test Plan](Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
+| 7 | Sections 3, 4 and 5 | [Test Plan](Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
+| 8 | Section 5.1 — Security Validation | [Test Plan](Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
+| 9 | Traceability to SRS | [Test Plan](Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) · [Test Traceability](docs/TEST_CASE_EXECUTION.md) |
+| 10 | 7–10 FR and NFR test cases | [Original 10 Test Cases](Deliverable-4-Test-Validation/04_Member4_Deliverable4_Test_Case_Update_Online_Exam_Portal%20%281%29.pdf) |
 
-### C. Software Architecture & Design (SAD)
+### 3. Software Architecture & Design (SAD)
 
-| No. | Evaluation Requirement | GitHub Evidence |
+The SAD describes the system architecture, components, UML diagrams, API design, security architecture and error handling.
+
+| No. | Requirement | Document |
 |---|---|---|
-| 11 | IEEE-standard SAD document | [SAD PDF](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
-| 12 | Component diagram, architectural pattern, requirement traceability and security architecture | [SAD — Architecture](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
-| 13 | At least two sequence diagrams, API design and error handling | [SAD — Design](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
+| 11 | IEEE-standard SAD format | [SAD](Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
+| 12 | Component diagrams, architectural pattern, traceability and security architecture | [SAD](Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
+| 13 | Two UML sequence diagrams, API design and error handling | [SAD](Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
 
 ---
 
-## PART 2 — Agile Planning & Repository Setup
+## Part 2 — Agile Planning & Repository Setup
 
-### A. GitHub Backlog & Project Management
+### 1. GitHub Project Management
 
-| No. | Evaluation Requirement | GitHub Evidence |
+We divided development into two sprints and maintained a backlog with user stories, assignees, requirement references and story points.
+
+| No. | Requirement | Evidence |
 |---|---|---|
-| 14 | GitHub Project created and linked to repository | [GitHub Project #2](https://github.com/orgs/SE-Mini-Project-6/projects/2) |
-| 15 | Backlog created using SRS FRs/NFRs | [Sprint Backlog](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) · [GitHub Issues](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/issues) |
-| 16 | Story Points assigned to all backlog items | [Backlog — Story Points](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
-| 17 | User stories assigned to individual members | [Backlog — Assignees](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
-| 18 | Sprint 1 and Sprint 2 planned on project board | [GitHub Project Board](https://github.com/orgs/SE-Mini-Project-6/projects/2) · [Sprint Breakdown](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
+| 14 | GitHub Project linked to the repository | [GitHub Project #2](https://github.com/orgs/SE-Mini-Project-6/projects/2) |
+| 15 | Backlog based on SRS requirements | [Sprint Backlog](docs/SPRINT_BACKLOG.md) · [Issues](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/issues) |
+| 16 | Story points assigned to backlog items | [Story Points](docs/SPRINT_BACKLOG.md) |
+| 17 | User stories assigned to team members | [Member Assignments](docs/SPRINT_BACKLOG.md) |
+| 18 | Sprint 1 and Sprint 2 planning | [Sprint Breakdown](docs/SPRINT_BACKLOG.md) · [Project Board](https://github.com/orgs/SE-Mini-Project-6/projects/2) |
 
-### B. Sprint 1 — Development & Collaboration
+### 2. Sprint 1 — Core Exam System
 
-| No. | Evaluation Requirement | GitHub Evidence |
+**Sprint 1: 19–23 October 2026**
+
+The first sprint focused on developing the basic examination workflow.
+
+Work completed during Sprint 1 included:
+
+- Student and Admin authentication
+- Exam creation and scheduling
+- MCQ creation, editing and deletion
+- Student exam dashboard
+- Question navigation
+- Answer saving
+- Manual exam submission
+- Automatic answer-key grading
+- Initial automated tests and GitHub Actions
+
+| No. | Requirement | Evidence |
 |---|---|---|
-| 19 | GitHub Actions automation for pushes and PRs | [Actions](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions) · [Workflow Files](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/.github/workflows) |
-| 20 | Code follows approved implementation methods and SRS/SAD | [Source Code](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/Online_Exam_Portal) · [Design Deviations](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/DESIGN_DEVIATIONS.md) |
-| 21 | PRs raised by the assigned team members | [PR History](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr) · [Member Assignments](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
-| 22 | PRs formally reviewed and merged by repository owner | [Merged PR History](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr+is%3Amerged) · [PR #59](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pull/59) |
+| 19 | GitHub Actions automation | [GitHub Actions](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions) · [Workflow Files](.github/workflows) |
+| 20 | Implementation based on SRS/SAD | [Source Code](Online_Exam_Portal) · [Design Deviations](docs/DESIGN_DEVIATIONS.md) |
+| 21 | Pull Requests raised by assigned members | [Pull Requests](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr) · [Backlog](docs/SPRINT_BACKLOG.md) |
+| 22 | PR review and merging | [Merged PR History](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr+is%3Amerged) · [Review Records](docs/TEAM_ACCEPTANCE.md) |
+| 23 | One-minute working-product video | [Sprint 1 Demo](Project_Demo/Sprint_1_Demo.mp4) |
 
-### C. Sprint 1 Deliverables
+### 3. Sprint 2 — Additional Features & Testing
 
-| No. | Evaluation Requirement | GitHub Evidence |
+**Sprint 2: 26–30 October 2026**
+
+The second sprint focused on completing the examination workflow and improving security, reliability and testing.
+
+Work developed during Sprint 2 included:
+
+- Server-controlled exam timer
+- Automatic submission on timeout
+- Mark-for-review functionality
+- Question status indicators
+- Admin submissions dashboard
+- Admin-controlled result release
+- Student result viewing
+- Security and authorization tests
+- Performance and reliability testing
+- Browser compatibility and usability testing
+
+| No. | Requirement | Evidence |
 |---|---|---|
-| 23 | One-minute working-product demo video | [Sprint 1 Demo — 60 seconds](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Project_Demo/Sprint_1_Demo.mp4) |
+| 24 | Sprint 2 completion and release-freeze documentation | [Sprint 2 Review & Freeze Draft](docs/SPRINT2_REVIEW_AND_FREEZE_DRAFT.md) |
+| 25 | Documentation of SRS/SAD deviations | [Design Deviations](docs/DESIGN_DEVIATIONS.md) |
+| 26 | Project documentation | [Documentation Index](docs/README.md) · [Team Acceptance](docs/TEAM_ACCEPTANCE.md) |
+| 27 | Two-minute working-product video | [Sprint 2 Demo](Project_Demo/Sprint_2_Demo.mp4) |
 
-### D. Sprint 2 — Development & Finalization
+### 4. Project Improvements
 
-| No. | Evaluation Requirement | GitHub Evidence |
-|---|---|---|
-| 24 | Sprint 2 completed and development officially frozen | [Sprint 2 Review & Freeze Record](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT2_REVIEW_AND_FREEZE_DRAFT.md) |
-| 25 | Deviations from original SRS/SAD formally documented | [Design Deviations Register](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/DESIGN_DEVIATIONS.md) |
-| 26 | Final project documentation completed | [Documentation Index](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/README.md) · [Team Acceptance](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/TEAM_ACCEPTANCE.md) |
+The performance, security, reliability and feature improvements made during development are documented separately.
 
-### E. Sprint 2 Deliverables
+**⭐ [PROJECT_IMPROVEMENTS.md — Complete Before & After Comparison](PROJECT_IMPROVEMENTS.md)**
 
-| No. | Evaluation Requirement | GitHub Evidence |
-|---|---|---|
-| 27 | Two-minute working-product demo video | [Sprint 2 Demo — 120 seconds](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Project_Demo/Sprint_2_Demo.mp4) |
+The report includes measured improvements in question loading time, autosave latency, database queries, throughput, security controls, test coverage and maintainability.
 
 ---
 
-## PART 3 — Testing & Quality Assurance
+## Part 3 — Testing & Quality Assurance
 
-| No. | Evaluation Requirement | GitHub Evidence |
+### 1. Test Case Updates & Execution
+
+Original test cases were updated to reflect changes made during Sprint 1 and Sprint 2.
+
+| No. | Requirement | Evidence |
 |---|---|---|
-| 28 | Original test cases updated after sprint changes | [Revised Test Cases](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/TEST_CASE_EXECUTION.md) · [Updated PDF](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/Test_Case_Execution_Revision_1_1.pdf) |
-| 29 | Tests executed according to the Test Plan | [Validation Results](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/VALIDATION_RESULTS.md) · [Technical Sign-off](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) |
+| 28 | Original test cases updated according to sprint changes | [Updated Test Cases](docs/TEST_CASE_EXECUTION.md) · [Revision 1.1 PDF](Deliverable-4-Test-Validation/Test_Case_Execution_Revision_1_1.pdf) |
+| 29 | Test execution and results based on the Test Plan | [Validation Results](docs/VALIDATION_RESULTS.md) · [Final Technical Checklist](docs/FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) |
 
-### Generated Test Reports and Supporting Evidence
+### 2. Automated Testing Results
 
-| Test / Report | GitHub Evidence |
+| Testing | Recorded Result | Evidence |
+|---|---|---|
+| Django automated tests | 147 tests passed | [Django CI](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43889325603) |
+| Browser compatibility | 252 checks passed | [Browser CI](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43889325512) |
+| Usability testing | 5/5 users completed the required tasks | [Usability Report](Deliverable-4-Test-Validation/usability_browser_verification.md) |
+| Security regression testing | Authentication, authorization and submission integrity tested | [Security Tests](Deliverable-4-Test-Validation/security_regression_traceability.md) |
+
+Browser compatibility testing covered Chrome and Firefox across desktop and mobile screen sizes.
+
+### 3. Generated Reports
+
+| Report | Link |
 |---|---|
-| Full Django Regression Suite — 147 Passed | [Django CI Run](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43889325603) |
-| Browser Compatibility — 252 Passed | [Browser Matrix CI](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43889325512) |
-| Five-User Usability Testing — 5/5 Passed | [Usability Walkthrough](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/usability_browser_verification.md) |
-| Security and Authorization | [Security Regression Report](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/security_regression_traceability.md) |
-| API Integration | [API Test Traceability](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/api_integration_test_traceability.md) |
-| Performance / Load Testing | [Performance Validation](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/performance_reliability_validation.md) |
-| Final Technical Measurements | [Technical Completion Report](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_TECHNICAL_COMPLETION.md) |
-| HTTPS and Deployment | [Deployment Guide](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/https_deployment.md) |
-| Raw Test Evidence | [docs/evidence](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/docs/evidence) |
+| Test Case Execution | [Execution Report](docs/TEST_CASE_EXECUTION.md) |
+| Validation Results | [Validation Report](docs/VALIDATION_RESULTS.md) |
+| Security Validation | [Security Report](Deliverable-4-Test-Validation/security_regression_traceability.md) |
+| API Integration | [API Test Report](Deliverable-4-Test-Validation/api_integration_test_traceability.md) |
+| Performance & Reliability | [Performance Report](Deliverable-4-Test-Validation/performance_reliability_validation.md) |
+| Browser & Usability Testing | [Browser Report](Deliverable-4-Test-Validation/usability_browser_verification.md) |
+| Technical Completion | [Technical Report](docs/FINAL_TECHNICAL_COMPLETION.md) |
+| Final Requirement Status | [Technical Sign-off Checklist](docs/FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) |
+| Raw Test Evidence | [Evidence Files](docs/evidence) |
 
 ---
 
-## PART 4 — Final Evaluation
+## Part 4 — Final Evaluation
 
-### A. Final Demonstration
+### 1. Application Demonstration
 
-| No. | Evaluation Requirement | GitHub Evidence |
+The application supports the following workflow:
+
+**Admin creates exam → Adds MCQs → Student attempts exam → Answers are saved → Student submits or timer expires → Admin reviews submissions → Results are released → Student views score**
+
+| No. | Requirement | Evidence |
 |---|---|---|
-| 30 | Application demonstrates all core use cases | [Final Demo Guide](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_DEMO.md) · [Application Source](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/Online_Exam_Portal) |
-| 31 | Team explains permitted deviations from original design | [Design Deviations](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/DESIGN_DEVIATIONS.md) |
-| 32 | Codebase is accessible, readable and version-controlled | [Repository](https://github.com/SE-Mini-Project-6/Online-Exam-Portal) · [Commit History](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/commits/main/) |
+| 30 | Working application and core use cases | [Sprint 2 Demo](Project_Demo/Sprint_2_Demo.mp4) · [Application Code](Online_Exam_Portal) |
+| 31 | Documented deviations from the original design | [Design Deviations](docs/DESIGN_DEVIATIONS.md) |
+| 32 | Readable, accessible and version-controlled code | [Source Code](Online_Exam_Portal) · [Commit History](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/commits/main/) |
 
-### B. Viva / Oral Examination
+### 2. Team Contributions & Development Process
 
-| No. | Evaluation Requirement | GitHub Evidence |
+| No. | Requirement | Evidence |
 |---|---|---|
-| 33 | Every member explains individual code contributions and PRs | [All PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr) · [Sprint Contributions](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/docs) |
-| 34 | Team explains Agile/SDLC, story points, planning and blockers | [Project Board](https://github.com/orgs/SE-Mini-Project-6/projects/2) · [Sprint Backlog](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
-| 35 | Team justifies architecture, API design and automated testing | [SAD](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) · [API Evidence](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/api_integration_test_traceability.md) · [CI Results](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions) |
+| 33 | Individual code contributions and Pull Requests | [Team Sprint Work](docs) · [Pull Requests](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr) |
+| 34 | Agile/SDLC process, sprint planning, story points and blockers | [Sprint Backlog](docs/SPRINT_BACKLOG.md) · [GitHub Project](https://github.com/orgs/SE-Mini-Project-6/projects/2) |
+| 35 | Architecture, API design and automated testing | [SAD](Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) · [API Testing](Deliverable-4-Test-Validation/api_integration_test_traceability.md) · [CI](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions) |
+
+### 3. Individual Contributions
+
+| Team Member | Main Work | Evidence |
+|---|---|---|
+| Abhishek Anand | Database models, MCQ CRUD, submission, grading and exam timer | [Sprint 1](docs/SPRINT1_ABHI.md) · [Sprint 2](docs/SPRINT2_ABHI_TIMER.md) |
+| Adithya Sundar | Authentication, exam management, access control and result release | [Sprint 1](docs/SPRINT1_ADITHYA_SUNDAR) · [Sprint 2](docs/SPRINT2_ADITHYA_SUNDAR.md) |
+| Aditya Jaiswal | Question navigation, autosave, review flags, UI and demos | [Sprint 1](docs/SPRINT1_Aditya_Jaiswal.md) · [Sprint Backlog](docs/SPRINT_BACKLOG.md) |
+| Aditya-TJ | Automated testing, security validation, performance testing and usability | [Testing Reports](Deliverable-4-Test-Validation) |
+
+**All contributions:** [GitHub Pull Requests](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr)
 
 ---
 
-## Individual Member Contributions
+## Project Results
 
-| Member | Sprint / Work | Evidence |
-|---|---|---|
-| Abhishek Anand | Sprint 1 — Database models, MCQ CRUD, manual submission, grading | [Sprint 1 Abhishek](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT1_ABHI.md) |
-| Abhishek Anand | Sprint 2 — Server-authoritative timer and auto-submission | [Sprint 2 Timer](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT2_ABHI_TIMER.md) |
-| Aditya-TJ | Test planning, security, performance and usability verification | [QA Evidence](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/Deliverable-4-Test-Validation) |
-| Aditya Jaiswal | Frontend, exam workflow and sprint demonstrations | [Sprint 1 Contribution](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT1_Aditya_Jaiswal.md) |
-| Adithya Sundar | Authentication, exam management, administration and result release | [Sprint 2 Contribution](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT2_ADITHYA_SUNDAR.md) |
+| Area | Result |
+|---|---|
+| Question-page average latency | Reduced by 72.7% in the measured PostgreSQL comparison |
+| Answer autosave average latency | Reduced by 30.8% in the measured PostgreSQL comparison |
+| Measured throughput | Increased by 89.5% |
+| Database reliability | SQLite locking failures from the initial concurrency test were resolved in the repeated test |
+| Automated Django tests | 147 passed |
+| Browser compatibility | 252 checks passed |
+| Usability evaluation | 5/5 participants completed the required tasks without assistance |
+| Extensibility | Isolated question-type experiment required one module change after refactoring |
 
-### Individual Pull Requests
+**⭐ [Detailed Project Improvements — Before vs After](PROJECT_IMPROVEMENTS.md)**
 
-- [Abhishek Anand — PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=author%3AAbhishekanand19)
-- [Aditya-TJ — PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=author%3AAditya-TJ)
-- [Aditya Jaiswal — PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=author%3Ajaiswaladitya6562)
-- [Adithya Sundar — PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=author%3AAdithya2505)
-
----
-
-## Current Acceptance Notes
-
-This README is an evidence-navigation guide. A linked document, issue or merged PR does not by itself establish formal evaluator acceptance.
-
-- The five-user usability walkthrough is recorded as **passed (5/5)**.
-- The Django regression suite and browser compatibility matrix have passing CI evidence.
-- PostgreSQL locally met the absolute NFR-01 and NFR-02 latency limits, but the documented NFR-06 concurrency growth criterion remains **failed**.
-- Deployment verification, formal human review, Project-board fields and sprint-freeze evidence must be checked against the actual latest records.
-- The final demonstration is a **live presentation**, not a third mandatory recorded video.
-
-Refer to the [Final Technical Sign-off Checklist](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) for the recorded requirement-by-requirement acceptance status.
+The performance measurements were carried out locally. The requirement-level results and remaining acceptance items are recorded in the [Final Technical Sign-off Checklist](docs/FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md).
