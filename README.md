@@ -1,293 +1,178 @@
 # Online Exam Portal
+# SE Mini Project — Evaluation Checklist & GitHub Evidence
 
-## Run and review the current implementation
+**Project:** Online Exam Portal  
+**Repository:** https://github.com/SE-Mini-Project-6/Online-Exam-Portal  
+**GitHub Project Board:** https://github.com/orgs/SE-Mini-Project-6/projects/2
 
-```powershell
-python -m pip install -r requirements.txt
-cd Online_Exam_Portal
-python manage.py migrate
-python manage.py createsuperuser
-$env:DJANGO_DEBUG = "True"  # local HTTP development only
-python manage.py runserver
-```
+This section maps the evaluator's 35 checklist requirements to their corresponding GitHub evidence.
 
-Use Django admin to provision student accounts with `is_staff=False`. Accounts are pre-provisioned; self-registration is outside scope. Run `python manage.py test --noinput` from `Online_Exam_Portal` for the complete regression suite.
+## Quick Access — Important Links
 
-**Evaluation entry point:** [docs evidence index](docs/README.md), [current test-case revision](docs/TEST_CASE_EXECUTION.md), [validation results](docs/VALIDATION_RESULTS.md), and [remaining team acceptance](docs/TEAM_ACCEPTANCE.md). Read the [design deviation register](docs/DESIGN_DEVIATIONS.md) alongside the original Part 1 PDFs. Historical documents are baselines; pending real-participant study, browser matrix, demo recordings and freeze approval must not be inferred from closed issues.
-
-Watch the [one-minute Sprint 1 demo](Project_Demo/Sprint_1_Demo.mp4) and [two-minute Sprint 2 demo](Project_Demo/Sprint_2_Demo.mp4), or follow the [live demo and viva run sheet](docs/FINAL_DEMO.md). Recording dates and source revisions are listed in the [demo notes](Project_Demo/README.md). **Release freeze is pending team approval.**
-
-## Software Engineering Mini Project
-
-This repository contains the work for **Mini Project 6 – Online Exam Portal**.
-
-The Online Exam Portal is a web-based examination system with two main users:
-
-- **Admin** – creates and manages exams, questions, submissions, and results.
-- **Student** – attempts exams, answers questions, marks questions for review, submits the exam, and views released results.
-
----
-
-## Project Deliverables
-
-The project is divided into four deliverables, with each team member responsible for one deliverable.
-
-| Deliverable | Description |
+| Deliverable | GitHub Link |
 |---|---|
-| **Deliverable 1** | Software Requirements Specification (SRS) |
-| **Deliverable 2** | Test Plan |
-| **Deliverable 3** | Software Architecture & Design Specification |
-| **Deliverable 4** | Test Cases Update for Test Plan |
+| Complete Evidence Index | [docs/README.md](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/README.md) |
+| SRS Document | [SRS — Deliverable 1](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
+| Test Plan | [Test Plan — Deliverable 2](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
+| Architecture & Design | [SAD — Deliverable 3](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
+| Test Cases | [Test Cases — Deliverable 4](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/Test_Case_Execution_Revision_1_1.pdf) |
+| GitHub Project Board | [Project #2](https://github.com/orgs/SE-Mini-Project-6/projects/2) |
+| Sprint Backlog | [Sprint 1 & 2 Stories](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
+| Pull Requests | [All Pull Requests](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls) |
+| GitHub Actions | [CI/CD Runs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions) |
+| Sprint 1 Demo | [60-Second Video](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Project_Demo/Sprint_1_Demo.mp4) |
+| Sprint 2 Demo | [120-Second Video](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Project_Demo/Sprint_2_Demo.mp4) |
+| Test Execution Results | [Validation Report](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/VALIDATION_RESULTS.md) |
+| Final Technical Checklist | [Final Sign-off Report](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) |
+| Final Demo Guide | [Live Demonstration & Viva](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_DEMO.md) |
 
 ---
 
-## Deliverable 1 – Software Requirements Specification
+## PART 1 — Requirements & Design Documents
 
-The SRS contains:
+### A. Software Requirements Specification (SRS)
 
-- Introduction and project description
-- Functional Requirements
-- Non-Functional Requirements
-- UML Use Case Diagram
-- Security Objectives
-- Security Requirements
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 1 | Document follows IEEE format | [SRS Document](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
+| 2 | Introduction, project description and scope | [SRS — Introduction](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
+| 3 | Clearly defined Functional and Non-Functional Requirements | [SRS — FRs & NFRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
+| 4 | At least one UML Use Case Diagram | [SRS — UML Diagram](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
+| 5 | At least two security objectives and two security requirements | [SRS — Security Section](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/SRS_Online_Exam_Portal.docx) |
 
----
+### B. Test Plan Document
 
-## Deliverable 2 – Test Plan
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 6 | IEEE-standard Test Plan | [Test Plan PDF](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
+| 7 | Sections 3, 4 and 5 completed | [Test Plan — Sections 3–5](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
+| 8 | Section 5.1 covers security validation | [Test Plan — Section 5.1](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-2-Test-Plan/Deliverable_2_Test_Plan.pdf) |
+| 9 | Traceability between SRS and Test Plan | [Requirement-to-Test Traceability](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/TEST_CASE_EXECUTION.md) |
+| 10 | 7–10 test cases covering FRs and NFRs | [Original Test Cases](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/04_Member4_Deliverable4_Test_Case_Update_Online_Exam_Portal%20%281%29.pdf) |
 
-The Test Plan contains:
+### C. Software Architecture & Design (SAD)
 
-- Introduction
-- Test items
-- Features to be tested
-- Features not to be tested
-- Test approach
-- Test environment
-- Entry and exit criteria
-- Security validation
-- Traceability with SRS requirements
-
----
-
-## Deliverable 3 – Software Architecture & Design Specification
-
-### Architecture
-
-- Component Diagram and component descriptions
-- Architectural Pattern
-- Requirement Traceability
-- Security Architecture
-- Deployment and supporting architecture details
-
-### Design
-
-- UML Sequence Diagrams
-- API Design
-- Error Handling
-- Data and state design
-- Supporting design details
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 11 | IEEE-standard SAD document | [SAD PDF](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
+| 12 | Component diagram, architectural pattern, requirement traceability and security architecture | [SAD — Architecture](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
+| 13 | At least two sequence diagrams, API design and error handling | [SAD — Design](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) |
 
 ---
 
-## Deliverable 4 – Test Case Update
+## PART 2 — Agile Planning & Repository Setup
 
-The Test Case document contains:
+### A. GitHub Backlog & Project Management
 
-- Functional Test Cases
-- Non-Functional Test Cases
-- Security Test Cases
-- Preconditions
-- Test Steps
-- Expected Results
-- Pass Criteria
-- Security Validation
-- Requirement Traceability
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 14 | GitHub Project created and linked to repository | [GitHub Project #2](https://github.com/orgs/SE-Mini-Project-6/projects/2) |
+| 15 | Backlog created using SRS FRs/NFRs | [Sprint Backlog](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) · [GitHub Issues](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/issues) |
+| 16 | Story Points assigned to all backlog items | [Backlog — Story Points](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
+| 17 | User stories assigned to individual members | [Backlog — Assignees](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
+| 18 | Sprint 1 and Sprint 2 planned on project board | [GitHub Project Board](https://github.com/orgs/SE-Mini-Project-6/projects/2) · [Sprint Breakdown](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
 
-A minimum of **7–10 test cases** are included.
+### B. Sprint 1 — Development & Collaboration
 
----
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 19 | GitHub Actions automation for pushes and PRs | [Actions](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions) · [Workflow Files](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/.github/workflows) |
+| 20 | Code follows approved implementation methods and SRS/SAD | [Source Code](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/Online_Exam_Portal) · [Design Deviations](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/DESIGN_DEVIATIONS.md) |
+| 21 | PRs raised by the assigned team members | [PR History](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr) · [Member Assignments](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
+| 22 | PRs formally reviewed and merged by repository owner | [Merged PR History](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr+is%3Amerged) · [PR #59](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pull/59) |
 
-## Main Features
+### C. Sprint 1 Deliverables
 
-### Admin
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 23 | One-minute working-product demo video | [Sprint 1 Demo — 60 seconds](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Project_Demo/Sprint_1_Demo.mp4) |
 
-- Login with Admin privileges
-- Create exams with a title, duration, and availability window
-- Configure exam duration and reject invalid availability intervals
-- Add, edit, and delete MCQ questions
-- View student submissions
-- Release examination results
+### D. Sprint 2 — Development & Finalization
 
-### Student
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 24 | Sprint 2 completed and development officially frozen | [Sprint 2 Review & Freeze Record](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT2_REVIEW_AND_FREEZE_DRAFT.md) |
+| 25 | Deviations from original SRS/SAD formally documented | [Design Deviations Register](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/DESIGN_DEVIATIONS.md) |
+| 26 | Final project documentation completed | [Documentation Index](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/README.md) · [Team Acceptance](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/TEAM_ACCEPTANCE.md) |
 
-- Login to the portal
-- Attempt available examinations
-- Answer questions in any order
-- Change answers before submission
-- Mark questions for review
-- Navigate through the question-status grid
-- Submit examination manually
-- Automatic submission after timeout
-- View results after release
+### E. Sprint 2 Deliverables
 
-## Exam configuration
-
-Staff users can configure an exam at `/exams/create/` from the **Manage Exams**
-card on the admin dashboard. The form stores the title, duration in minutes,
-and timezone-aware start and end timestamps. Validation ensures:
-- The end timestamp must be strictly later than the start timestamp.
-- The duration must be a positive integer (at least one minute).
-- The duration cannot exceed the total availability window.
-- Missing or malformed fields are handled gracefully with field-level errors.
-
-Successfully saved exams are listed in the **Configured Exams** section of the
-admin dashboard.
-
-The implementation satisfies requirement **FR-03** (Create Exam) and extends the
-admin exam-management capability described in the
-[Deliverable 3 architecture/design document](Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf).
-No design deviation was required.
-
-### Test evidence
-
-Automated coverage is in
-[exams/tests.py](Online_Exam_Portal/exams/tests.py) (12 tests) and verifies:
-- Successful exam creation and redirection to dashboard.
-- Configured exam and duration appear in the admin dashboard table.
-- Invalid interval rejection: end timestamp earlier than start timestamp.
-- Invalid interval rejection: end timestamp equal to start timestamp.
-- Non-positive duration rejection (0 or negative).
-- Missing/empty duration handled gracefully without runtime errors.
-- Duration exceeding availability window rejection.
-- Direct model-level `clean()` validation checks.
-- Non-staff / student access prohibition (HTTP 403 Forbidden).
-- Anonymous user redirect to login page (HTTP 302).
-- Admin GET form render verification.
-- Model string representation (`__str__`).
-
-Run the automated test suite with:
-
-```text
-cd Online_Exam_Portal
-..\.venv\Scripts\python.exe manage.py test exams
-```
-
-Manual verification steps:
-
-1. Sign in through `/accounts/login/` as an admin (staff) user.
-2. Select **Create an exam** from the **Manage Exams** card.
-3. Enter a title, valid duration (e.g., `90`), and valid window (e.g., start tomorrow 10:00, end tomorrow 12:00), then click **Save exam**.
-4. Confirm redirection to the admin dashboard and that the exam appears under **Configured Exams** with title, duration, and formatted window timestamps.
-5. Attempt invalid intervals:
-   - End time before or equal to start time: confirm error `"End time must be after the start time."`
-   - Duration exceeding the window (e.g., 180 minutes for a 2-hour window): confirm error `"Exam duration cannot exceed the availability window."`
-   - Duration of 0 or blank: confirm validation error without server error.
-6. Attempt to visit `/exams/create/` while logged in as a student user; confirm HTTP 403 Forbidden.
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 27 | Two-minute working-product demo video | [Sprint 2 Demo — 120 seconds](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Project_Demo/Sprint_2_Demo.mp4) |
 
 ---
 
-## Student available-exam list and window enforcement
+## PART 3 — Testing & Quality Assurance
 
-Students can view all scheduled examinations directly on the **Student Dashboard**
-at `/accounts/student-dashboard/` or through `/exams/available/`. Each exam card
-and table row displays:
-- The exam **Title** and **Duration** in minutes.
-- The scheduled availability window with formatted start and end timestamps.
-- An availability status indicator:
-  - **Available Now**: For exams whose current time is within `start_at` and `end_at`. Provides an active **Start Exam** button.
-  - **Upcoming**: For exams scheduled in the future (`now < start_at`). Action button is disabled with start time indication.
-  - **Closed**: For exams whose window has elapsed (`now > end_at`). Action button is disabled.
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 28 | Original test cases updated after sprint changes | [Revised Test Cases](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/TEST_CASE_EXECUTION.md) · [Updated PDF](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/Test_Case_Execution_Revision_1_1.pdf) |
+| 29 | Tests executed according to the Test Plan | [Validation Results](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/VALIDATION_RESULTS.md) · [Technical Sign-off](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) |
 
-### Server-side window enforcement
+### Generated Test Reports and Supporting Evidence
 
-Strict server-side validation is enforced in `take_exam` (`/exams/<id>/take/` and `/exams/<id>/`):
-- **Early access guard**: Requests made before the start timestamp (`now < start_at`) are rejected with `HTTP 403 Forbidden` (`"This exam has not started yet. Early access is blocked on server."`).
-- **Expired access guard**: Requests made after the window closes (`now > end_at`) are rejected with `HTTP 403 Forbidden` (`"This exam availability window has expired. Access is blocked on server."`).
-- **Active window**: Requests within the window (`start_at <= now <= end_at`) are granted `HTTP 200 OK` and render the exam attempt interface with duration and test rules.
-- **Authentication**: Unauthenticated users attempting to access exam URLs are redirected to `/accounts/login/` (`HTTP 302`).
-- **REST API support**: The endpoints return JSON representations when requested with `Accept: application/json` or `?format=json`.
-
-The implementation satisfies requirements **FR-05** (Display Exam), **SEC-REQ-02**
-(Role-Based Access Control), and **SEC-OBJ-01** (Prevent Unauthorized Access) as
-specified in the [SRS document](SRS_Online_Exam_Portal.docx) and follows the MVT/REST
-specifications in [Deliverable 3](Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf).
-No design deviations were required.
-
-### Test evidence
-
-Automated coverage in [exams/tests.py](Online_Exam_Portal/exams/tests.py) (24 tests total, including 12 dedicated window-enforcement tests) verifies:
-- Student dashboard displays configured exams, durations, and scheduled timestamps.
-- Appropriate status badges (`Available Now`, `Upcoming`, `Closed`) and active action links.
-- Early exam access attempts return `HTTP 403 Forbidden` with descriptive messages.
-- Expired exam access attempts return `HTTP 403 Forbidden` with descriptive messages.
-- Active window exam access returns `HTTP 200 OK` with attempt instructions.
-- Detail and take URL routes consistently enforce window boundaries.
-- Anonymous users are redirected to login (`HTTP 302`).
-- Invalid exam ID returns `HTTP 404 Not Found`.
-- Standalone available-exams view and REST API JSON endpoints.
-- Model availability methods and properties across active, upcoming, and expired states.
-
-Run the automated test suite with:
-
-```text
-cd Online_Exam_Portal
-..\.venv\Scripts\python.exe manage.py test exams
-```
-
-Or run the full test suite (41 tests covering core, accounts, and exams):
-
-```text
-cd Online_Exam_Portal
-..\.venv\Scripts\python.exe manage.py test accounts.tests exams.tests core.tests
-```
-
-Manual verification steps:
-
-1. Sign in as Admin (`/accounts/login/`) and create three test exams:
-   - **Exam 1 (Active)**: Window starts 10 minutes ago, ends in 50 minutes.
-   - **Exam 2 (Upcoming)**: Window starts tomorrow at 10:00 AM.
-   - **Exam 3 (Expired)**: Window was scheduled for yesterday.
-2. Sign in as a Student (`/accounts/student-login/` or `/accounts/login/`) and visit the Student Dashboard (`/accounts/student-dashboard/`).
-3. Confirm that all three exams appear under **Available Examinations** with their respective titles, durations, and scheduled window timestamps.
-4. Confirm statuses:
-   - Exam 1 shows **Available Now** and an enabled **Start Exam** button.
-   - Exam 2 shows **Upcoming** and a disabled button.
-   - Exam 3 shows **Closed** and a disabled button.
-5. Click **Start Exam** on Exam 1; confirm HTTP 200 and attempt page renders with active window indicator.
-6. Directly navigate to `/exams/<upcoming_id>/take/`; confirm server blocks access with **HTTP 403 Forbidden** stating exam has not started yet.
-7. Directly navigate to `/exams/<expired_id>/take/`; confirm server blocks access with **HTTP 403 Forbidden** stating window has expired.
-8. Log out and attempt direct access to `/exams/<active_id>/take/`; confirm HTTP 302 redirect to `/accounts/login/`.
+| Test / Report | GitHub Evidence |
+|---|---|
+| Full Django Regression Suite — 147 Passed | [Django CI Run](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43889325603) |
+| Browser Compatibility — 252 Passed | [Browser Matrix CI](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions/runs/43889325512) |
+| Five-User Usability Testing — 5/5 Passed | [Usability Walkthrough](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/usability_browser_verification.md) |
+| Security and Authorization | [Security Regression Report](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/security_regression_traceability.md) |
+| API Integration | [API Test Traceability](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/api_integration_test_traceability.md) |
+| Performance / Load Testing | [Performance Validation](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/performance_reliability_validation.md) |
+| Final Technical Measurements | [Technical Completion Report](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_TECHNICAL_COMPLETION.md) |
+| HTTPS and Deployment | [Deployment Guide](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/https_deployment.md) |
+| Raw Test Evidence | [docs/evidence](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/docs/evidence) |
 
 ---
 
-## Technology Stack
+## PART 4 — Final Evaluation
 
-- **Backend:** Python / Django
-- **API:** REST API
-- **Database:** Relational Database
-- **Version Control:** Git
-- **Repository Hosting:** GitHub
+### A. Final Demonstration
 
-## Admin submissions dashboard
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 30 | Application demonstrates all core use cases | [Final Demo Guide](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_DEMO.md) · [Application Source](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/Online_Exam_Portal) |
+| 31 | Team explains permitted deviations from original design | [Design Deviations](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/DESIGN_DEVIATIONS.md) |
+| 32 | Codebase is accessible, readable and version-controlled | [Repository](https://github.com/SE-Mini-Project-6/Online-Exam-Portal) · [Commit History](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/commits/main/) |
 
-Staff can open **View Submissions** from the admin dashboard or choose **View submissions** beside a configured exam. The page at `/accounts/admin-submissions/` lists active student accounts for the selected exam, including students who have not started. It shows `Not started`, `In progress`, or `Submitted`, the submission timestamp when available, and the score only after submission. Students receive HTTP 403; anonymous visitors are redirected to login.
+### B. Viva / Oral Examination
 
-Automated coverage is in `Online_Exam_Portal/accounts/test_submissions.py`. Run it from `Online_Exam_Portal` with `python manage.py test accounts.test_submissions`. Manual browser steps and the interface/design note are recorded in `Deliverable-4-Test-Validation/admin_submissions_dashboard.md`.
+| No. | Evaluation Requirement | GitHub Evidence |
+|---|---|---|
+| 33 | Every member explains individual code contributions and PRs | [All PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=is%3Apr) · [Sprint Contributions](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/docs) |
+| 34 | Team explains Agile/SDLC, story points, planning and blockers | [Project Board](https://github.com/orgs/SE-Mini-Project-6/projects/2) · [Sprint Backlog](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT_BACKLOG.md) |
+| 35 | Team justifies architecture, API design and automated testing | [SAD](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-3-Architecture-Design/03_Member3_Deliverable3_Software_Architecture_and_Design_Specification.pdf.pdf) · [API Evidence](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/Deliverable-4-Test-Validation/api_integration_test_traceability.md) · [CI Results](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/actions) |
 
 ---
 
-## Repository Structure
+## Individual Member Contributions
 
-```text
-Online-Exam-Portal/
-│
-├── README.md
-│
-├── Deliverable-1-SRS/
-│
-├── Deliverable-2-Test-Plan/
-│
-├── Deliverable-3-Architecture-Design/
-│
-└── Deliverable-4-Test-Cases/
+| Member | Sprint / Work | Evidence |
+|---|---|---|
+| Abhishek Anand | Sprint 1 — Database models, MCQ CRUD, manual submission, grading | [Sprint 1 Abhishek](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT1_ABHI.md) |
+| Abhishek Anand | Sprint 2 — Server-authoritative timer and auto-submission | [Sprint 2 Timer](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT2_ABHI_TIMER.md) |
+| Aditya-TJ | Test planning, security, performance and usability verification | [QA Evidence](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/tree/main/Deliverable-4-Test-Validation) |
+| Aditya Jaiswal | Frontend, exam workflow and sprint demonstrations | [Sprint 1 Contribution](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT1_Aditya_Jaiswal.md) |
+| Adithya Sundar | Authentication, exam management, administration and result release | [Sprint 2 Contribution](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/SPRINT2_ADITHYA_SUNDAR.md) |
+
+### Individual Pull Requests
+
+- [Abhishek Anand — PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=author%3AAbhishekanand19)
+- [Aditya-TJ — PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=author%3AAditya-TJ)
+- [Aditya Jaiswal — PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=author%3Ajaiswaladitya6562)
+- [Adithya Sundar — PRs](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/pulls?q=author%3AAdithya2505)
+
+---
+
+## Current Acceptance Notes
+
+This README is an evidence-navigation guide. A linked document, issue or merged PR does not by itself establish formal evaluator acceptance.
+
+- The five-user usability walkthrough is recorded as **passed (5/5)**.
+- The Django regression suite and browser compatibility matrix have passing CI evidence.
+- PostgreSQL locally met the absolute NFR-01 and NFR-02 latency limits, but the documented NFR-06 concurrency growth criterion remains **failed**.
+- Deployment verification, formal human review, Project-board fields and sprint-freeze evidence must be checked against the actual latest records.
+- The final demonstration is a **live presentation**, not a third mandatory recorded video.
+
+Refer to the [Final Technical Sign-off Checklist](https://github.com/SE-Mini-Project-6/Online-Exam-Portal/blob/main/docs/FINAL_TECHNICAL_SIGNOFF_CHECKLIST.md) for the recorded requirement-by-requirement acceptance status.
